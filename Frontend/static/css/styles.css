@@ -3,7 +3,11 @@
 
 .header-bar {
     width: 100%;
-    box-shadow: 0px 2px 20px rgba(69, 69, 69, 0.5);
+    box-shadow: 0 2px 20px rgba(69, 69, 69, 0.5);
+}
+
+.row {
+    width: 100%;
 }
 
 .fp-logo-container {

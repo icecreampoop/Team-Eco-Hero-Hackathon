@@ -4,9 +4,10 @@
 
 .main {
     width: 100%;
+    overflow: scroll;
 }
 
-.board-card {
+.transactions-card {
     display: flex;
     flex-direction: row;
     border: 3px solid #6C7780;
@@ -15,13 +16,13 @@
     padding: 20px;
     box-shadow: 0px 2px 4px 5px rgba(0, 0, 0, 0.1);
     margin-bottom: 40px;
-    min-width: 600px;
 }
 
 .main-container {
     display: flex;
     flex-direction: column;
     align-items: center;
+    min-width: 800px;
 }
 
 .thead-custom {
@@ -54,9 +55,21 @@ td:nth-child(3) {
     font-weight: 600;
 }
 
-.leaderboard-title {
+.transactions-title {
     margin: 20px;
     font-size: 40px;
     color: #E21A70;
     font-weight: 800;
+}
+
+.badge.cancelled {
+    background-color: red;
+}
+
+.badge.completed {
+    background-color: green;
+}
+
+.badge.pending {
+    background-color: cornflowerblue;
 }
