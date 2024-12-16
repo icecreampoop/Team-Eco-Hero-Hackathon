@@ -1,7 +1,20 @@
 package main
 
-import backend "github.com/icecreampoop/Team-Eco-Hero-Hackathon/Backend"
+import (
+	backend "github.com/icecreampoop/Team-Eco-Hero-Hackathon/Backend"
+	"github.com/joho/godotenv"
+)
+
+import (
+	_ "github.com/joho/godotenv"
+	"log"
+)
 
 func main() {
-	backend.UploadFile("test.txt", []byte("test"))
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatalf("Error loading .env file: %v", err)
+	}
+	backend.ServerHandler()
+	backend.Connect()
 }
