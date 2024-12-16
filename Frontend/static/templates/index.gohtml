@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Page</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google Fonts - Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Quicksand:wght@700&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome CSS for icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+
+    <style>
+        /* Base styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f8fa;
+        }
+
+        .content-side {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .content-card {
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 800px;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+        }
+
+        .content-card img {
+            width: 50%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .content-text {
+            width: 100%;
+            text-align: center;
+        }
+
+        .content-text h1 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #FF2B85;
+        }
+
+        .content-text p {
+            font-size: 1.2rem;
+            color: #444444;
+            margin-bottom: 20px;
+        }
+
+        .alert {
+            font-weight: 600;
+            font-size: 1.1rem;
+            display: flex;
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center;
+            color: darkred;
+            margin-bottom: 20px;
+        }
+
+        .alert h3 {
+            margin-left: 10px; 
+            font-size: 1.1rem;
+        }
+
+        .alert i {
+            font-size: 2rem; 
+            color: darkred; 
+            margin-bottom: 10px; 
+        }
+
+        .btn-custom {
+            padding: 14px 30px; 
+            font-size: 1.2rem;
+            font-weight: bold;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            margin-bottom: 10px; 
+            width: 80%; s
+            text-align: center;
+        }
+
+        .btn-ra {
+            background-color: #d10d3e;
+            color: white;
+        }
+
+        .btn-logout {
+            background-color: black;
+            color: white;
+        }
+
+        .btn-custom:hover {
+            background-color: #D3D3D3;
+            color: white;
+            transform: scale(1.05);
+        }
+
+        .btn-login {
+            background-color: black;
+            border-color: black;
+            color: white;
+        }
+
+        .btn-signup {
+            background-color: #FF2B85; 
+            border-color: #FF2B85;
+            color: white;
+        }
+
+        .btn-login:hover {
+            background-color: #D3D3D3;
+            color: black;
+        }
+
+        .btn-signup:hover {
+            background-color: #D3D3D3;
+            color: black;
+        }
+
+        .button-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        @media (max-width: 768px) {
+            .content-card {
+                flex-direction: column;
+            }
+
+            .content-card img {
+                width: 100%;
+                height: 250px;
+            }
+
+            .content-text {
+                width: 100%;
+                padding-left: 0;
+                margin-top: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12 content-side">
+                <!-- Centered Form with Card -->
+                <div class="content-card">
+                    <!-- Image on the left (Optional) -->
+                    <img src="https://imgcdn.sigstick.com/GWFs5IUz5xp4yxdRlJN7/6.webp" alt="Card Image">
+
+                    <!-- Text content on the right -->
+                    <div class="content-text">
+                        <div class="text-center mb-4">
+                            <h1>Welcome</h1>
+                            <p>Login or sign up to access the site.</p>
+                        </div>
+
+                        <!-- Conditional Content for Logged In or Logged Out -->
+                        {{if .First}}
+                        <div class="alert alert-success">
+                            <h3>Welcome, {{.Username}}!</h3>
+                            <p><strong>First Name:</strong> {{.First}}</p>
+                            <p><strong>Last Name:</strong> {{.Last}}</p>
+                            <div class="mt-4">
+                                <a href="/restricted" class="btn btn-ra btn-lg btn-custom">Go to Restricted Area</a>
+                                <a href="/logout" class="btn btn-lg btn-custom btn-logout ms-2">Log Out</a>
+                            </div>
+                        </div>
+                        {{else}}
+                        <div class="alert alert-warning">
+                            <!-- Warning icon centered with text -->
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <h3>You are currently either not logged in or need to sign up for an account.</h3>
+                        </div>
+                        <div class="button-container">
+                            <a href="/signup" class="btn btn-signup btn-custom">Sign Up</a>
+                            <a href="/login" class="btn btn-login btn-custom">Login</a>
+                        </div>
+                        {{end}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
