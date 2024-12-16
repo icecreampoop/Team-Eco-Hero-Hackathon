@@ -2,15 +2,15 @@ package backend
 
 import (
 	"bytes"
-	"image"
 	"fmt"
+	"image"
 	"io"
 	"log"
 	"net/http"
 )
 
 func showAllItems(w http.ResponseWriter, r *http.Request) {
-
+	http.ServeFile(w, r, "./Frontend/static/items.html")
 }
 
 func showSingleItem(w http.ResponseWriter, r *http.Request) {
@@ -59,7 +59,8 @@ func createNewItem(w http.ResponseWriter, r *http.Request) {
 	// Process the imageBytes (e.g., store in a database or perform operations)
 	fmt.Printf("Received file %s with size %d bytes\n", handler.Filename, len(imageBytes))
 
-	UploadFile(itemName + "."  + format, imageBytes)
+	// UploadFile(itemName + "."  + format, imageBytes)
+	UploadFile("."+format, imageBytes)
 
 	// Respond to the client
 	w.WriteHeader(http.StatusOK)
@@ -88,11 +89,11 @@ func HandleHTTPIndex(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandleHTTPUser(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "./Frontend/static/user.gohtml")
+	http.ServeFile(w, r, "./Frontend/static/user.html")
 }
 
 func HandleHTTPBoard(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "./Frontend/static/board.gohtml")
+	http.ServeFile(w, r, "./Frontend/static/board.html")
 }
 
 func HandleHTTPLogin(w http.ResponseWriter, r *http.Request) {
@@ -132,8 +133,10 @@ func ServerHandler() {
 	mux := http.NewServeMux()
 
 	// handlers
-	mux.HandleFunc("/", HandleHTTPIndex) // default handler to index
-	mux.HandleFunc("/index", HandleHTTPIndex)
+	// mux.HandleFunc("/", HandleHTTPIndex) // default handler to index
+	// mux.HandleFunc("/index", HandleHTTPIndex)
+	// Matt: Changed the / path to showallitems instead
+	mux.HandleFunc("/", showAllItems)
 
 	//all item handlers
 	mux.HandleFunc("GET /items", showAllItems)
@@ -151,10 +154,10 @@ func ServerHandler() {
 
 	// Serve static files from the frontend directory
 	fs := http.FileServer(http.Dir("./Frontend/static"))
-	mux.Handle("/static/", http.StripPrefix("/static/", fs))
+	mux.Handle("/Frontend/static/", http.StripPrefix("/Frontend/static/", fs))
 
 	// Start server
-	port := ":8080"
+	port := ":5000"
 	fmt.Printf("Starting server on port %s\n", port)
 	if err := http.ListenAndServe(port, mux); err != nil {
 		log.Fatalf("Could not start server: %s\n", err)
