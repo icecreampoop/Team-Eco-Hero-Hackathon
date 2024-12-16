@@ -7,28 +7,23 @@ import (
 )
 
 func HandleHTTPIndex(w http.ResponseWriter, r *http.Request) {
-	//fmt.Fprintf(w, "Index")
 	http.ServeFile(w, r, "./Frontend/static/index.gohtml")
 }
 
 func HandleHTTPItems(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Items")
-	// http.ServeFile(w, r, "frontend/items.gohtml")
+	http.ServeFile(w, r, "./Frontend/static/items.gohtml")
 }
 
 func HandleHTTPUser(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "User")
-	// http.ServeFile(w, r, "frontend/user.gohtml")
+	http.ServeFile(w, r, "./Frontend/static/user.gohtml")
 }
 
 func HandleHTTPBoard(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Leaderboard")
-	// http.ServeFile(w, r, "frontend/board.gohtml")
+	http.ServeFile(w, r, "./Frontend/static/board.gohtml")
 }
 
 func HandleHTTPLogin(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintf(w, "Login")
-	// http.ServeFile(w, r, "frontend/login.gohtml")
+	// http.ServeFile(w, r, "./Frontend/static/login.gohtml")
 }
 
 func ServerHandler() {
