@@ -1,0 +1,80 @@
+/* Login */
+
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #f5f8fa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    margin: 0;
+}
+
+.card {
+    width: 100%;
+    max-width: 600px;
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 30px;
+}
+
+.card-title {
+    color: #FF2B85;
+    font-size: 2rem;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-control {
+    border-radius: 10px;
+    margin: 0 auto;
+}
+
+.btn-custom {
+    background-color: #E21A70;
+    color: white;
+    font-weight: bold;
+    border-radius: 10px;
+    transition: background-color 0.3s, color 0.3s;
+    width: 60%;
+    padding: 12px;
+}
+
+.btn-custom:hover {
+    background-color: black;
+    color: white;
+}
+
+.form-label {
+    font-weight: bold;
+}
+
+.button-control {
+    text-align: center
+}
+
+.sign-up {
+    text-align: center
+}
+
+.sign-up-btn {
+    text-decoration: underline
+}
+
+.sign-up-btn:hover {
+    color: #E21A70;
+}
+
+form {
+    margin: 0 50px;
+}
+
+/* Error message styles */
+.alert {
+    margin-bottom: 20px;
+}
