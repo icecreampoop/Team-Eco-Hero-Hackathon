@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Detailed Information</title>
+
+    <!-- Bootstrap 4 CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Google Fonts - Poppins -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <!-- Custom Styles -->
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f8f9fa;
+        }
+        .container {
+            margin-top: 50px;
+            max-width: 600px;
+        }
+        .card {
+            border-radius: 10px;
+        }
+        .card-header {
+            background-color: #FF2B85;
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            text-align: center;
+            border-radius: 10px 10px 0 0;
+        }
+        .card-body {
+            background-color: #ffffff;
+            padding: 30px;
+        }
+        .card-body p {
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        .btn-logout {
+            background-color: black;
+            color: white;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        .btn-logout:hover {
+            background-color: #D3D3D3;
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn-home {
+            background-color: #FF2B85;
+            color: white;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            transition: background-color 0.3s ease;
+        }
+        .btn-home:hover {
+            background-color: #D3D3D3;
+            text-decoration: none;
+            color: white;
+        }
+
+        .btn-wrap{
+            margin-top: 40px;
+        }
+
+        .image-container {
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .image-container img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="image-container">
+        <img src="https://pandariders.sg/wp-content/uploads/2022/10/Screenshot-2022-10-09-at-3.47.16-PM.png" alt="Paupau Image">
+    </div>
+
+    <div class="card">
+        <div class="card-header">
+            User Information
+        </div>
+        <div class="card-body">
+            {{if .First}}
+                <p><strong>Username:</strong> {{.Username}}</p>
+                <p><strong>Password:</strong> {{.Password}}</p>
+                <p><strong>First Name:</strong> {{.First}}</p>
+                <p><strong>Last Name:</strong> {{.Last}}</p>
+                <div class="btn-wrap">
+                    <a href="/" class="btn-home">Back</a>
+                    <a href="/logout" class="btn-logout">Log Out</a>
+                </div>
+            {{end}}
+        </div>
+    </div>
+
+</div>
+
+<!-- Bootstrap 4 JS and dependencies -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

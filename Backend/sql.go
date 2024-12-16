@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 package main
 
 import (
@@ -61,3 +62,6 @@ func Connect() {
 
 	log.Println("Database connection successful!")
 }
+=======
+package backend
+>>>>>>> d7eda441b8c88e83865f3791b6adcc9fc7ef455e
