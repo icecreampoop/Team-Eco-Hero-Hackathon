@@ -55,15 +55,15 @@ body {
 }
 
 .button-control {
-    text-align: center
+    text-align: center;
 }
 
 .sign-up {
-    text-align: center
+    text-align: center;
 }
 
 .sign-up-btn {
-    text-decoration: underline
+    text-decoration: underline;
 }
 
 .sign-up-btn:hover {
