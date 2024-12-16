@@ -1,0 +1,155 @@
+/* fp pink #E21A70 */
+/* fp hover #c21760 */
+/* greyed out btn #6C7780 */
+
+.main {
+    width: 100%;
+}
+
+.left-pane {
+    padding: 15px;
+    border: 1px solid lightgray;
+    border-radius: 10px;
+    margin: 20px;
+}
+
+.user-card {
+    display: flex;
+    flex-direction: row;
+    border: 3px solid #6C7780;
+    margin: 20px;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0px 2px 4px 5px rgba(0, 0, 0, 0.1);
+}
+
+.avatar-container {
+    height: 120px;
+    width: 120px;
+}
+
+.user-name {
+    color: #E21A70;
+    font-size: larger;
+    font-weight: bolder;
+}
+
+.user-info {
+    margin-left: 20px;
+    margin-right: 20px;
+    width: 20%;
+    min-width: 120px;
+}
+
+.search-bar {
+    width: 100%;
+}
+
+.img-container {
+    height: 180px;
+}
+
+.user-expbar-container{
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.exp-title {
+    font-size: xx-large;
+    font-weight: bolder;
+}
+
+.full-exp-bar {
+    width: 100%;
+    height: 50px;
+    background-color: white;
+    border-radius: 30px;
+    border: 2px solid #E21A70;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-left: 10px;
+}
+
+.exp-bar {
+    height: 100%;
+    /* background: linear-gradient(90deg, #4caf50, #81c784); */
+    /* background: linear-gradient(90deg, #c21760, #E21A70, #c21760); */
+    background-color: #E21A70;
+    border-radius: 30px;
+    border: 1px solid white;
+    width: 50%;
+    transition: width 0.5s ease-in-out;
+}
+
+.item-viewer {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.item-card {
+    width: 30%;
+    overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.item-name {
+    font-weight: bold;
+}
+
+.item-info {
+    padding: 10px;
+}
+
+.listed-by {
+    color: #6C7780;
+    font-size: small;
+}
+
+.dark-badge {
+    background-color: #6C7780;
+}
+
+.more-btn {
+    color: white;
+    background-color: #E21A70;
+    width: 100%;
+    margin-top: 10px;
+}
+
+.more-btn:hover {
+    background-color: #c21760;
+    color: white;
+}
+
+.more-btn:active {
+    background-color: #c21760 !important;
+    color: white !important;
+}
+
+.filter-btn {
+    width: 100%;
+    margin-top: 15px;
+}
+
+.title-search-bar-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.title-container {
+    font-size: xx-large;
+    font-weight: 800;
+    margin-right: 30px;
+    width: 40%;
+    min-width: 200px;
+}
+
+.main-container {
+    padding-left: 30px;
+    padding-right: 30px;
+}
