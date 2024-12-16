@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create Item Listing</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+      }
+      #drop-zone {
+        border: 2px dashed #ccc;
+        border-radius: 10px;
+        padding: 20px;
+        text-align: center;
+        color: #aaa;
+        cursor: pointer;
+      }
+      #drop-zone.dragover {
+        border-color: #000;
+        color: #000;
+      }
+      #file-input {
+        display: none;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Upload an Image with Additional Information</h1>
+    <form
+      id="uploadForm"
+      action="http://localhost:8080/items"
+      method="POST"
+      enctype="multipart/form-data"
+    >
+      <!-- Image Upload Section -->
+      <div id="drop-zone">
+        Drag and drop an image here, or click to select a file
+      </div>
+      <input type="file" id="file-input" name="image" accept="image/*" required/>
+
+      <!-- User Text Input Fields -->
+      <div>
+        <label for="item-name">Item Name:</label>
+        <input
+          type="text"
+          id="item-name"
+          name="item-name"
+          placeholder="Enter item name"
+          required
+        />
+      </div>
+      <div>
+        <label for="item-description">Item Description:</label>
+        <textarea
+          id="item-description"
+          name="item-description"
+          placeholder="Enter item description"
+          required
+        ></textarea>
+      </div>
+
+      <!-- Predefined Dropdown Selection -->
+      <div>
+        <label for="category">Category:</label>
+        <select id="category" name="category" required>
+          <option value="" disabled selected>Select a category</option>
+          <option value="art">Art</option>
+          <option value="technology">Technology</option>
+          <option value="nature">Nature</option>
+          <option value="sports">Sports</option>
+        </select>
+      </div>
+
+      <button type="submit" style="margin-top: 20px">Upload</button>
+    </form>
+
+    <script>
+      const dropZone = document.getElementById("drop-zone");
+      const fileInput = document.getElementById("file-input");
+
+      // Handle drag-and-drop
+      dropZone.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropZone.classList.add("dragover");
+      });
+
+      dropZone.addEventListener("dragleave", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropZone.classList.remove("dragover");
+      });
+
+      dropZone.addEventListener("drop", (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        dropZone.classList.remove("dragover");
+
+        const file = e.dataTransfer.files[0];
+        if (file && file.type.startsWith("image/")) {
+          fileInput.files = e.dataTransfer.files; // Set the dropped file to the input
+        } else {
+          alert("Please drop a valid image file.");
+        }
+      });
+
+      // Handle file selection via click
+      dropZone.addEventListener("click", () => fileInput.click());
+    </script>
+  </body>
+</html>
