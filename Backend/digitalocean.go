@@ -1,4 +1,4 @@
-package main
+package backend
 
 import (
 	"github.com/aws/aws-sdk-go/aws"
@@ -17,3 +17,4 @@ struct (
 func uploadToDO() {
 	Println("test")
 }
+
