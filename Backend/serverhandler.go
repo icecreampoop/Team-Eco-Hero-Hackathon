@@ -8,7 +8,7 @@ import (
 
 func HandleHTTPIndex(w http.ResponseWriter, r *http.Request) {
 	//fmt.Fprintf(w, "Index")
-	http.ServeFile(w, r, "frontend/index.gohtml")
+	http.ServeFile(w, r, "./Frontend/static/index.gohtml")
 }
 
 func HandleHTTPItems(w http.ResponseWriter, r *http.Request) {
@@ -36,7 +36,7 @@ func ServerHandler() {
 	mux := http.NewServeMux()
 
 	// handlers
-	mux.HandleFunc("/", HandleHTTPIndex) // default handler
+	mux.HandleFunc("/", HandleHTTPIndex) // default handler to index
 	mux.HandleFunc("/index", HandleHTTPIndex)
 	mux.HandleFunc("/items", HandleHTTPItems)
 	mux.HandleFunc("/user", HandleHTTPUser)
