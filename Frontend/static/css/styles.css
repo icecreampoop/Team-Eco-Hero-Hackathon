@@ -1,1 +1,50 @@
+/* fp pink #E21A70 */
 
+.header-bar {
+    width: 100%;
+    box-shadow: 0px 2px 20px rgba(69, 69, 69, 0.5);
+}
+
+.logo-container {
+    padding-left: 50px;
+}
+
+.user-container {
+    padding-right: 50px;
+    display: flex;
+    justify-content: right;
+    align-items: center;
+}
+
+.header-btn {
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+    padding-right: 20px;
+    border-radius: 5px;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+
+.header-btn.signup {
+    background-color: #E21A70;
+    border-radius: 5px;
+    color: white;
+}
+
+.header-btn.login {
+    border: 1px solid black;
+}
+
+.hide {
+    display: none;
+}
+
+.nav-bar {
+    padding-left: 50px;
+    padding-right: 50px;
+}
+
+.nav-bar-btn {
+
+}
