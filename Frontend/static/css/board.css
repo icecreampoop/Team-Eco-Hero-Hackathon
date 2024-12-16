@@ -1,0 +1,62 @@
+/* fp pink #E21A70 */
+/* fp hover #c21760 */
+/* greyed out btn #6C7780 */
+
+.main {
+    width: 100%;
+}
+
+.board-card {
+    display: flex;
+    flex-direction: row;
+    border: 3px solid #6C7780;
+    width: 70%;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0px 2px 4px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 40px;
+}
+
+.main-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 800px;
+}
+
+.thead-custom {
+    background-color: #E21A70;
+    color: white;
+    text-align: center;
+}
+
+th:first-child {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+th:last-child {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+th {
+    font-size: large;
+}
+
+tr {
+    text-align: center;
+    vertical-align: middle;
+}
+
+td:nth-child(3) {
+    color: #E21A70;
+    font-weight: 600;
+}
+
+.leaderboard-title {
+    margin: 20px;
+    font-size: 40px;
+    color: #E21A70;
+    font-weight: 800;
+}

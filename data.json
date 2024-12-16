@@ -1,0 +1,44 @@
+{
+  "users": [
+    {
+      "UserID": 1,
+      "Password": "hashed_password1",
+      "Email": "user1@example.com",
+      "EXP": 20,
+      "Level": 2,
+      "AvatarPic": "http://example.com/avatar1.jpg",
+      "Admin": false
+    },
+    {
+      "UserID": 2,
+      "Password": "hashed_password2",
+      "Email": "user2@example.com",
+      "EXP": 40,
+      "Level": 3,
+      "AvatarPic": "http://example.com/avatar2.jpg",
+      "Admin": true
+    }
+  ],
+  "items": [
+    {
+      "ItemID": 1,
+      "UserID": 1,
+      "ItemName": "Laptop",
+      "ItemDescription": "A powerful gaming laptop",
+      "Category1": "Electronics",
+      "Category2": "Gaming",
+      "Category3": "Laptop",
+      "ItemImage": "http://example.com/laptop.jpg"
+    },
+    {
+      "ItemID": 2,
+      "UserID": 2,
+      "ItemName": "Phone",
+      "ItemDescription": "A flagship smartphone",
+      "Category1": "Electronics",
+      "Category2": "Mobile",
+      "Category3": "Phone",
+      "ItemImage": "http://example.com/phone.jpg"
+    }
+  ]
+}
