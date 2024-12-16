@@ -1,0 +1,40 @@
+.main {
+    width: 100%;
+}
+
+.left-pane {
+    padding: 10px;
+    border: 1px solid lightgray;
+    border-radius: 10px;
+    margin: 20px;
+}
+
+.category-title {
+    font-size:larger;
+    font-weight: bold;
+}
+
+.right-pane {
+
+}
+
+.search-bar {
+    margin-top: 20px;
+}
+
+.item-viewer {
+    margin-top: 20px;
+}
+
+.item-card {
+    width: 200px;
+    overflow: hidden;
+}
+
+.dark-badge {
+
+}
+
+.more-btn {
+
+}
