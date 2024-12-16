@@ -1,9 +1,13 @@
+/* fp pink #E21A70 */
+/* fp hover #c21760 */
+/* greyed out btn #6C7780 */
+
 .main {
     width: 100%;
 }
 
 .left-pane {
-    padding: 10px;
+    padding: 15px;
     border: 1px solid lightgray;
     border-radius: 10px;
     margin: 20px;
@@ -22,19 +26,58 @@
     margin-top: 20px;
 }
 
+.img-container {
+    height: 180px;
+}
+
 .item-viewer {
     margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
 }
 
 .item-card {
-    width: 200px;
+    width: 30%;
     overflow: hidden;
+    margin-bottom: 20px;
+}
+
+.item-name {
+    font-weight: bold;
+}
+
+.item-info {
+    padding: 10px;
+}
+
+.listed-by {
+    color: #6C7780;
+    font-size: small;
 }
 
 .dark-badge {
-
+    background-color: #6C7780;
 }
 
 .more-btn {
+    color: white;
+    background-color: #E21A70;
+    width: 100%;
+    margin-top: 10px;
+}
 
+.more-btn:hover {
+    background-color: #c21760;
+    color: white;
+}
+
+.more-btn:active {
+    background-color: #c21760 !important;
+    color: white !important;
+}
+
+.filter-btn {
+    width: 100%;
+    margin-top: 15px;
 }
