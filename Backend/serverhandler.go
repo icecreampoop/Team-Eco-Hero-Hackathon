@@ -60,28 +60,47 @@ func showAllItems(w http.ResponseWriter, r *http.Request) {
 }
 
 func showSingleItem(w http.ResponseWriter, r *http.Request) {
+	// Extract itemID from URL parameters
 	params := mux.Vars(r)
-	itemID, _ := strconv.Atoi(params["itemid"])
-
-	fmt.Println(itemID)
-
-	data, err := LoadUserData()
+	itemID, err := strconv.Atoi(params["itemID"])
 	if err != nil {
-		fmt.Println(err)
+		http.Error(w, "Invalid item ID", http.StatusBadRequest)
 		return
 	}
 
+	fmt.Println("Item ID:", itemID)
+
+	// Load user data
+	data, err := LoadUserData()
+	if err != nil {
+		fmt.Println("Error loading data:", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	// Find the item by ID
 	var foundItem Item
+	var itemFound bool
 	for _, item := range data.Items {
 		if item.ItemID == itemID {
 			foundItem = item
+			itemFound = true
+			break
 		}
 	}
 
+	// If item not found, return 404 error
+	if !itemFound {
+		fmt.Println("Item not found:", itemID) // Debugging line
+		http.NotFound(w, r)
+		return
+	}
+
+	// Render the template with the found item
 	err = tpl.ExecuteTemplate(w, "item.html", foundItem)
 	if err != nil {
-		http.Error(w, "Error rendering User template", http.StatusInternalServerError)
-		log.Println("Template execution error:", err)
+		http.Error(w, "Error rendering template", http.StatusInternalServerError)
+		fmt.Println("Template execution error:", err)
 	}
 }
 
@@ -260,6 +279,14 @@ func HandleHTTPSingleUser(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func myRequestsPage(w http.ResponseWriter, r *http.Request) {
+	err := tpl.ExecuteTemplate(w, "transactions.html", nil)
+	if err != nil {
+		http.Error(w, "Error rendering My-requests template", http.StatusInternalServerError)
+		log.Println("Template execution error:", err)
+	}
+}
+
 func HandleHTTPBoard(w http.ResponseWriter, r *http.Request) {
 	data, err := LoadUserData()
 	if err != nil {
@@ -424,8 +451,13 @@ func ServerHandler() {
 	mux.HandleFunc("/create-item", createNewItem).Methods("POST")
 	mux.HandleFunc("/items/{itemID}/request", requestItem).Methods("POST")
 	mux.HandleFunc("/items/{itemID}/accept", acceptRequest).Methods("POST")
+<<<<<<< HEAD
+	mux.HandleFunc("/items/{itemID}/accept", acceptRequest).Methods("GET")
+	mux.HandleFunc("/items/{itemID}", updateItemDetails).Methods("PUT")
+=======
 	mux.HandleFunc("/items/{itemID}/update-item", updateItemDetails).Methods("POST")
 	mux.HandleFunc("/items/{itemID}/update-item", serveUpdateItemPage).Methods("GET")
+>>>>>>> abc05bd55bf77e6fa9387e13573012395b9f0757
 	mux.HandleFunc("/items/{itemID}", deleteItem).Methods("DELETE")
 
 	mux.HandleFunc("/user", HandleHTTPUser).Methods("GET")
@@ -434,6 +466,7 @@ func ServerHandler() {
 	mux.HandleFunc("/login", HandleHTTPLogin).Methods("GET", "POST")
 	mux.HandleFunc("/signup", HandleHTTPSignup).Methods("GET", "POST")
 	mux.HandleFunc("/logout", HandleHTTPLogout).Methods("GET")
+	mux.HandleFunc("/my-requests", myRequestsPage).Methods("GET")
 
 	// Serve static files from the frontend directory
 	fs := http.FileServer(http.Dir("./Frontend/static"))
