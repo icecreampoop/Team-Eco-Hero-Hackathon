@@ -49,9 +49,9 @@
                         </div>
                         <div class="item-info">
                             <div class="item-name">{{ .ItemName }}</div>
-                            <div class="listed-by">Listed By: {{ .OwnerID }}</div>
+                            <div class="listed-by">Listed By: {{ .OwnerUsername }}</div>
                             <span class="badge dark-badge">{{ .Category }}</span>
-                            <button type="button" class="btn more-btn">View More</button>
+                            <a href="/items/{{ .ItemID }}" class="btn more-btn">View More</a>
                         </div>
                     </div>
                     {{ else }}
@@ -61,3 +61,5 @@
                 
             </div>
         </div>
+    </div>
+</body>
