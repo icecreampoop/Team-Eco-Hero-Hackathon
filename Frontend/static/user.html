@@ -56,7 +56,13 @@
                         <div class="item-info">
                             <div class="item-name">{{.ItemName}}</div>
                             <span class="badge dark-badge">{{.Category}}</span>
-                            <span class="badge dark-badge">{{.ItemStatus}}</span>
+                            <span class="badge dark-badge"
+                                style="{{if eq .ItemStatus `available`}}background-color: #28a745; 
+                                {{else if eq .ItemStatus `pending`}}background-color: #17a2b8; 
+                                {{else if eq .ItemStatus `not available`}}background-color: #fd7e14; 
+                                {{else if eq .ItemStatus `donated`}}background-color: #6c757d;{{end}}">
+                                {{.ItemStatus}}
+                            </span>
                             <button type="button" onclick="nav({{.ItemID}})" class="btn more-btn">View More</button>
                         </div>
                     </div>
