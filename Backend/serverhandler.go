@@ -73,7 +73,7 @@ func createNewItem(w http.ResponseWriter, r *http.Request) {
 	UploadFile("."+format, imageBytes)
 	// AddNewItemToDB(&Item{
 	// 	ItemID: nil,
-	// 	OwnerID: getUserID(),
+	// 	OwnerID: sfafs,
 	// 	ReceiverID: nil,
 	// 	ItemName: r.FormValue()
 	// })
@@ -105,26 +105,34 @@ func HandleHTTPIndex(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandleHTTPUser(w http.ResponseWriter, r *http.Request) {
-	userID, err := getUserID(r)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+	// redirect function
 
-	data, err := loadUsers("data.json")
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-
-	fmt.Println(data, userID)
-
-	// err = tpl.ExecuteTemplate(w, "user.html", nil)
+	// userID, err := getUserID(r)
 	// if err != nil {
-	// 	http.Error(w, "Error rendering User template", http.StatusInternalServerError)
-	// 	log.Println("Template execution error:", err)
+	// 	fmt.Println(err)
+	// 	return
 	// }
+	userID := 2
 
+	data, err := LoadUserData()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	var foundUser User
+	for _, user := range data.Users {
+		if user.UserID == userID {
+			foundUser = user
+		}
+	}
+
+	fmt.Println(foundUser)
+	err = tpl.ExecuteTemplate(w, "user.html", foundUser)
+	if err != nil {
+		http.Error(w, "Error rendering User template", http.StatusInternalServerError)
+		log.Println("Template execution error:", err)
+	}
 }
 
 func HandleHTTPBoard(w http.ResponseWriter, r *http.Request) {
