@@ -1,9 +1,10 @@
 package main
 
 import (
+	"log"
+
 	backend "github.com/icecreampoop/Team-Eco-Hero-Hackathon/Backend"
 	"github.com/joho/godotenv"
-	"log"
 )
 
 func main() {
@@ -11,7 +12,7 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error loading .env file: %v", err)
 	}
-	//backend.ServerHandler()
+	backend.ServerHandler()
 	backend.LoadDataFromConfig("data.json")
 	log.Printf("Loaded users: %+v", backend.Users)
 	log.Printf("Loaded items: %+v", backend.Items)
