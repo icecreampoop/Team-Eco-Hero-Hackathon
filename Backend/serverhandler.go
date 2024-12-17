@@ -229,8 +229,8 @@ func createNewItem(w http.ResponseWriter, r *http.Request) {
 	fileResourcePath, _ := UploadFile(hashedFileName, imageBytes)
 	// add item entry to db
 	userIDInt, _ := getUserID(r)
-	err = AddNewItem(userIDInt, r.FormValue("item-name"), r.FormValue("item-description"),
-		r.FormValue("category"), fileResourcePath)
+	err = AddNewItem(userIDInt, SanitizeInput(r.FormValue("item-name")), SanitizeInput(r.FormValue("item-description")),
+		SanitizeInput(r.FormValue("category")), fileResourcePath)
 	if err != nil {
 		fmt.Println(err)
 		return
@@ -563,8 +563,8 @@ func HandleHTTPLogin(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Get form values
-		email := r.FormValue("email")
-		password := r.FormValue("password")
+		email := SanitizeInput(r.FormValue("email"))
+		password := SanitizeInput(r.FormValue("password"))
 
 		// Validate credentials
 		valid, err := ValidateUserCredentials(email, password)
@@ -632,9 +632,9 @@ func HandleHTTPSignup(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Get form values
-		email := r.FormValue("email")
-		password := r.FormValue("password")
-		username := r.FormValue("username")
+		email := SanitizeInput(r.FormValue("email"))
+		password := SanitizeInput(r.FormValue("password"))
+		username := SanitizeInput(r.FormValue("username"))
 
 		// Add the new user to the data.json file
 		err = AddNewUser(email, password, username)
