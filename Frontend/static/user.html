@@ -44,12 +44,12 @@
                 <div class="title-search-bar-container">
                     <div class="title-container">Your Listings</div>
                     <div class="search-bar">
-                        <input type="text" class="form-control" placeholder="Search...">
+                        <input id="search-bar" type="text" class="form-control" placeholder="Search...">
                     </div>
                 </div>
                 <div class="item-viewer">
                     {{range .TplItems}}
-                    <div class="card item-card">
+                    <div class="card item-card" item-name="{{.ItemName}}">
                         <div class="img-container">
                             <img src={{.ItemImageLink}} width="100%" height="100%">
                         </div>
@@ -70,6 +70,24 @@
     <script>
         var exp = {{.TplUser.EXP}}
         document.getElementById("expBar").style.width = `${exp}%`
+
+        // Search bar
+        const itemCards = document.querySelectorAll(".item-card")
+        var searchInput = document.getElementById("search-bar")
+        searchInput.addEventListener("input", function () {
+            const searchQuery = searchInput.value.toLowerCase();
+
+            itemCards.forEach(card => {
+                const itemName = card.getAttribute("item-name").toLowerCase(); // Use data-name attribute
+
+                // Check if the search query matches item name or category
+                if (itemName.includes(searchQuery)) {
+                    card.style.display = "block"; // Show the card
+                } else {
+                    card.style.display = "none"; // Hide the card
+                }
+            });
+        });
 
         function nav(itemid){
             window.location.href = "/items/" + itemid
