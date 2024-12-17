@@ -25,7 +25,9 @@
       "Level": 45,
       "AvatarPic": "https://raw.githubusercontent.com/EdythHo/gitPartA2/refs/heads/main/sianPau-removebg-preview.png",
       "Admin": true,
-      "ActiveRequests": []
+      "ActiveRequests": [
+        4
+      ]
     },
     {
       "UserID": 3,
@@ -37,6 +39,7 @@
       "AvatarPic": "https://raw.githubusercontent.com/EdythHo/gitPartA2/refs/heads/main/avatar4.jpg",
       "Admin": false,
       "ActiveRequests": [
+        4,
         5
       ]
     },
@@ -49,7 +52,9 @@
       "Level": 72,
       "AvatarPic": "https://i1.sndcdn.com/avatars-XpzN0ujJa3iI96PS-hKizHQ-t1080x1080.jpg",
       "Admin": false,
-      "ActiveRequests": []
+      "ActiveRequests": [
+        4
+      ]
     },
     {
       "UserID": 5,
@@ -60,7 +65,9 @@
       "Level": 98,
       "AvatarPic": "https://raw.githubusercontent.com/EdythHo/gitPartA2/refs/heads/main/potato.webp",
       "Admin": true,
-      "ActiveRequests": []
+      "ActiveRequests": [
+        4
+      ]
     },
     {
       "UserID": 6,
@@ -71,7 +78,9 @@
       "Level": 10,
       "AvatarPic": "https://imgcdn.stablediffusionweb.com/2024/3/27/f2456dac-07df-4324-aa4b-d4cc41795dbc.jpg",
       "Admin": false,
-      "ActiveRequests": []
+      "ActiveRequests": [
+        4
+      ]
     },
     {
       "UserID": 7,
@@ -82,7 +91,9 @@
       "Level": 1,
       "AvatarPic": "",
       "Admin": false,
-      "ActiveRequests": []
+      "ActiveRequests": [
+        4
+      ]
     },
     {
       "UserID": 8,
@@ -93,7 +104,9 @@
       "Level": 1,
       "AvatarPic": "",
       "Admin": false,
-      "ActiveRequests": null
+      "ActiveRequests": [
+        4
+      ]
     },
     {
       "UserID": 9,
@@ -223,12 +236,12 @@
     {
       "ItemID": 4,
       "OwnerID": 1,
-      "ReceiverID": 2,
+      "ReceiverID": 0,
       "ItemName": "Car",
       "ItemDescription": "Bought one by accident",
       "ItemImageLink": "https://imageio.forbes.com/specials-images/imageserve/5d35eacaf1176b0008974b54/0x0.jpg?format=jpg\u0026crop=4560,2565,x790,y784,safe\u0026height=900\u0026width=1600\u0026fit=bounds",
       "Category": "sports",
-      "Status": "donated",
+      "Status": "pending",
       "CurrentRequesters": [
         2,
         3,
