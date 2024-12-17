@@ -9,26 +9,26 @@
             <div class="col-5 user-container">
                 <!-- template if/else logged in or not -->
                 <div class="login-signup-container hide">
-                    <a href="#" class="header-btn login">Log in</a>
-                    <a href="#" class="header-btn signup">Sign up</a>              
+                    <a href="/login" class="header-btn login">Log in</a>
+                    <a href="/signup" class="header-btn signup">Sign up</a>              
                 </div>
                 <div class="logo-logout-container">
                     <div id="logo-click" class="logo-container">
-                        <div href="" class="user_logo">
+                        <div class="user_logo">
                             <i class="fa-solid fa-user"></i>
                         </div>
                     </div>
-                    <a href="#" class="header-btn login">Log out</a>
+                    <a href="/logout" class="header-btn login">Log out</a>
                 </div>
                 <div id="dropdown" class="dropdown-container hide">
-                    <div class="dropdown-option">Profile</div>
-                    <div class="dropdown-option">Settings</div>
+                    <div id="profile" class="dropdown-option">Profile</div>
+                    <div id="settings" class="dropdown-option">Settings</div>
                 </div>
             </div>
         </div>
         <div class="col-12 nav-bar">
-            <a href="#" class="nav-bar-btn">Items</a>
-            <a href="#" class="nav-bar-btn">Leader Board</a>
+            <a href="/items" class="nav-bar-btn">Items</a>
+            <a href="/board" class="nav-bar-btn">Leader Board</a>
         </div>
     </div>
 </header>
@@ -40,6 +40,12 @@
         dropdown.classList.toggle("hide")
         dropdown.style.top = `${logo.offsetTop + logo.offsetHeight + 10}px`
         dropdown.style.left = `${logo.offsetLeft - 50}px`
+    })
+    document.getElementById("profile").addEventListener("click", function(){
+        window.location.href = "/user"
+    })
+    document.getElementById("settings").addEventListener("click", function(){
+        window.location.href = "/user/account"
     })
 </script>
 {{ end }}
