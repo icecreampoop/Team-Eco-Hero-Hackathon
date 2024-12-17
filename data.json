@@ -7,7 +7,8 @@
       "EXP": 20,
       "Level": 2,
       "AvatarPic": "http://example.com/avatar1.jpg",
-      "Admin": false
+      "Admin": false,
+      "ActiveRequests": null
     },
     {
       "UserID": 2,
@@ -16,7 +17,8 @@
       "EXP": 40,
       "Level": 3,
       "AvatarPic": "http://example.com/avatar2.jpg",
-      "Admin": true
+      "Admin": true,
+      "ActiveRequests": null
     },
     {
       "UserID": 3,
@@ -25,7 +27,8 @@
       "EXP": 10,
       "Level": 1,
       "AvatarPic": "http://example.com/avatar3.jpg",
-      "Admin": false
+      "Admin": false,
+      "ActiveRequests": null
     },
     {
       "UserID": 4,
@@ -34,7 +37,8 @@
       "EXP": 60,
       "Level": 4,
       "AvatarPic": "http://example.com/avatar4.jpg",
-      "Admin": false
+      "Admin": false,
+      "ActiveRequests": null
     },
     {
       "UserID": 5,
@@ -43,7 +47,8 @@
       "EXP": 80,
       "Level": 5,
       "AvatarPic": "http://example.com/avatar5.jpg",
-      "Admin": true
+      "Admin": true,
+      "ActiveRequests": null
     }
   ],
   "items": [
@@ -54,7 +59,8 @@
       "ItemName": "Laptop",
       "ItemDescription": "A powerful gaming laptop (2018)",
       "Category": "electronics",
-      "Status": "available"
+      "Status": "available",
+      "CurrentRequesters": null
     },
     {
       "ItemID": 2,
@@ -63,7 +69,8 @@
       "ItemName": "Smartphone",
       "ItemDescription": "A mid-range smartphone",
       "Category": "mobile",
-      "Status": "available"
+      "Status": "available",
+      "CurrentRequesters": null
     },
     {
       "ItemID": 3,
@@ -72,7 +79,8 @@
       "ItemName": "Bicycle",
       "ItemDescription": "A mountain bike",
       "Category": "sports",
-      "Status": "available"
+      "Status": "available",
+      "CurrentRequesters": null
     },
     {
       "ItemID": 4,
@@ -81,7 +89,8 @@
       "ItemName": "Bookshelf",
       "ItemDescription": "ladder",
       "Category": "hardwaretools",
-      "Status": "pending"
+      "Status": "pending",
+      "CurrentRequesters": null
     },
     {
       "ItemID": 5,
@@ -90,7 +99,18 @@
       "ItemName": "Jacket",
       "ItemDescription": "Blue winter jacket",
       "Category": "clothing",
-      "Status": "donated"
+      "Status": "donated",
+      "CurrentRequesters": null
+    },
+    {
+      "ItemID": 6,
+      "OwnerID": 1,
+      "ReceiverID": 0,
+      "ItemName": "HDMI Cable",
+      "ItemDescription": "",
+      "Category": "electronics",
+      "Status": "available",
+      "CurrentRequesters": []
     }
   ]
 }

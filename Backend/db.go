@@ -8,14 +8,15 @@ import (
 )
 
 type User struct {
-	UserID         int    `json:"UserID"`
-	Password       string `json:"Password"`
-	Email          string `json:"Email"`
-	EXP            int    `json:"EXP"`
-	Level          int    `json:"Level"`
-	AvatarPic      string `json:"AvatarPic"`
-	Admin          bool   `json:"Admin"`
-	ActiveRequests []int  `json:"ActiveRequests"`
+	UserID    int    `json:"UserID"`
+	Password  string `json:"Password"`
+	Email     string `json:"Email"`
+	EXP       int    `json:"EXP"`
+	Level     int    `json:"Level"`
+	AvatarPic string `json:"AvatarPic"`
+	Admin     bool   `json:"Admin"`
+	// array of item IDs
+	ActiveRequests []int `json:"ActiveRequests"`
 }
 
 type Categories string
@@ -37,26 +38,16 @@ const (
 )
 
 type Item struct {
-<<<<<<< HEAD
 	ItemID          int        `json:"ItemID"`
 	OwnerID         int        `json:"OwnerID"`
 	ReceiverID      int        `json:"ReceiverID"`
 	ItemName        string     `json:"ItemName"`
 	ItemDescription string     `json:"ItemDescription"`
-	Category1       Categories `json:"Category1"`
-	Category2       Categories `json:"Category2"`
-	Category3       Categories `json:"Category3"`
+	ItemImageLink   string     `json:"ItemImageLink"`
+	Category        Categories `json:"Category"`
 	ItemStatus      Statuses   `json:"Status"`
-=======
-	ItemID            int        `json:"ItemID"`
-	OwnerID           int        `json:"OwnerID"`
-	ReceiverID        int        `json:"ReceiverID"`
-	ItemName          string     `json:"ItemName"`
-	ItemDescription   string     `json:"ItemDescription"`
-	Category          Categories `json:"Category"`
-	ItemStatus        Statuses   `json:"Status"`
-	CurrentRequesters []int      `json:"CurrentRequesters"`
->>>>>>> c5b93805fdb273db783f7785e33917d507f33743
+	// array of user IDs
+	CurrentRequesters []int `json:"CurrentRequesters"`
 }
 
 // Data struct to represent the data.json structure
@@ -137,11 +128,49 @@ func AddNewUser(email, password string) error {
 	return SaveUserData(data)
 }
 
-// add item to db
-func AddNewItem(ownerID int, itemName, categories string) error {
-	return nil
+// Add new item to data.json
+func AddNewItem(ownerID int, itemName string, categories string) error {
+	data, err := LoadUserData()
+	if err != nil {
+		return err
+	}
+	userExists := false
+	for _, user := range data.Users {
+		if user.UserID == ownerID {
+			userExists = true
+			break
+		}
+	}
+	if !userExists {
+		return err
+	}
+
+	var validCategory Categories
+	switch categories {
+	case string(Electronics), string(Mobile), string(Furniture), string(HardwareTools),
+		string(Sports), string(Clothing), string(Books), string(Media), string(Others):
+		validCategory = Categories(categories)
+	default:
+		return fmt.Errorf("invalid category: %s", categories)
+	}
+	// Create a new item
+	newItem := Item{
+		ItemID:            len(data.Items) + 1,
+		OwnerID:           ownerID,
+		ReceiverID:        0, // 0 means no receiver yet
+		ItemName:          itemName,
+		ItemDescription:   "", // Optional: allow it to be empty for now
+		Category:          validCategory,
+		ItemStatus:        StatusAvailable, // New items are 'available' by default
+		CurrentRequesters: []int{},
+	}
+
+	// Append the new item to the list
+	data.Items = append(data.Items, newItem)
+
+	// Save the updated data
+	return SaveUserData(data)
 }
-<<<<<<< HEAD
 
 // GetItem retrieves an item by its ItemID
 func GetItem(itemID int) (Item, error) {
@@ -170,5 +199,3 @@ func GetItem(itemID int) (Item, error) {
 
 	return Item{}, fmt.Errorf("item with ID %d not found", itemID)
 }
-=======
->>>>>>> c5b93805fdb273db783f7785e33917d507f33743
