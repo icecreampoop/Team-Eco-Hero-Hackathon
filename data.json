@@ -24,7 +24,7 @@
     },
     {
       "UserID": 3,
-      "Username": "",
+      "Username": "user3",
       "Password": "hashed_password3",
       "Email": "user3@example.com",
       "EXP": 10,
@@ -35,7 +35,7 @@
     },
     {
       "UserID": 4,
-      "Username": "",
+      "Username": "hashbrown",
       "Password": "hashed_password4",
       "Email": "user4@example.com",
       "EXP": 60,
@@ -46,7 +46,7 @@
     },
     {
       "UserID": 5,
-      "Username": "",
+      "Username": "potatoking",
       "Password": "hashed_password5",
       "Email": "user5@example.com",
       "EXP": 80,
@@ -57,7 +57,7 @@
     },
     {
       "UserID": 6,
-      "Username": "",
+      "Username": "notadmin",
       "Password": "1",
       "Email": "1",
       "EXP": 0,
@@ -68,7 +68,7 @@
     },
     {
       "UserID": 7,
-      "Username": "",
+      "Username": "lmao",
       "Password": "123",
       "Email": "lmao@gmail.com",
       "EXP": 0,
