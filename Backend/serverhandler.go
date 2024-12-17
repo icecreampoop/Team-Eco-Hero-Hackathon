@@ -180,7 +180,7 @@ func createNewItem(w http.ResponseWriter, r *http.Request) {
 	// add item entry to db
 	userIDInt, _ := getUserID(r)
 	fmt.Println(userIDInt)
-	err = AddNewItem(3, r.FormValue("item-name"), r.FormValue("item-description"),
+	err = AddNewItem(userIDInt, r.FormValue("item-name"), r.FormValue("item-description"),
 		r.FormValue("category"), fileResourcePath)
 	if err != nil {
 		fmt.Println(err)
@@ -190,6 +190,7 @@ func createNewItem(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("settle")
 	//w.WriteHeader(http.StatusOK)
 	//w.Write([]byte("File uploaded and processed successfully"))
+	http.Redirect(w, r, "http://localhost:5000/", http.StatusFound)
 }
 
 func requestItem(w http.ResponseWriter, r *http.Request) {
@@ -200,13 +201,21 @@ func acceptRequest(w http.ResponseWriter, r *http.Request) {
 
 }
 
+func serveAcceptRequestPage(w http.ResponseWriter, r *http.Request) {
+
+}
+
 func updateItemDetails(w http.ResponseWriter, r *http.Request) {
 	//asf
 }
 
 func deleteItem(w http.ResponseWriter, r *http.Request) {
-	itemIDStr := r.PathValue("itemID")
-	itemID, err := strconv.Atoi(itemIDStr)
+	fmt.Println()
+	params := mux.Vars(r)
+	itemID, err := strconv.Atoi(params["itemID"])
+
+	//itemIDStr := r.PathValue("itemID")
+	//itemID, err := strconv.Atoi(itemIDStr)
 	if err != nil {
 		http.Error(w, "Invalid item ID", http.StatusBadRequest)
 		return
@@ -225,6 +234,8 @@ func deleteItem(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(fmt.Sprintf("Item with ID %d successfully deleted", itemID)))
+
+	http.Redirect(w, r, "/", http.StatusAccepted)
 }
 
 // functions to handle HTTP requests for page loads
@@ -450,16 +461,13 @@ func ServerHandler() {
 	// Default handler
 	mux.HandleFunc("/", showAllItems).Methods("GET") // default handler to showallitems
 
-	//all item handlers
-	mux.HandleFunc("/items", createNewItem).Methods("POST")
 	mux.HandleFunc("/items", showAllItems).Methods("GET")
 	mux.HandleFunc("/items/{itemID}", showSingleItem).Methods("GET")
 	mux.HandleFunc("/create-item", createNewItemPage).Methods("GET")
 	mux.HandleFunc("/create-item", createNewItem).Methods("POST")
 	mux.HandleFunc("/items/{itemID}/request", requestItem).Methods("POST")
 	mux.HandleFunc("/items/{itemID}/accept", acceptRequest).Methods("POST")
-	mux.HandleFunc("/items/{itemID}/accept", acceptRequest).Methods("GET")
-	mux.HandleFunc("/items/{itemID}", updateItemDetails).Methods("PUT")
+	mux.HandleFunc("/items/{itemID}/accept", serveAcceptRequestPage).Methods("GET")
 	mux.HandleFunc("/items/{itemID}/update-item", updateItemDetails).Methods("POST")
 	mux.HandleFunc("/items/{itemID}/update-item", serveUpdateItemPage).Methods("GET")
 	mux.HandleFunc("/items/{itemID}", deleteItem).Methods("DELETE")
