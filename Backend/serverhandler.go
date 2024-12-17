@@ -12,6 +12,8 @@ import (
 	"os"
 	"strconv"
 	"text/template"
+
+	"github.com/gorilla/mux"
 )
 
 var tpl *template.Template
@@ -63,6 +65,14 @@ func showAllItems(w http.ResponseWriter, r *http.Request) {
 
 func showSingleItem(w http.ResponseWriter, r *http.Request) {
 
+}
+
+func createNewItemPage(w http.ResponseWriter, r *http.Request) {
+	err := tpl.ExecuteTemplate(w, "add-item.html", nil)
+	if err != nil {
+		http.Error(w, "Error rendering add-item template", http.StatusInternalServerError)
+		log.Println("Template execution error:", err)
+	}
 }
 
 func createNewItem(w http.ResponseWriter, r *http.Request) {
@@ -148,7 +158,26 @@ func updateItemDetails(w http.ResponseWriter, r *http.Request) {
 }
 
 func deleteItem(w http.ResponseWriter, r *http.Request) {
+	itemIDStr := r.PathValue("itemID")
+	itemID, err := strconv.Atoi(itemIDStr)
+	if err != nil {
+		http.Error(w, "Invalid item ID", http.StatusBadRequest)
+		return
+	}
 
+	err = DeleteItem(itemID)
+	if err != nil {
+		if err.Error() == fmt.Sprintf("item with ID %d not found", itemID) {
+			http.Error(w, "Item not found", http.StatusNotFound)
+			return
+		}
+		http.Error(w, "Error deleting item", http.StatusInternalServerError)
+		log.Println("Error deleting items:", err)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(fmt.Sprintf("Item with ID %d successfully deleted", itemID)))
 }
 
 // functions to handle HTTP requests for page loads
@@ -157,6 +186,11 @@ func HandleHTTPIndex(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandleHTTPUser(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	userID, _ := strconv.Atoi(params["userid"])
+
+	// if userID blank , meaning if /user
+
 	// redirect function
 
 	// userID, err := getUserID(r)
@@ -164,7 +198,6 @@ func HandleHTTPUser(w http.ResponseWriter, r *http.Request) {
 	// 	fmt.Println(err)
 	// 	return
 	// }
-	userID := 2
 
 	data, err := LoadUserData()
 	if err != nil {
@@ -296,28 +329,30 @@ func ServerHandler() {
 	}
 
 	// Create new HTTP mux
-	mux := http.NewServeMux()
+	mux := mux.NewRouter()
 
 	// Default handler
 	mux.HandleFunc("/", showAllItems) // default handler to showallitems
 
 	//all item handlers
-	mux.HandleFunc("GET /items", showAllItems)
-	mux.HandleFunc("GET /items/{itemID}", showSingleItem)
-	mux.HandleFunc("POST /items", createNewItem)
-	mux.HandleFunc("POST /items/{itemID}/request", requestItem)
-	mux.HandleFunc("POST /items/{itemID}/accept", acceptRequest)
-	mux.HandleFunc("PUT /items/{itemID}", updateItemDetails)
-	mux.HandleFunc("DELETE /items/{itemID}", deleteItem)
+	mux.HandleFunc("/items", showAllItems).Methods("GET")
+	mux.HandleFunc("/items/{itemID}", showSingleItem).Methods("GET")
+	mux.HandleFunc("/create-item", createNewItemPage).Methods("GET")
+	mux.HandleFunc("/create-item", createNewItem).Methods("POST")
+	mux.HandleFunc("/items/{itemID}/request", requestItem).Methods("POST")
+	mux.HandleFunc("/items/{itemID}/accept", acceptRequest).Methods("POST")
+	mux.HandleFunc("/items/{itemID}", updateItemDetails).Methods("PUT")
+	mux.HandleFunc("/items/{itemID}", deleteItem).Methods("DELETE")
 
-	mux.HandleFunc("/user", HandleHTTPUser)
-	mux.HandleFunc("/board", HandleHTTPBoard)
-	mux.HandleFunc("/login", HandleHTTPLogin)
-	mux.HandleFunc("/signup", HandleHTTPSignup)
+	// mux.HandleFunc("GET /user", HandleHTTPUser)
+	mux.HandleFunc("/user/{userid}", HandleHTTPUser).Methods("GET")
+	mux.HandleFunc("/board", HandleHTTPBoard).Methods("GET")
+	mux.HandleFunc("/login", HandleHTTPLogin).Methods("GET")
+	mux.HandleFunc("/signup", HandleHTTPSignup).Methods("GET")
 
 	// Serve static files from the frontend directory
 	fs := http.FileServer(http.Dir("./Frontend/static"))
-	mux.Handle("/Frontend/static/", http.StripPrefix("/Frontend/static/", fs))
+	mux.PathPrefix("/Frontend/static/").Handler(http.StripPrefix("/Frontend/static/", fs))
 
 	// Start server
 	port := ":5000"
