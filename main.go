@@ -12,7 +12,6 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error loading .env file: %v", err)
 	}
-
 	log.Println("App is ready!")
 
 	// listenandserve in serverhandler.go, please run this last to ensure all other functions run first
