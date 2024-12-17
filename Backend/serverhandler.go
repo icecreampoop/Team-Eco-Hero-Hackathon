@@ -7,6 +7,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"text/template"
 )
 
 func showAllItems(w http.ResponseWriter, r *http.Request) {
@@ -96,47 +97,97 @@ func HandleHTTPBoard(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "./Frontend/static/board.html")
 }
 
+// // HandleHTTPLogin serves the login page
+// func HandleHTTPLogin(w http.ResponseWriter, r *http.Request) {
+// 	http.ServeFile(w, r, "./Frontend/static/login.html")
+// }
+
+// HandleHTTPLogin serves the login page and handles login authentication
 func HandleHTTPLogin(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "./Frontend/static/login.html")
+	tmpl, err := template.ParseFiles("./Frontend/static/login.html")
+	if err != nil {
+		log.Printf("Error loading template: %v", err)
+		http.Error(w, "Unable to load template", http.StatusInternalServerError)
+		return
+	}
+
+	if r.Method == http.MethodPost {
+		// Parse form data
+		if err := r.ParseForm(); err != nil {
+			http.Error(w, "Unable to parse form", http.StatusBadRequest)
+			return
+		}
+
+		// Get form values
+		username := r.FormValue("username")
+		password := r.FormValue("password")
+
+		// Validate credentials
+		valid, err := ValidateUserCredentials(username, password)
+		if err != nil {
+			http.Error(w, "Unable to validate user credentials", http.StatusInternalServerError)
+			return
+		}
+
+		if valid {
+			// Successful login
+			http.Redirect(w, r, "/user", http.StatusSeeOther)
+			return
+		}
+
+		// Invalid credentials
+		tmpl.Execute(w, map[string]interface{}{
+			"ErrorMessage": "Invalid username or password",
+		})
+		return
+	}
+
+	// Serve the login page for GET requests
+	tmpl.Execute(w, nil)
 }
 
+// HandleHTTPSignup serves the signup page and handles user registration
 func HandleHTTPSignup(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "./Frontend/static/signup.html")
+	tmpl, err := template.ParseFiles("./Frontend/static/signup.html")
+	if err != nil {
+		log.Printf("Error loading template: %v", err)
+		http.Error(w, "Unable to load template", http.StatusInternalServerError)
+		return
+	}
+
+	if r.Method == http.MethodPost {
+		// Parse form data
+		if err := r.ParseForm(); err != nil {
+			http.Error(w, "Unable to parse form", http.StatusBadRequest)
+			return
+		}
+
+		// Get form values
+		email := r.FormValue("email")
+		password := r.FormValue("password")
+
+		// Add the new user to the data.json file
+		err = AddNewUser(email, password)
+		if err != nil {
+			http.Error(w, "Unable to add new user", http.StatusInternalServerError)
+			return
+		}
+
+		// Redirect to login page after successful signup
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		return
+	}
+
+	// Serve the signup page for GET requests
+	tmpl.Execute(w, nil)
 }
-
-// // functions to handle user actions
-// func HandleButtonClick(w http.ResponseWriter, r *http.Request) {
-// 	if r.Method == http.MethodPost {
-// 		fmt.Fprintf(w, "Button clicked!")
-// 	} else {
-// 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
-// 	}
-// }
-
-// func HandleUserInput(w http.ResponseWriter, r *http.Request) {
-// 	if r.Method == http.MethodPost {
-// 		// Parse form data
-// 		if err := r.ParseForm(); err != nil {
-// 			http.Error(w, "Unable to parse form", http.StatusBadRequest)
-// 			return
-// 		}
-// 		// Get user input
-// 		userInput := r.FormValue("userInput")
-// 		fmt.Fprintf(w, "Received user input: %s", userInput)
-// 	} else {
-// 		http.Error(w, "Invalid request method", http.StatusMethodNotAllowed)
-// 	}
-// }
 
 func ServerHandler() {
 	// Create new HTTP mux
 	mux := http.NewServeMux()
 
-	// handlers
-	// mux.HandleFunc("/", HandleHTTPIndex) // default handler to index
-	// mux.HandleFunc("/index", HandleHTTPIndex)
-	// Matt: Changed the / path to showallitems instead
-	mux.HandleFunc("/", showAllItems)
+	// Default handler
+	mux.HandleFunc("/", showAllItems) // default handler to showallitems
 
 	//all item handlers
 	mux.HandleFunc("GET /items", showAllItems)
