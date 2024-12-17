@@ -65,6 +65,17 @@
       "AvatarPic": "",
       "Admin": false,
       "ActiveRequests": null
+    },
+    {
+      "UserID": 7,
+      "Username": "",
+      "Password": "123",
+      "Email": "lmao@gmail.com",
+      "EXP": 0,
+      "Level": 1,
+      "AvatarPic": "",
+      "Admin": false,
+      "ActiveRequests": null
     }
   ],
   "items": [

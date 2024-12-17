@@ -101,6 +101,7 @@ func showSingleItem(w http.ResponseWriter, r *http.Request) {
 	itemWithOwner := ItemWithOwner{
 		Item:          foundItem,
 		OwnerUsername: owner.Username, // Set the owner's username
+		OwnerID:       owner.UserID,
 	}
 
 	// Render the template with the found item and its owner information

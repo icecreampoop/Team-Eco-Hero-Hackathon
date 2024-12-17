@@ -1,13 +1,3 @@
-body {
-    background-color: #f5f8fa;
-    display: flex;
-    justify-content: center; 
-    align-items: center;      
-    min-height: 100vh; 
-    margin: 0;
-    font-family: 'Poppins', sans-serif;
-}
-
 .card {
     width: 100%;
     max-width: 800px;  
@@ -54,7 +44,7 @@ body {
     color: white; 
 }
 
-.listed-by {
+.listed-by, .owner-ID {
     color: #6C7780;
     font-size: small;
 }
