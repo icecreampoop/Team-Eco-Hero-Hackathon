@@ -68,8 +68,6 @@ func showSingleItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println("Item ID:", itemID)
-
 	// Load user data
 	data, err := LoadUserData()
 	if err != nil {
@@ -202,8 +200,8 @@ func updateItemDetails(w http.ResponseWriter, r *http.Request) {
 }
 
 func deleteItem(w http.ResponseWriter, r *http.Request) {
-	itemIDStr := r.PathValue("itemID")
-	itemID, err := strconv.Atoi(itemIDStr)
+	params := mux.Vars(r)
+	itemID, err := strconv.Atoi(params["itemID"])
 	if err != nil {
 		http.Error(w, "Invalid item ID", http.StatusBadRequest)
 		return
@@ -222,8 +220,6 @@ func deleteItem(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(fmt.Sprintf("Item with ID %d successfully deleted", itemID)))
-
-	http.Redirect(w, r, "/", http.StatusAccepted)
 }
 
 // functions to handle HTTP requests for page loads
