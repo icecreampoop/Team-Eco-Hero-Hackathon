@@ -54,11 +54,22 @@
       "AvatarPic": "http://example.com/avatar5.jpg",
       "Admin": true,
       "ActiveRequests": null
+    },
+    {
+      "UserID": 6,
+      "Username": "",
+      "Password": "1",
+      "Email": "1",
+      "EXP": 0,
+      "Level": 1,
+      "AvatarPic": "",
+      "Admin": false,
+      "ActiveRequests": null
     }
   ],
   "items": [
     {
-      "ItemID": 3,
+      "ItemID": 1,
       "OwnerID": 3,
       "ReceiverID": 0,
       "ItemName": "Bicycle",
@@ -69,7 +80,7 @@
       "CurrentRequesters": null
     },
     {
-      "ItemID": 4,
+      "ItemID": 2,
       "OwnerID": 3,
       "ReceiverID": 0,
       "ItemName": "Bookshelf",
@@ -81,12 +92,56 @@
     },
     {
       "ItemID": 3,
-      "OwnerID": 1,
+      "OwnerID": 3,
       "ReceiverID": 0,
-      "ItemName": "f",
-      "ItemDescription": "f",
-      "ItemImageLink": "https://ecofilebucket.sgp1.digitaloceanspaces.com/2832385974.png",
-      "Category": "hardwaretools",
+      "ItemName": "SECRET",
+      "ItemDescription": "YES",
+      "ItemImageLink": "https://ecofilebucket.sgp1.digitaloceanspaces.com/4122035232.png",
+      "Category": "books",
+      "Status": "available",
+      "CurrentRequesters": []
+    },
+    {
+      "ItemID": 4,
+      "OwnerID": 3,
+      "ReceiverID": 0,
+      "ItemName": "reeqrqer",
+      "ItemDescription": "qerqer",
+      "ItemImageLink": "https://ecofilebucket.sgp1.digitaloceanspaces.com/2352114681.png",
+      "Category": "clothing",
+      "Status": "available",
+      "CurrentRequesters": []
+    },
+    {
+      "ItemID": 5,
+      "OwnerID": 6,
+      "ReceiverID": 0,
+      "ItemName": "ISADHSAD",
+      "ItemDescription": "asdasd",
+      "ItemImageLink": "https://ecofilebucket.sgp1.digitaloceanspaces.com/2356809741.png",
+      "Category": "clothing",
+      "Status": "available",
+      "CurrentRequesters": []
+    },
+    {
+      "ItemID": 6,
+      "OwnerID": 6,
+      "ReceiverID": 0,
+      "ItemName": "new item",
+      "ItemDescription": "hashashda",
+      "ItemImageLink": "https://ecofilebucket.sgp1.digitaloceanspaces.com/1786419533.png",
+      "Category": "clothing",
+      "Status": "available",
+      "CurrentRequesters": []
+    },
+    {
+      "ItemID": 7,
+      "OwnerID": 6,
+      "ReceiverID": 0,
+      "ItemName": "new nwe nwe",
+      "ItemDescription": "asdnk ",
+      "ItemImageLink": "https://ecofilebucket.sgp1.digitaloceanspaces.com/1640968246.png",
+      "Category": "furniture",
       "Status": "available",
       "CurrentRequesters": []
     }

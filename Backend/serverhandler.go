@@ -173,7 +173,7 @@ func createNewItem(w http.ResponseWriter, r *http.Request) {
 	// add item entry to db
 	userIDInt, _ := getUserID(r)
 	fmt.Println(userIDInt)
-	err = AddNewItem(3, r.FormValue("item-name"), r.FormValue("item-description"),
+	err = AddNewItem(userIDInt, r.FormValue("item-name"), r.FormValue("item-description"),
 		r.FormValue("category"), fileResourcePath)
 	if err != nil {
 		fmt.Println(err)
@@ -183,6 +183,7 @@ func createNewItem(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("settle")
 	//w.WriteHeader(http.StatusOK)
 	//w.Write([]byte("File uploaded and processed successfully"))
+	http.Redirect(w, r, "http://localhost:5000/", http.StatusFound)
 }
 
 func requestItem(w http.ResponseWriter, r *http.Request) {
@@ -198,8 +199,12 @@ func updateItemDetails(w http.ResponseWriter, r *http.Request) {
 }
 
 func deleteItem(w http.ResponseWriter, r *http.Request) {
-	itemIDStr := r.PathValue("itemID")
-	itemID, err := strconv.Atoi(itemIDStr)
+	fmt.Println()
+	params := mux.Vars(r)
+	itemID, err := strconv.Atoi(params["itemID"])
+
+	//itemIDStr := r.PathValue("itemID")
+	//itemID, err := strconv.Atoi(itemIDStr)
 	if err != nil {
 		http.Error(w, "Invalid item ID", http.StatusBadRequest)
 		return
