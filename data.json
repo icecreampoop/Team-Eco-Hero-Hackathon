@@ -78,6 +78,39 @@
       "Category": "hardwaretools",
       "Status": "pending",
       "CurrentRequesters": null
+    },
+    {
+      "ItemID": 3,
+      "OwnerID": 3,
+      "ReceiverID": 0,
+      "ItemName": "test",
+      "ItemDescription": "testtest",
+      "ItemImageLink": "abc.com",
+      "Category": "electronics",
+      "Status": "available",
+      "CurrentRequesters": []
+    },
+    {
+      "ItemID": 4,
+      "OwnerID": 3,
+      "ReceiverID": 0,
+      "ItemName": "test",
+      "ItemDescription": "testtest",
+      "ItemImageLink": "abc.com",
+      "Category": "electronics",
+      "Status": "available",
+      "CurrentRequesters": []
+    },
+    {
+      "ItemID": 5,
+      "OwnerID": 3,
+      "ReceiverID": 0,
+      "ItemName": "iphone 28",
+      "ItemDescription": "Brand new in box. Used 4 times only.",
+      "ItemImageLink": "https://ecofilebucket.sgp1.digitaloceanspaces.com/2632804571.",
+      "Category": "mobile",
+      "Status": "available",
+      "CurrentRequesters": []
     }
   ]
 }

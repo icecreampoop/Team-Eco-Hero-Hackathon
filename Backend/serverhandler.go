@@ -4,16 +4,17 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/gorilla/mux"
 	"hash/fnv"
 	"image"
+	_ "image/jpeg"
+	_ "image/png"
 	"io"
 	"log"
 	"net/http"
 	"os"
 	"strconv"
 	"text/template"
-
-	"github.com/gorilla/mux"
 )
 
 var tpl *template.Template
@@ -98,10 +99,11 @@ func createNewItem(w http.ResponseWriter, r *http.Request) {
 	imageBytes := buf.Bytes()
 
 	// Detect the image format
-	_, format, err := image.Decode(file)
+	_, format, err := image.DecodeConfig(file)
 	if err != nil {
-		http.Error(w, "Unsupported or invalid image format", http.StatusUnsupportedMediaType)
-		return
+		fmt.Println(format)
+		//http.Error(w, "Unsupported or invalid image format", http.StatusUnsupportedMediaType)
+		//return
 	}
 
 	// Process the imageBytes (e.g., store in a database or perform operations)
@@ -109,30 +111,39 @@ func createNewItem(w http.ResponseWriter, r *http.Request) {
 
 	// upload media to digital ocean spaces
 	// Get the "UserID" cookie from the request
-	cookie, err := r.Cookie("UserID")
-	if err != nil {
-		// If the cookie is not found, handle the error
-		http.Error(w, "UserID cookie not found", http.StatusBadRequest)
-		return
-	}
+	//cookie, err := r.Cookie("UserID")
+	//if err != nil {
+	//	// If the cookie is not found, handle the error
+	//	http.Error(w, "UserID cookie not found", http.StatusBadRequest)
+	//	return
+	//}
 
 	// Convert the cookie value (which is a string) to an integer
-	userID, err := strconv.Atoi(cookie.Value)
-	if err != nil {
-		// If there's an error converting the value, handle it
-		http.Error(w, "Invalid UserID value", http.StatusBadRequest)
-		return
-	}
-	hashedFileName := hashResourcePath(findUser(userID).Email+r.FormValue("item-name")) + "." + format
+	//userID, err := strconv.Atoi(cookie.Value)
+	//if err != nil {
+	//	// If there's an error converting the value, handle it
+	//	http.Error(w, "Invalid UserID value", http.StatusBadRequest)
+	//	return
+	//}
+	hashedFileName := hashResourcePath(findUser(3).Email+r.FormValue("item-name")) + "." + format
+	//hashedFileName := hashResourcePath(findUser(3).Email+r.FormValue("item-name")) + "." + "png"
+	//hashedFileName := hashResourcePath(findUser(userID).Email+r.FormValue("item-name")) + "." + "jpg"
+
 	fileResourcePath, _ := UploadFile(hashedFileName, imageBytes)
+	fmt.Println(fileResourcePath)
 	// add item entry to db
 	userIDInt, _ := getUserID(r)
-	AddNewItem(userIDInt, r.FormValue("item-name"), r.FormValue("item-description"),
+	fmt.Println(userIDInt)
+	err = AddNewItem(3, r.FormValue("item-name"), r.FormValue("item-description"),
 		r.FormValue("category"), fileResourcePath)
-
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	// Respond to the client
-	w.WriteHeader(http.StatusOK)
-	w.Write([]byte("File uploaded and processed successfully"))
+	fmt.Println("settle")
+	//w.WriteHeader(http.StatusOK)
+	//w.Write([]byte("File uploaded and processed successfully"))
 }
 
 func requestItem(w http.ResponseWriter, r *http.Request) {
@@ -325,6 +336,8 @@ func ServerHandler() {
 	mux.HandleFunc("/", showAllItems) // default handler to showallitems
 
 	//all item handlers
+	mux.HandleFunc("/items", createNewItem).Methods("POST")
+
 	mux.HandleFunc("/items", showAllItems).Methods("GET")
 	mux.HandleFunc("/items/{itemID}", showSingleItem).Methods("GET")
 	mux.HandleFunc("/create-item", createNewItemPage).Methods("GET")

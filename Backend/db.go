@@ -139,10 +139,12 @@ func AddNewItem(ownerID int, itemName string, itemDescription string, categories
 	for _, user := range data.Users {
 		if user.UserID == ownerID {
 			userExists = true
+			fmt.Printf("user %v exists", user.UserID)
 			break
 		}
 	}
 	if !userExists {
+		fmt.Println("failed no such user")
 		return err
 	}
 
@@ -152,6 +154,8 @@ func AddNewItem(ownerID int, itemName string, itemDescription string, categories
 		string(Sports), string(Clothing), string(Books), string(Media), string(Others):
 		validCategory = Categories(categories)
 	default:
+		fmt.Println("failed cat")
+
 		return fmt.Errorf("invalid category: %s", categories)
 	}
 	// Create a new item
@@ -169,7 +173,7 @@ func AddNewItem(ownerID int, itemName string, itemDescription string, categories
 
 	// Append the new item to the list
 	data.Items = append(data.Items, newItem)
-
+	fmt.Println("added properlly")
 	// Save the updated data
 	return SaveUserData(data)
 }
