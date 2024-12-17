@@ -9,6 +9,7 @@ import (
 
 type User struct {
 	UserID    int    `json:"UserID"`
+	Username  string `json:"Username"`
 	Password  string `json:"Password"`
 	Email     string `json:"Email"`
 	EXP       int    `json:"EXP"`
@@ -129,7 +130,7 @@ func AddNewUser(email, password string) error {
 }
 
 // Add new item to data.json
-func AddNewItem(ownerID int, itemName string, categories string) error {
+func AddNewItem(ownerID int, itemName string, itemDescription string, categories string) error {
 	data, err := LoadUserData()
 	if err != nil {
 		return err
@@ -159,7 +160,7 @@ func AddNewItem(ownerID int, itemName string, categories string) error {
 		OwnerID:           ownerID,
 		ReceiverID:        0, // 0 means no receiver yet
 		ItemName:          itemName,
-		ItemDescription:   "", // Optional: allow it to be empty for now
+		ItemDescription:   itemDescription,
 		Category:          validCategory,
 		ItemStatus:        StatusAvailable, // New items are 'available' by default
 		CurrentRequesters: []int{},
