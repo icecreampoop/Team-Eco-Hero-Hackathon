@@ -278,7 +278,7 @@ func requestItem(w http.ResponseWriter, r *http.Request) {
 		log.Println("Error requesting item:", err)
 		return
 	}
-
+	//fmt.Println("item requested")
 	// Respond to the client
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(fmt.Sprintf("Item with ID %d successfully requested by user %d", itemID, userID)))
