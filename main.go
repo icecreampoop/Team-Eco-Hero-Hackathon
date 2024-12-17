@@ -12,10 +12,12 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error loading .env file: %v", err)
 	}
-	backend.ServerHandler()
 	backend.LoadDataFromConfig("data.json")
 	log.Printf("Loaded users: %+v", backend.Users)
 	log.Printf("Loaded items: %+v", backend.Items)
 
 	log.Println("App is ready!")
+
+	// listenandserve in serverhandler.go, please run this last to ensure all other functions run first
+	backend.ServerHandler()
 }
