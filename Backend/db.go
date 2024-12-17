@@ -130,7 +130,7 @@ func AddNewUser(email, password string) error {
 }
 
 // Add new item to data.json
-func AddNewItem(ownerID int, itemName string, categories string) error {
+func AddNewItem(ownerID int, itemName string, itemDescription string, categories string, imageLink string) error {
 	data, err := LoadUserData()
 	if err != nil {
 		return err
@@ -160,10 +160,11 @@ func AddNewItem(ownerID int, itemName string, categories string) error {
 		OwnerID:           ownerID,
 		ReceiverID:        0, // 0 means no receiver yet
 		ItemName:          itemName,
-		ItemDescription:   "", // Optional: allow it to be empty for now
+		ItemDescription:   itemDescription,
 		Category:          validCategory,
 		ItemStatus:        StatusAvailable, // New items are 'available' by default
 		CurrentRequesters: []int{},
+		ItemImageLink:     imageLink,
 	}
 
 	// Append the new item to the list
@@ -199,4 +200,106 @@ func GetItem(itemID int) (Item, error) {
 	}
 
 	return Item{}, fmt.Errorf("item with ID %d not found", itemID)
+}
+
+// DeleteItem removes an item from the data.json file by its ItemID
+func DeleteItem(itemID int) error {
+	// Load existing data
+	data, err := LoadUserData()
+	if err != nil {
+		return err
+	}
+
+	// Flag to track if the item was found
+	itemFound := false
+
+	// Create a slice to hold the remaining items
+	var updatedItems []Item
+
+	// Iterate through the items
+	for _, item := range data.Items {
+		if item.ItemID == itemID {
+			itemFound = true
+			continue // Skip the item to delete it
+		}
+		updatedItems = append(updatedItems, item)
+	}
+
+	// Check if the item was found
+	if !itemFound {
+		return fmt.Errorf("item with ID %d not found", itemID)
+	}
+
+	// Update the data with the remaining items
+	data.Items = updatedItems
+
+	// Save the updated data
+	err = SaveUserData(data)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+// EditItem updates the fields of an existing item in the database
+func EditItem(itemID int, newName, newDescription, newLink, newCategory string) error {
+	// Load existing data
+	data, err := LoadUserData()
+	if err != nil {
+		return err
+	}
+
+	// Validate category
+	if newCategory != "" {
+		validCategory := false
+		for _, c := range []Categories{
+			Electronics, Mobile, Furniture, HardwareTools,
+			Sports, Clothing, Books, Media, Others,
+		} {
+			if string(c) == newCategory {
+				validCategory = true
+				break
+			}
+		}
+		if !validCategory {
+			return fmt.Errorf("invalid category: %s", newCategory)
+		}
+	}
+
+	// Flag to check if the item exists
+	itemFound := false
+
+	// Search for the item and update its fields
+	for i, item := range data.Items {
+		if item.ItemID == itemID {
+			if newName != "" {
+				data.Items[i].ItemName = newName
+			}
+			if newDescription != "" {
+				data.Items[i].ItemDescription = newDescription
+			}
+			if newLink != "" {
+				data.Items[i].ItemImageLink = newLink
+			}
+			if newCategory != "" {
+				data.Items[i].Category = Categories(newCategory)
+			}
+			itemFound = true
+			break
+		}
+	}
+
+	// If the item was not found, return an error
+	if !itemFound {
+		return fmt.Errorf("item with ID %d not found", itemID)
+	}
+
+	// Save the updated data back to the file
+	err = SaveUserData(data)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

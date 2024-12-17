@@ -60,35 +60,26 @@
                     <div class="col-9">
                         <input id="item-name" name="item-name" type="text" class="form-control" placeholder="Enter item name" required>
                     </div>
-                </div>
-                <div class="row">
+                </div><div class="row">
                     <div class="col-3">
-                        <label for="item-name">Category:</label>
+                        <label for="categorySelect">Category:</label>
                     </div>
                     <div class="col-9 category-container">
-                        <div class="category-instruct">Select up to three:</div>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="cat1">
-                            <label class="form-check-label" for="cat1">Electronics</label>
-                        </div>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="cat2">
-                            <label class="form-check-label" for="cat2">Furniture</label>
-                        </div>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="cat3">
-                            <label class="form-check-label" for="cat3">Gaming</label>
-                        </div>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="cat4">
-                            <label class="form-check-label" for="cat4">Household</label>
-                        </div>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="cat5">
-                            <label class="form-check-label" for="cat5">Food & Groceries</label>
-                        </div>
+                        <select class="form-select" id="categorySelect" name="category">
+                            <option selected disabled>Select a category</option>
+                            <option value="electronics">Electronics</option>
+                            <option value="mobile">Mobile</option>
+                            <option value="furniture">Furniture</option>
+                            <option value="hardwaretools">Hardware Tools</option>
+                            <option value="sports">Sports</option>
+                            <option value="clothing">Clothing</option>
+                            <option value="books">Books</option>
+                            <option value="media">Media</option>
+                            <option value="others">Others</option>
+                        </select>
                     </div>
                 </div>
+                
                 <div class="row">
                     <div class="col-3">
                         <label for="item-description">Description:</label>

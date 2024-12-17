@@ -41,61 +41,23 @@
                     <input type="text" class="form-control" placeholder="Search...">
                 </div>
                 <div class="item-viewer">
+                    <!-- Loop through the filtered items -->
+                    {{ range . }}
                     <div class="card item-card">
                         <div class="img-container">
-                            <img src="/Frontend/static/images/item1.png" width="100%" height="100%">
+                            <img src="{{ .ItemImageLink }}" width="100%" height="100%">
                         </div>
                         <div class="item-info">
-                            <div class="item-name">Keyboard</div>
-                            <div class="listed-by">Listed By: Matthew</div>
-                            <span class="badge dark-badge">Electronics</span>
-                            <span class="badge dark-badge">Household</span>
-                            <span class="badge dark-badge">Gaming</span><br>
+                            <div class="item-name">{{ .ItemName }}</div>
+                            <div class="listed-by">Listed By: {{ .OwnerID }}</div>
+                            <span class="badge dark-badge">{{ .Category }}</span>
                             <button type="button" class="btn more-btn">View More</button>
                         </div>
                     </div>
-                    <div class="card item-card">
-                        <div class="img-container">
-                            <img src="/Frontend/static/images/item1.png" width="100%" height="100%">
-                        </div>
-                        <div class="item-info">
-                            <div class="item-name">Keyboard</div>
-                            <div class="listed-by">Listed By: Matthew</div>
-                            <span class="badge dark-badge">Electronics</span>
-                            <span class="badge dark-badge">Household</span>
-                            <span class="badge dark-badge">Gaming</span><br>
-                            <button type="button" class="btn more-btn">View More</button>
-                        </div>
-                    </div>
-                    <div class="card item-card">
-                        <div class="img-container">
-                            <img src="/Frontend/static/images/item1.png" width="100%" height="100%">
-                        </div>
-                        <div class="item-info">
-                            <div class="item-name">Keyboard</div>
-                            <div class="listed-by">Listed By: Matthew</div>
-                            <span class="badge dark-badge">Electronics</span>
-                            <span class="badge dark-badge">Household</span>
-                            <span class="badge dark-badge">Gaming</span><br>
-                            <button type="button" class="btn more-btn">View More</button>
-                        </div>
-                    </div>
-                    <div class="card item-card">
-                        <div class="img-container">
-                            <img src="/Frontend/static/images/item1.png" width="100%" height="100%">
-                        </div>
-                        <div class="item-info">
-                            <div class="item-name">Keyboard</div>
-                            <div class="listed-by">Listed By: Matthew</div>
-                            <span class="badge dark-badge">Electronics</span>
-                            <span class="badge dark-badge">Household</span>
-                            <span class="badge dark-badge">Gaming</span><br>
-                            <button type="button" class="btn more-btn">View More</button>
-                        </div>
-                    </div>
+                    {{ else }}
+                    <div>No items found</div>
+                    {{ end }}
                 </div>
                 
             </div>
         </div>
-    </div>
-</body>

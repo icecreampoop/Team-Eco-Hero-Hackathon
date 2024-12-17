@@ -3,8 +3,8 @@ package backend
 import (
 	"bytes"
 	"fmt"
-
-	//"image"
+	"hash/fnv"
+	"image"
 	"io"
 	"log"
 	"net/http"
@@ -13,6 +13,7 @@ import (
 )
 
 var tpl *template.Template
+var hasher = fnv.New32a()
 
 type userPageData struct {
 	TplUser  User
@@ -20,7 +21,28 @@ type userPageData struct {
 }
 
 func showAllItems(w http.ResponseWriter, r *http.Request) {
-	err := tpl.ExecuteTemplate(w, "items.html", nil)
+	// Load data from data.json
+	data, err := LoadUserData()
+	if err != nil {
+		http.Error(w, "Error loading data", http.StatusInternalServerError)
+		log.Println("Error loading data:", err)
+		return
+	}
+
+	// Get the filter query parameters from the URL (if any)
+	statusFilter := r.URL.Query().Get("status") // "available" or "pending"
+
+	// Filter items based on the status
+	var filteredItems []Item
+	for _, item := range data.Items {
+		// Filter by status if specified, otherwise show all items
+		if statusFilter == "" || item.ItemStatus == StatusAvailable || item.ItemStatus == StatusPending {
+			filteredItems = append(filteredItems, item)
+		}
+	}
+
+	// Pass the filtered items to the template
+	err = tpl.ExecuteTemplate(w, "items.html", filteredItems)
 	if err != nil {
 		http.Error(w, "Error rendering template", http.StatusInternalServerError)
 		log.Println("Template execution error:", err)
@@ -64,29 +86,37 @@ func createNewItem(w http.ResponseWriter, r *http.Request) {
 	imageBytes := buf.Bytes()
 
 	// Detect the image format
-	// _, format, err := image.Decode(file)
-	// if err != nil {
-	// 	http.Error(w, "Unsupported or invalid image format", http.StatusUnsupportedMediaType)
-	// 	return
-	// }
+	_, format, err := image.Decode(file)
+	if err != nil {
+		http.Error(w, "Unsupported or invalid image format", http.StatusUnsupportedMediaType)
+		return
+	}
 
 	// Process the imageBytes (e.g., store in a database or perform operations)
 	fmt.Printf("Received file %s with size %d bytes\n", handler.Filename, len(imageBytes))
 
 	// upload media to digital ocean spaces
-	// UploadFile(itemName + "."  + format, imageBytes)
-	// // add item entry to db
-	// AddNewItem(&Item{
-	// 	ItemID: nil,
-	// 	OwnerID: getUserID(r),
-	// 	ReceiverID: nil,
-	// 	ItemName: r.FormValue(),
-	// 	ItemDescription: s,
-	// 	ItemImageLink: d,
-	// 	Category: f,
-	// 	ItemStatus: ss,
-	// 	CurrentRequesters: nil,
-	// })
+	// Get the "UserID" cookie from the request
+	cookie, err := r.Cookie("UserID")
+	if err != nil {
+		// If the cookie is not found, handle the error
+		http.Error(w, "UserID cookie not found", http.StatusBadRequest)
+		return
+	}
+
+	// Convert the cookie value (which is a string) to an integer
+	userID, err := strconv.Atoi(cookie.Value)
+	if err != nil {
+		// If there's an error converting the value, handle it
+		http.Error(w, "Invalid UserID value", http.StatusBadRequest)
+		return
+	}
+	hashedFileName := hashResourcePath(findUser(userID).Email+r.FormValue("item-name")) + "." + format
+	fileResourcePath, _ := UploadFile(hashedFileName, imageBytes)
+	// add item entry to db
+	userIDInt, _ := getUserID(r)
+	AddNewItem(userIDInt, r.FormValue("item-name"), r.FormValue("item-description"),
+		r.FormValue("category"), fileResourcePath)
 
 	// Respond to the client
 	w.WriteHeader(http.StatusOK)
@@ -289,9 +319,9 @@ func getUserID(r *http.Request) (int, error) {
 	// Retrieve userID from cookie
 	cookie, err := r.Cookie("userID")
 	if err == http.ErrNoCookie {
-		return -1, fmt.Errorf("No userID cookie found. Please log in.")
+		return -1, fmt.Errorf("no userID cookie found. Please log in")
 	} else if err != nil {
-		return -1, fmt.Errorf("Error retrieving cookie")
+		return -1, fmt.Errorf("error retrieving cookie")
 	}
 
 	userID, _ := strconv.Atoi(cookie.Value)
