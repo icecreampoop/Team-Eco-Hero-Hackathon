@@ -65,7 +65,7 @@
     {
       "UserID": 6,
       "Username": "Chat GPT",
-      "Password": "1",
+      "Password": "password1",
       "Email": "Eco Master",
       "EXP": 90,
       "Level": 10,
@@ -76,7 +76,7 @@
     {
       "UserID": 7,
       "Username": "lmao",
-      "Password": "123",
+      "Password": "password123",
       "Email": "lmao@gmail.com",
       "EXP": 0,
       "Level": 1,
@@ -87,13 +87,92 @@
     {
       "UserID": 8,
       "Username": "a",
-      "Password": "a",
+      "Password": "password1",
       "Email": "a",
       "EXP": 0,
       "Level": 1,
       "AvatarPic": "",
       "Admin": false,
-      "ActiveRequests": []
+      "ActiveRequests": null
+    },
+    {
+      "UserID": 9,
+      "Username": "wqw",
+      "Password": "qwdqwd2",
+      "Email": "sdad",
+      "EXP": 0,
+      "Level": 1,
+      "AvatarPic": "",
+      "Admin": false,
+      "ActiveRequests": null
+    },
+    {
+      "UserID": 10,
+      "Username": "hehe",
+      "Password": "hehe123",
+      "Email": "hehe",
+      "EXP": 0,
+      "Level": 1,
+      "AvatarPic": "",
+      "Admin": false,
+      "ActiveRequests": null
+    },
+    {
+      "UserID": 11,
+      "Username": "123",
+      "Password": "password123",
+      "Email": "123",
+      "EXP": 0,
+      "Level": 1,
+      "AvatarPic": "",
+      "Admin": false,
+      "ActiveRequests": null
+    },
+    {
+      "UserID": 12,
+      "Username": "1",
+      "Password": "1",
+      "Email": "1",
+      "EXP": 0,
+      "Level": 1,
+      "AvatarPic": "",
+      "Admin": false,
+      "ActiveRequests": [
+        1
+      ]
+    },
+    {
+      "UserID": 13,
+      "Username": "122222",
+      "Password": "12",
+      "Email": "1",
+      "EXP": 0,
+      "Level": 1,
+      "AvatarPic": "",
+      "Admin": false,
+      "ActiveRequests": null
+    },
+    {
+      "UserID": 14,
+      "Username": "23r2r32r323r2r3r23",
+      "Password": "23r232r3",
+      "Email": "23r23r23r323r2r32",
+      "EXP": 0,
+      "Level": 1,
+      "AvatarPic": "",
+      "Admin": false,
+      "ActiveRequests": null
+    },
+    {
+      "UserID": 15,
+      "Username": "3r",
+      "Password": "r3",
+      "Email": "33",
+      "EXP": 0,
+      "Level": 1,
+      "AvatarPic": "",
+      "Admin": false,
+      "ActiveRequests": null
     }
   ],
   "items": [
@@ -108,7 +187,9 @@
       "Status": "available",
       "CurrentRequesters": [
         6,
-        6
+        6,
+        11,
+        12
       ]
     },
     {
