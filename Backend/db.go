@@ -57,6 +57,11 @@ type Data struct {
 	Items []Item `json:"items"`
 }
 
+type ItemWithOwner struct {
+	Item
+	OwnerUsername string // This will hold the username of the item owner
+}
+
 // Load user data from data.json
 func LoadUserData() (Data, error) {
 	var data Data

@@ -36,17 +36,27 @@ func showAllItems(w http.ResponseWriter, r *http.Request) {
 	// Get the filter query parameters from the URL (if any)
 	statusFilter := r.URL.Query().Get("status") // "available" or "pending"
 
-	// Filter items based on the status
-	var filteredItems []Item
+	// Create a slice to hold the filtered items with OwnerUsername
+	var filteredItemsWithOwner []ItemWithOwner
+
 	for _, item := range data.Items {
+		// Use the findUser function to get the owner's username
+		owner := findUserTpl(item.OwnerID, data.Users)
+
+		// Create an ItemWithOwner struct and assign the OwnerUsername
+		itemWithOwner := ItemWithOwner{
+			Item:          item,
+			OwnerUsername: owner.Username, // Assign the owner's username
+		}
+
 		// Filter by status if specified, otherwise show all items
 		if statusFilter == "" || item.ItemStatus == StatusAvailable || item.ItemStatus == StatusPending {
-			filteredItems = append(filteredItems, item)
+			filteredItemsWithOwner = append(filteredItemsWithOwner, itemWithOwner)
 		}
 	}
 
-	// Pass the filtered items to the template
-	err = tpl.ExecuteTemplate(w, "items.html", filteredItems)
+	// Pass the filtered items with owner info to the template
+	err = tpl.ExecuteTemplate(w, "items.html", filteredItemsWithOwner)
 	if err != nil {
 		http.Error(w, "Error rendering template", http.StatusInternalServerError)
 		log.Println("Template execution error:", err)
@@ -418,6 +428,16 @@ func findUser(userID int) User {
 
 	return User{}
 
+}
+
+// Find user based on their user ID, returns the user struct
+func findUserTpl(userID int, users []User) User {
+	for _, user := range users {
+		if user.UserID == userID {
+			return user
+		}
+	}
+	return User{} // Return an empty user if not found
 }
 
 func hashResourcePath(input string) string {
