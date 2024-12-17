@@ -270,6 +270,14 @@ func HandleHTTPSingleUser(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func myRequestsPage(w http.ResponseWriter, r *http.Request) {
+	err := tpl.ExecuteTemplate(w, "transactions.html", nil)
+	if err != nil {
+		http.Error(w, "Error rendering My-requests template", http.StatusInternalServerError)
+		log.Println("Template execution error:", err)
+	}
+}
+
 func HandleHTTPBoard(w http.ResponseWriter, r *http.Request) {
 	data, err := LoadUserData()
 	if err != nil {
@@ -444,6 +452,7 @@ func ServerHandler() {
 	mux.HandleFunc("/login", HandleHTTPLogin).Methods("GET", "POST")
 	mux.HandleFunc("/signup", HandleHTTPSignup).Methods("GET", "POST")
 	mux.HandleFunc("/logout", HandleHTTPLogout).Methods("GET")
+	mux.HandleFunc("/my-requests", myRequestsPage).Methods("GET")
 
 	// Serve static files from the frontend directory
 	fs := http.FileServer(http.Dir("./Frontend/static"))
