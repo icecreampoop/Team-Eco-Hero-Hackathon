@@ -4,9 +4,6 @@ import (
 	"bytes"
 	"fmt"
 	"hash/fnv"
-	"image"
-	_ "image/jpeg"
-	_ "image/png"
 	"io"
 	"log"
 	"net/http"
@@ -88,6 +85,10 @@ func showSingleItem(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func serveUpdateItemPage(w http.ResponseWriter, r *http.Request) {
+	
+}
+
 func createNewItemPage(w http.ResponseWriter, r *http.Request) {
 	err := tpl.ExecuteTemplate(w, "add-item.html", nil)
 	if err != nil {
@@ -128,37 +129,26 @@ func createNewItem(w http.ResponseWriter, r *http.Request) {
 	}
 	imageBytes := buf.Bytes()
 
-	// Detect the image format
-	_, format, err := image.DecodeConfig(file)
-	if err != nil {
-		fmt.Println(format)
-		//http.Error(w, "Unsupported or invalid image format", http.StatusUnsupportedMediaType)
-		//return
-	}
-
 	// Process the imageBytes (e.g., store in a database or perform operations)
 	fmt.Printf("Received file %s with size %d bytes\n", handler.Filename, len(imageBytes))
 
 	// upload media to digital ocean spaces
 	// Get the "UserID" cookie from the request
-	//cookie, err := r.Cookie("UserID")
-	//if err != nil {
-	//	// If the cookie is not found, handle the error
-	//	http.Error(w, "UserID cookie not found", http.StatusBadRequest)
-	//	return
-	//}
+	cookie, err := r.Cookie("UserID")
+	if err != nil {
+		// If the cookie is not found, handle the error
+		http.Error(w, "UserID cookie not found", http.StatusBadRequest)
+		return
+	}
 
 	// Convert the cookie value (which is a string) to an integer
-	//userID, err := strconv.Atoi(cookie.Value)
-	//if err != nil {
-	//	// If there's an error converting the value, handle it
-	//	http.Error(w, "Invalid UserID value", http.StatusBadRequest)
-	//	return
-	//}
-	hashedFileName := hashResourcePath(findUser(3).Email+r.FormValue("item-name")) + "." + format
-	//hashedFileName := hashResourcePath(findUser(3).Email+r.FormValue("item-name")) + "." + "png"
-	//hashedFileName := hashResourcePath(findUser(userID).Email+r.FormValue("item-name")) + "." + "jpg"
-
+	userID, err := strconv.Atoi(cookie.Value)
+	if err != nil {
+		// If there's an error converting the value, handle it
+		http.Error(w, "Invalid UserID value", http.StatusBadRequest)
+		return
+	}
+	hashedFileName := hashResourcePath(findUser(userID).Email+r.FormValue("item-name")) + getFileExtension(handler.Header.Get("Content-Type"))
 	fileResourcePath, _ := UploadFile(hashedFileName, imageBytes)
 	fmt.Println(fileResourcePath)
 	// add item entry to db
@@ -185,7 +175,7 @@ func acceptRequest(w http.ResponseWriter, r *http.Request) {
 }
 
 func updateItemDetails(w http.ResponseWriter, r *http.Request) {
-
+	//asf
 }
 
 func deleteItem(w http.ResponseWriter, r *http.Request) {
@@ -443,7 +433,8 @@ func ServerHandler() {
 	mux.HandleFunc("/create-item", createNewItem).Methods("POST")
 	mux.HandleFunc("/items/{itemID}/request", requestItem).Methods("POST")
 	mux.HandleFunc("/items/{itemID}/accept", acceptRequest).Methods("POST")
-	mux.HandleFunc("/items/{itemID}", updateItemDetails).Methods("PUT")
+	mux.HandleFunc("/items/{itemID}/update-item", updateItemDetails).Methods("POST")
+	mux.HandleFunc("/items/{itemID}/update-item", serveUpdateItemPage).Methods("GET")
 	mux.HandleFunc("/items/{itemID}", deleteItem).Methods("DELETE")
 
 	mux.HandleFunc("/user", HandleHTTPUser).Methods("GET")
@@ -504,4 +495,21 @@ func findUserTpl(userID int, users []User) User {
 func hashResourcePath(input string) string {
 	hasher.Write([]byte(input))
 	return strconv.FormatUint(uint64(hasher.Sum32()), 10)
+}
+
+func getFileExtension(contentType string) string {
+	switch contentType {
+	case "image/png":
+		return ".png"
+	case "image/jpeg":
+		return ".jpg"
+	case "image/gif":
+		return ".gif"
+	case "image/bmp":
+		return ".bmp"
+	case "image/webp":
+		return ".webp"
+	default:
+		return "" // Unknown type
+	}
 }

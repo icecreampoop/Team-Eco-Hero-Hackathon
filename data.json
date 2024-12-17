@@ -78,6 +78,17 @@
       "Category": "hardwaretools",
       "Status": "pending",
       "CurrentRequesters": null
+    },
+    {
+      "ItemID": 3,
+      "OwnerID": 1,
+      "ReceiverID": 0,
+      "ItemName": "f",
+      "ItemDescription": "f",
+      "ItemImageLink": "https://ecofilebucket.sgp1.digitaloceanspaces.com/2832385974.png",
+      "Category": "hardwaretools",
+      "Status": "available",
+      "CurrentRequesters": []
     }
   ]
 }
