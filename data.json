@@ -18,7 +18,7 @@
       "Email": "Eco Apprentice",
       "EXP": 40,
       "Level": 45,
-      "AvatarPic": "http://example.com/avatar2.jpg",
+      "AvatarPic": "https://raw.githubusercontent.com/EdythHo/gitPartA2/refs/heads/main/sianPau-removebg-preview.png",
       "Admin": true,
       "ActiveRequests": null
     },
@@ -29,7 +29,7 @@
       "Email": "Eco Warrior",
       "EXP": 10,
       "Level": 51,
-      "AvatarPic": "http://example.com/avatar3.jpg",
+      "AvatarPic": "https://raw.githubusercontent.com/EdythHo/gitPartA2/refs/heads/main/avatar4.jpg",
       "Admin": false,
       "ActiveRequests": null
     },
@@ -40,7 +40,7 @@
       "Email": "Eco Guardian",
       "EXP": 60,
       "Level": 72,
-      "AvatarPic": "http://example.com/avatar4.jpg",
+      "AvatarPic": "https://raw.githubusercontent.com/EdythHo/gitPartA2/refs/heads/main/avatar3.jpg",
       "Admin": false,
       "ActiveRequests": null
     },
@@ -51,7 +51,7 @@
       "Email": "Eco Hero",
       "EXP": 80,
       "Level": 98,
-      "AvatarPic": "http://example.com/avatar5.jpg",
+      "AvatarPic": "https://raw.githubusercontent.com/EdythHo/gitPartA2/refs/heads/main/potato.webp",
       "Admin": true,
       "ActiveRequests": null
     },
