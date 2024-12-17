@@ -138,7 +138,26 @@ func updateItemDetails(w http.ResponseWriter, r *http.Request) {
 }
 
 func deleteItem(w http.ResponseWriter, r *http.Request) {
+	itemIDStr := r.PathValue("itemID")
+	itemID, err := strconv.Atoi(itemIDStr)
+	if err != nil {
+		http.Error(w, "Invalid item ID", http.StatusBadRequest)
+		return
+	}
 
+	err = DeleteItem(itemID)
+	if err != nil {
+		if err.Error() == fmt.Sprintf("item with ID %d not found", itemID) {
+			http.Error(w, "Item not found", http.StatusNotFound)
+			return
+		}
+		http.Error(w, "Error deleting item", http.StatusInternalServerError)
+		log.Println("Error deleting items:", err)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(fmt.Sprintf("Item with ID %d successfully deleted", itemID)))
 }
 
 // functions to handle HTTP requests for page loads

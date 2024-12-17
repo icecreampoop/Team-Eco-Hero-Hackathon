@@ -7,7 +7,7 @@
       "Email": "user1@example.com",
       "EXP": 20,
       "Level": 2,
-      "AvatarPic": "https://media.licdn.com/dms/image/v2/C5603AQHJUmjAUgp4Hw/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1517673150770?e=2147483647&v=beta&t=KK4cL6u-eYyLmmoTYm5ApCKvOx_-e6iaTh8Mzz3Kulg",
+      "AvatarPic": "https://media.licdn.com/dms/image/v2/C5603AQHJUmjAUgp4Hw/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1517673150770?e=2147483647\u0026v=beta\u0026t=KK4cL6u-eYyLmmoTYm5ApCKvOx_-e6iaTh8Mzz3Kulg",
       "Admin": false,
       "ActiveRequests": null
     },
@@ -58,34 +58,12 @@
   ],
   "items": [
     {
-      "ItemID": 1,
-      "OwnerID": 1,
-      "ReceiverID": 0,
-      "ItemName": "Laptop",
-      "ItemDescription": "A powerful gaming laptop (2018)",
-      "ItemImageLink": "https://cdn.mos.cms.futurecdn.net/3kcgKLkfPRbskpsYzW239d.jpg",
-      "Category": "electronics",
-      "Status": "available",
-      "CurrentRequesters": null
-    },
-    {
-      "ItemID": 2,
-      "OwnerID": 2,
-      "ReceiverID": 0,
-      "ItemName": "Smartphone",
-      "ItemDescription": "A mid-range smartphone",
-      "ItemImageLink": "https://5.imimg.com/data5/BF/RQ/MY-74789112/apple-iphone-7-32gb-black-colour-usa-250x250.jpg",
-      "Category": "mobile",
-      "Status": "available",
-      "CurrentRequesters": null
-    },
-    {
       "ItemID": 3,
       "OwnerID": 3,
       "ReceiverID": 0,
       "ItemName": "Bicycle",
       "ItemDescription": "A mountain bike",
-      "ItemImageLink": "https://www.canyon.com/dw/image/v2/BCML_PRD/on/demandware.static/-/Sites-canyon-storefront/default/dwead92c71/category-landing/mountain/seo-mtb-light.jpg?sw=1280&sfrm=jpg&q=80",
+      "ItemImageLink": "https://www.canyon.com/dw/image/v2/BCML_PRD/on/demandware.static/-/Sites-canyon-storefront/default/dwead92c71/category-landing/mountain/seo-mtb-light.jpg?sw=1280\u0026sfrm=jpg\u0026q=80",
       "Category": "sports",
       "Status": "available",
       "CurrentRequesters": null
@@ -99,17 +77,6 @@
       "ItemImageLink": "https://www.kardiel.com/product_images/uploaded_images/blogs/blog-post-75/Style-It-2-1.jpg",
       "Category": "hardwaretools",
       "Status": "pending",
-      "CurrentRequesters": null
-    },
-    {
-      "ItemID": 5,
-      "OwnerID": 4,
-      "ReceiverID": 5,
-      "ItemName": "COOL JACKET",
-      "ItemDescription": "Blue winter jacket",
-      "ItemImageLink": "https://i.ebayimg.com/images/g/FAwAAOSwBhdiW0SX/s-l1200.jpg",
-      "Category": "clothing",
-      "Status": "donated",
       "CurrentRequesters": null
     }
   ]
