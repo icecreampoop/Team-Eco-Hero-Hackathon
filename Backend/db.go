@@ -2,6 +2,7 @@ package backend
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"os"
 )
@@ -35,15 +36,15 @@ const (
 )
 
 type Item struct {
-	ItemID          int    `json:"ItemID"`
-	OwnerID         int    `json:"OwnerID"`
-	ReceiverID      int    `json:"ReceiverID"`
-	ItemName        string `json:"ItemName"`
-	ItemDescription string `json:"ItemDescription"`
+	ItemID          int        `json:"ItemID"`
+	OwnerID         int        `json:"OwnerID"`
+	ReceiverID      int        `json:"ReceiverID"`
+	ItemName        string     `json:"ItemName"`
+	ItemDescription string     `json:"ItemDescription"`
 	Category1       Categories `json:"Category1"`
 	Category2       Categories `json:"Category2"`
 	Category3       Categories `json:"Category3"`
-	ItemStatus      Statuses `json:"Status"`
+	ItemStatus      Statuses   `json:"Status"`
 }
 
 // Data struct to represent the data.json structure
@@ -127,4 +128,32 @@ func AddNewUser(email, password string) error {
 // add item to db
 func AddNewItem(ownerID int, itemName, categories string) error {
 	return nil
+}
+
+// GetItem retrieves an item by its ItemID
+func GetItem(itemID int) (Item, error) {
+	var data Data
+	file, err := os.Open("data.json")
+	if err != nil {
+		return Item{}, err
+	}
+	defer file.Close()
+
+	bytes, err := io.ReadAll(file)
+	if err != nil {
+		return Item{}, err
+	}
+
+	err = json.Unmarshal(bytes, &data)
+	if err != nil {
+		return Item{}, err
+	}
+
+	for _, item := range data.Items {
+		if item.ItemID == itemID {
+			return item, nil
+		}
+	}
+
+	return Item{}, fmt.Errorf("item with ID %d not found", itemID)
 }
