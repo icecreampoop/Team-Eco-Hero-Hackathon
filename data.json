@@ -58,6 +58,7 @@
       "ReceiverID": 0,
       "ItemName": "Laptop",
       "ItemDescription": "A powerful gaming laptop (2018)",
+      "ItemImageLink": "",
       "Category": "electronics",
       "Status": "available",
       "CurrentRequesters": null
@@ -68,6 +69,7 @@
       "ReceiverID": 0,
       "ItemName": "Smartphone",
       "ItemDescription": "A mid-range smartphone",
+      "ItemImageLink": "",
       "Category": "mobile",
       "Status": "available",
       "CurrentRequesters": null
@@ -78,6 +80,7 @@
       "ReceiverID": 0,
       "ItemName": "Bicycle",
       "ItemDescription": "A mountain bike",
+      "ItemImageLink": "",
       "Category": "sports",
       "Status": "available",
       "CurrentRequesters": null
@@ -88,6 +91,7 @@
       "ReceiverID": 0,
       "ItemName": "Bookshelf",
       "ItemDescription": "ladder",
+      "ItemImageLink": "",
       "Category": "hardwaretools",
       "Status": "pending",
       "CurrentRequesters": null
@@ -98,19 +102,10 @@
       "ReceiverID": 5,
       "ItemName": "Jacket",
       "ItemDescription": "Blue winter jacket",
+      "ItemImageLink": "",
       "Category": "clothing",
       "Status": "donated",
       "CurrentRequesters": null
-    },
-    {
-      "ItemID": 6,
-      "OwnerID": 1,
-      "ReceiverID": 0,
-      "ItemName": "HDMI Cable",
-      "ItemDescription": "",
-      "Category": "electronics",
-      "Status": "available",
-      "CurrentRequesters": []
     }
   ]
 }

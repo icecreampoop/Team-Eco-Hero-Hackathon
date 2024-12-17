@@ -130,7 +130,7 @@ func AddNewUser(email, password string) error {
 }
 
 // Add new item to data.json
-func AddNewItem(ownerID int, itemName string, categories string) error {
+func AddNewItem(ownerID int, itemName string, itemDescription string, categories string) error {
 	data, err := LoadUserData()
 	if err != nil {
 		return err
@@ -160,7 +160,7 @@ func AddNewItem(ownerID int, itemName string, categories string) error {
 		OwnerID:           ownerID,
 		ReceiverID:        0, // 0 means no receiver yet
 		ItemName:          itemName,
-		ItemDescription:   "", // Optional: allow it to be empty for now
+		ItemDescription:   itemDescription,
 		Category:          validCategory,
 		ItemStatus:        StatusAvailable, // New items are 'available' by default
 		CurrentRequesters: []int{},
@@ -199,4 +199,44 @@ func GetItem(itemID int) (Item, error) {
 	}
 
 	return Item{}, fmt.Errorf("item with ID %d not found", itemID)
+}
+
+// DeleteItem removes an item from the data.json file by its ItemID
+func DeleteItem(itemID int) error {
+	// Load existing data
+	data, err := LoadUserData()
+	if err != nil {
+		return err
+	}
+
+	// Flag to track if the item was found
+	itemFound := false
+
+	// Create a slice to hold the remaining items
+	var updatedItems []Item
+
+	// Iterate through the items
+	for _, item := range data.Items {
+		if item.ItemID == itemID {
+			itemFound = true
+			continue // Skip the item to delete it
+		}
+		updatedItems = append(updatedItems, item)
+	}
+
+	// Check if the item was found
+	if !itemFound {
+		return fmt.Errorf("item with ID %d not found", itemID)
+	}
+
+	// Update the data with the remaining items
+	data.Items = updatedItems
+
+	// Save the updated data
+	err = SaveUserData(data)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
