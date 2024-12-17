@@ -9,7 +9,12 @@
       "Level": 32,
       "AvatarPic": "https://media.licdn.com/dms/image/v2/C5603AQHJUmjAUgp4Hw/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1517673150770?e=2147483647\u0026v=beta\u0026t=KK4cL6u-eYyLmmoTYm5ApCKvOx_-e6iaTh8Mzz3Kulg",
       "Admin": false,
-      "ActiveRequests": [1,2,3,5]
+      "ActiveRequests": [
+        1,
+        2,
+        3,
+        5
+      ]
     },
     {
       "UserID": 2,
@@ -132,7 +137,7 @@
       "ReceiverID": 0,
       "ItemName": "Car",
       "ItemDescription": "Bought one by accident",
-      "ItemImageLink": "https://imageio.forbes.com/specials-images/imageserve/5d35eacaf1176b0008974b54/0x0.jpg?format=jpg&crop=4560,2565,x790,y784,safe&height=900&width=1600&fit=bounds",
+      "ItemImageLink": "https://imageio.forbes.com/specials-images/imageserve/5d35eacaf1176b0008974b54/0x0.jpg?format=jpg\u0026crop=4560,2565,x790,y784,safe\u0026height=900\u0026width=1600\u0026fit=bounds",
       "Category": "sports",
       "Status": "available",
       "CurrentRequesters": []
@@ -182,6 +187,17 @@
       "ItemDescription": "New",
       "ItemImageLink": "https://ecofilebucket.sgp1.digitaloceanspaces.com/692389666.jpg",
       "Category": "furniture",
+      "Status": "available",
+      "CurrentRequesters": []
+    },
+    {
+      "ItemID": 9,
+      "OwnerID": 3,
+      "ReceiverID": 0,
+      "ItemName": "XBOX",
+      "ItemDescription": "XBOX FOR FREEE",
+      "ItemImageLink": "https://ecofilebucket.sgp1.digitaloceanspaces.com/3991008488.jpg",
+      "Category": "electronics",
       "Status": "available",
       "CurrentRequesters": []
     }
