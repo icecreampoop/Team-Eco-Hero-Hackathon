@@ -1,117 +1,182 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{{ .ItemName }}</title>
 
     <!-- Bootstrap CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Quicksand:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/Frontend/static/css/styles.css">
-    <link rel="stylesheet" href="/Frontend/static/css/item.css">
-</head>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Quicksand:wght@700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/Frontend/static/css/styles.css" />
+    <link rel="stylesheet" href="/Frontend/static/css/item.css" />
+  </head>
 
-<body>
+  <body>
     {{ template "headerbar" }}
     <div class="main">
-        <div class="container my-5">
-            <div class="row justify-content-center">
-                <div class="col-md-6">
-                    <div class="card">
-                        <img src="{{ .ItemImageLink }}" alt="Item image" class="card-img-top">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ .ItemName }}</h5>
-                            <div class="item-info">
-                                <div class="listed-by">Listed By: {{ .OwnerUsername }}</div>
-                                <div class="owner-ID">User ID #<span id="owner-id">{{.OwnerID}}</span></div>
-                                <span class="badge dark-badge">{{ .Category }}</span>
-                            </div>
-                            <p class="card-text mt-3">{{ .ItemDescription }}</p>
-                            <div class="d-flex justify-content-center gap-3 mt-3">
-                                <a id="req-btn" class="btn btn-primary">Request</a>
-                            </div>
-                            <div id="edit-delete-btns">
-                                <a href="/items/{{.ItemID}}/update-item" class="btn btn-success mt-3">Edit</a>
-                                <a id="delete-btn" class="btn btn-danger mt-3">Delete</a>
-                            </div>
-                        </div>
-                    </div>
+      <div class="container my-5">
+        <div class="row justify-content-center">
+          <div class="col-md-6">
+            <div class="card">
+              <img
+                src="{{ .ItemImageLink }}"
+                alt="Item image"
+                class="card-img-top"
+              />
+              <div class="card-body">
+                <h5 class="card-title">{{ .ItemName }}</h5>
+                <div class="item-info">
+                  <div class="listed-by">Listed By: {{ .OwnerUsername }}</div>
+                  <div class="owner-ID">
+                    User ID #<span id="owner-id">{{.OwnerID}}</span>
+                  </div>
+                  <span class="badge dark-badge">{{ .Category }}</span>
                 </div>
+                <p class="card-text mt-3">{{ .ItemDescription }}</p>
+                <div
+                  class="d-flex justify-content-center gap-3 mt-3"
+                  id="request-btn-toggle"
+                >
+                  <a id="req-btn" class="btn btn-primary">Request</a>
+                </div>
+                <div id="edit-delete-btns">
+                  <a
+                    href="/items/{{.ItemID}}/update-item"
+                    class="btn btn-success mt-3"
+                    >Edit</a
+                  >
+                  <a id="delete-btn" class="btn btn-danger mt-3">Delete</a>
+                </div>
+              </div>
+              <div class="container my-5" id="requestors-list-toggle">
+                <h3 class="text-center mb-4">Requestors List</h3>
+                <ul class="list-group">
+                  {{ range $index, $name := .CurrentRequestersNameArr }}
+                  <li
+                    class="list-group-item d-flex justify-content-between align-items-center"
+                  >
+                    {{ $name }}
+                    <div class="d-flex" style="white-space: nowrap">
+                      <!-- Ensures no wrapping -->
+                      <form
+                        action="/items/{{$.ItemID}}/accept"
+                        method="POST"
+                        class="d-inline"
+                        id="accept-form-toggle-{{ $index }}"
+                      >
+                        <input
+                          type="hidden"
+                          name="receiverName"
+                          value="{{ $name }}"
+                        />
+                        <button type="submit" class="btn btn-primary btn-sm">
+                          Accept
+                        </button>
+                      </form>
+                      <a
+                        href="https://slack.com/intl/en-sg/"
+                        class="btn btn-primary btn-sm"
+                        >Contact</a
+                      >
+                    </div>
+                  </li>
+                  {{ end }}
+                </ul>
+              </div>
             </div>
+          </div>
         </div>
+      </div>
     </div>
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            // Event listener for the Delete button
-            document.getElementById("delete-btn").addEventListener("click", function(event) {
-                event.preventDefault(); // Prevent the default link behavior (navigation)
-                
-                // Get the item ID from the button's data attribute
-                const itemId = {{.ItemID}};
+      document.addEventListener("DOMContentLoaded", function() {
+          // Event listener for the Delete button
+          document.getElementById("delete-btn").addEventListener("click", function(event) {
+              event.preventDefault(); // Prevent the default link behavior (navigation)
 
-                // Send the DELETE request to the server
-                fetch(`/items/${itemId}`, {
-                    method: 'DELETE',  // HTTP method
-                })
-                .then(response => {
-                    if (response.ok) {
-                        console.log("Item deleted successfully.");
-                        window.location.href = "/"
-                    } else {
-                        console.log("Failed to delete the item.");
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
+              // Get the item ID from the button's data attribute
+              const itemId = {{.ItemID}};
+
+              // Send the DELETE request to the server
+              fetch(`/items/${itemId}`, {
+                  method: 'DELETE',  // HTTP method
+              })
+              .then(response => {
+                  if (response.ok) {
+                      console.log("Item deleted successfully.");
+                      window.location.href = "/"
+                  } else {
+                      console.log("Failed to delete the item.");
+                  }
+              })
+              .catch(error => {
+                  console.error('Error:', error);
+              });
+          });
+
+          document.getElementById("req-btn").addEventListener("click", function(event) {
+              event.preventDefault(); // Prevent the default link behavior (navigation)
+
+              // Get the item ID from the button's data attribute
+              const itemId = {{.ItemID}};
+
+              // Send the DELETE request to the server
+              fetch(`/items/${itemId}/request`, {
+                  method: 'POST',  // HTTP method
+              })
+              .then(response => {
+                  if (response.ok) {
+                      console.log("Item deleted successfully.");
+                      alert("Item Successfully Requested!")
+                      window.location.href = "/"
+                  } else {
+                      alert("Unable to request for this item now!")
+                      console.log("Failed to request the item.");
+                  }
+              })
+              .catch(error => {
+                  console.error('Error:', error);
+              });
+          });
+      });
+
+      var ownerID = Number({{.OwnerID}})
+      var sameUser = false
+      var editDelete = document.getElementById("edit-delete-btns")
+      for (let i = 0; i < cookies.length; i++) {
+          let [key, val] = cookies[i].split("=")
+          console.log(ownerID, val)
+          if (key === "UserID" && Number(val) === ownerID) {
+              sameUser = true
+              editDelete.classList.remove("hide")
+              break
+          }
+      }
+      if(!sameUser){
+          editDelete.classList.add("hide")
+          document.getElementById("requestors-list-toggle").classList.add("hide")
+      } else {
+          // if user is owner of item
+          document.getElementById("request-btn-toggle").classList.add("hide")
+      }
+
+      if("{{$.ItemStatus}}" == "donated") {
+          document.querySelectorAll('[id^="accept-form-toggle-"]').forEach(
+            function(form) {
+                form.classList.add("hide");
             });
-
-            document.getElementById("req-btn").addEventListener("click", function(event) {
-                event.preventDefault(); // Prevent the default link behavior (navigation)
-                
-                // Get the item ID from the button's data attribute
-                const itemId = {{.ItemID}};
-
-                // Send the DELETE request to the server
-                fetch(`/items/${itemId}/request`, {
-                    method: 'POST',  // HTTP method
-                })
-                .then(response => {
-                    if (response.ok) {
-                        console.log("Item deleted successfully.");
-                        alert("Item Successfully Requested!")
-                        window.location.href = "/"
-                    } else {
-                        alert("Unable to request for this item now!")
-                        console.log("Failed to request the item.");
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                });
-            });
-        });
-
-        var ownerID = Number({{.OwnerID}})
-        var sameUser = false
-        var editDelete = document.getElementById("edit-delete-btns")
-        for (let i = 0; i < cookies.length; i++) {
-            let [key, val] = cookies[i].split("=")
-            console.log(ownerID, val)
-            if (key === "UserID" && Number(val) === ownerID) {
-                sameUser = true
-                editDelete.classList.remove("hide")
-                break
-            }
-        }
-        if(!sameUser){
-            editDelete.classList.add("hide")
-        }
+      }
     </script>
-</body>
+  </body>
 </html>
-
-
-

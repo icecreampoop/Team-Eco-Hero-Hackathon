@@ -62,8 +62,9 @@ type Data struct {
 
 type ItemWithOwner struct {
 	Item
-	OwnerUsername string // This will hold the username of the item owner
-	OwnerID       int
+	OwnerUsername            string // This will hold the username of the item owner
+	OwnerID                  int
+	CurrentRequestersNameArr []string
 }
 
 // Load user data from data.json

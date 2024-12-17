@@ -115,6 +115,13 @@ func showSingleItem(w http.ResponseWriter, r *http.Request) {
 		OwnerID:       owner.UserID,
 	}
 
+	// pck was here to map and add requestor name arr
+	var nameArr []string
+	for _, userID := range itemWithOwner.CurrentRequesters {
+		nameArr = append(nameArr, findUser(userID).Username)
+	}
+	itemWithOwner.CurrentRequestersNameArr = nameArr
+
 	// Render the template with the found item and its owner information
 	err = tpl.ExecuteTemplate(w, "item.html", itemWithOwner)
 	if err != nil {
@@ -285,11 +292,58 @@ func requestItem(w http.ResponseWriter, r *http.Request) {
 }
 
 func acceptRequest(w http.ResponseWriter, r *http.Request) {
+	//by right by best practises it is to write the db func and call it here
 
-}
+	data, _ := LoadUserData()
+	params := mux.Vars(r)
+	itemID, _ := strconv.Atoi(params["itemID"])
+	receiverName := r.FormValue("receiverName")
+	var receiverID int
+	requestorsStore  := map[int]int{}
 
-func serveAcceptRequestPage(w http.ResponseWriter, r *http.Request) {
+	// find receiver ID
+	for _, userStructs := range data.Users {
+		// this is so scuffed because it assumes usernames are unique
+		if userStructs.Username == receiverName {
+			receiverID = userStructs.UserID
+			break
+		}
+	}
 
+	for i := range data.Items {
+		if data.Items[i].ItemID == itemID {
+			// populate receiverID
+			data.Items[i].ReceiverID = receiverID
+			// change ItemStatus to donated
+			data.Items[i].ItemStatus = "donated"
+
+			// delete the item from all requestor's ActiveRequests
+			for _, v := range data.Items[i].CurrentRequesters {
+				requestorsStore[v] = v
+			}
+			for i := range data.Users {
+				userStructs := &data.Users[i] // Get a pointer to the actual struct
+				// if userStructID is in the store
+				if _, ok := requestorsStore[userStructs.UserID]; ok {
+					// found the user struct corresponding to the item's currentrequestors
+					for i, v := range userStructs.ActiveRequests {
+						if v == itemID {
+							// remove the itemID from the list
+							userStructs.ActiveRequests = append(userStructs.ActiveRequests[:i], userStructs.ActiveRequests[i+1:]...)
+							break
+						}
+					}
+				}
+			}
+		}
+	}
+
+	SaveUserData(data)
+
+	cookie, _ := r.Cookie("UserID")
+	userID, _ := strconv.Atoi(cookie.Value)
+
+	http.Redirect(w, r, fmt.Sprintf("/user/%d", userID), http.StatusSeeOther)
 }
 
 func updateItemDetails(w http.ResponseWriter, r *http.Request) {
@@ -672,7 +726,6 @@ func ServerHandler() {
 	mux.HandleFunc("/create-item", createNewItem).Methods("POST")
 	mux.HandleFunc("/items/{itemID}/request", requestItem).Methods("POST")
 	mux.HandleFunc("/items/{itemID}/accept", acceptRequest).Methods("POST")
-	mux.HandleFunc("/items/{itemID}/accept", serveAcceptRequestPage).Methods("GET")
 	mux.HandleFunc("/items/{itemID}/update-item", updateItemDetails).Methods("POST")
 	mux.HandleFunc("/items/{itemID}/update-item", serveUpdateItemPage).Methods("GET")
 	mux.HandleFunc("/items/{itemID}", deleteItem).Methods("DELETE")
