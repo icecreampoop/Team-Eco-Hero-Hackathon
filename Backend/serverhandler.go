@@ -86,7 +86,7 @@ func showSingleItem(w http.ResponseWriter, r *http.Request) {
 }
 
 func serveUpdateItemPage(w http.ResponseWriter, r *http.Request) {
-	
+
 }
 
 func createNewItemPage(w http.ResponseWriter, r *http.Request) {
@@ -418,7 +418,6 @@ func ServerHandler() {
 
 	//all item handlers
 	mux.HandleFunc("/items", createNewItem).Methods("POST")
-
 	mux.HandleFunc("/items", showAllItems).Methods("GET")
 	mux.HandleFunc("/items/{itemID}", showSingleItem).Methods("GET")
 	mux.HandleFunc("/create-item", createNewItemPage).Methods("GET")
