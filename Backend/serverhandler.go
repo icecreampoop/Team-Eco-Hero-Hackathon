@@ -11,9 +11,11 @@ import (
 	"os"
 	"strconv"
 	"text/template"
+	"hash/fnv"
 )
 
 var tpl *template.Template
+var hasher = fnv.New32a()
 
 // Show all items from the database and pass them to the template
 func showAllItems(w http.ResponseWriter, r *http.Request) {
@@ -80,15 +82,35 @@ func createNewItem(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Received file %s with size %d bytes\n", handler.Filename, len(imageBytes))
 
 	// upload media to digital ocean spaces
-	UploadFile(itemName + "."  + format, imageBytes)
+	// Get the "UserID" cookie from the request
+	cookie, err := r.Cookie("UserID")
+	if err != nil {
+		// If the cookie is not found, handle the error
+		http.Error(w, "UserID cookie not found", http.StatusBadRequest)
+		return
+	}
+
+	// Convert the cookie value (which is a string) to an integer
+	userID, err := strconv.Atoi(cookie.Value)
+	if err != nil {
+		// If there's an error converting the value, handle it
+		http.Error(w, "Invalid UserID value", http.StatusBadRequest)
+		return
+	}
+	hashedFileName := hashResourcePath(findUser(userID).Email + r.FormValue("item-name")) + "."  + format
+	fileResourcePath, _ := UploadFile(hashedFileName, imageBytes)
 	// add item entry to db
 	userIDInt, _ := getUserID(r)
-	AddNewItem(userIDInt, r.FormValue("item-name"), r.FormValue("item-description"), r.FormValue("category"))
+	AddNewItem(userIDInt, r.FormValue("item-name"), r.FormValue("item-description"), 
+				r.FormValue("category"), fileResourcePath)
 
 	// Respond to the client
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("File uploaded and processed successfully"))
 }
+
+// returns the resource address
+func uploadFileToDigitalOcean([]bytes, )
 
 func requestItem(w http.ResponseWriter, r *http.Request) {
 
@@ -304,4 +326,19 @@ func loadUsers(filename string) ([]User, error) {
 	}
 
 	return users, nil
+}
+
+// find user based on their user ID, returns user struct
+func findUser(userID int) User {
+	user := &User{
+
+	}
+
+	return *user
+
+}
+
+func hashResourcePath(input string) string {
+	hasher.Write([]byte(input))
+	return strconv.FormatUint(uint64(hasher.Sum32()), 10)
 }

@@ -14,7 +14,7 @@ import (
 
 var (
 	s3Client s3.S3
-	bucketName string
+	BucketName string
 )
 
 func init() {
@@ -22,7 +22,7 @@ func init() {
 	accessKey := os.Getenv("DIGITAL_OCEAN_ACCESS_KEY")
 	secretKey := os.Getenv("DIGITAL_OCEAN_SECRET_KEY")
 	region := os.Getenv("DIGITAL_OCEAN_REGION")
-	bucketName = os.Getenv("DIGITAL_OCEAN_BUCKET_NAME")
+	BucketName = os.Getenv("DIGITAL_OCEAN_BUCKET_NAME")
 	endpoint := "https://" + region + ".digitaloceanspaces.com"
 
 	sess := session.Must(session.NewSession(&aws.Config{
@@ -35,25 +35,26 @@ func init() {
 	s3Client = *s3.New(sess)
 }
 
-func UploadFile(fileName string, fileContent []byte) error {
+// returns resource address
+func UploadFile(fileName string, fileContent []byte) (string, error) {
 	_, err := s3Client.PutObject(&s3.PutObjectInput{
-		Bucket: aws.String(bucketName),
+		Bucket: aws.String(BucketName),
 		Key:    aws.String(fileName),
 		Body:   bytes.NewReader(fileContent),
 		ACL:    aws.String("public-read"), // Optional: Make the file publicly accessible
 	})
 	if err != nil {
 		log.Fatalf("Failed to upload file: %v", err)
-		return err
+		return "", err
 	}
 
 	fmt.Printf("File uploaded successfully to spaces: %s\n", fileName)
-	return nil
+	return "https://" + BucketName + ".sgp1.digitaloceanspaces.com/" + fileName, nil
 }
 
 func DeleteFile(fileName string) error {
 	_, err := s3Client.DeleteObject(&s3.DeleteObjectInput{
-		Bucket: aws.String(bucketName),
+		Bucket: aws.String(BucketName),
 		Key:    aws.String(fileName),
 	})
 	if err != nil {
