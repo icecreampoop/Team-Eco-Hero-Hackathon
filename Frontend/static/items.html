@@ -39,12 +39,12 @@
             </div>
             <div class="col-8 right-pane">
                 <div class="search-bar">
-                    <input type="text" class="form-control" placeholder="Search...">
+                    <input id="search-bar" type="text" class="form-control" placeholder="Search...">
                 </div>
                 <div class="item-viewer">
                     <!-- Loop through the filtered items -->
                     {{ range . }}
-                    <div class="card item-card" data-category="{{ .Category }}">
+                    <div class="card item-card" data-category="{{ .Category }}" item-name="{{ .ItemName }}">
                         <div class="img-container">
                             <img src="{{ .ItemImageLink }}" width="100%" height="100%">
                         </div>
@@ -85,6 +85,24 @@
                     <label class="form-check-label">${category}</label>
                 `;
                 filterContainer.append(div);
+            });
+
+
+            // Search bar
+            var searchInput = document.getElementById("search-bar")
+            searchInput.addEventListener("input", function () {
+                const searchQuery = searchInput.value.toLowerCase();
+
+                itemCards.forEach(card => {
+                    const itemName = card.getAttribute("item-name").toLowerCase(); // Use data-name attribute
+
+                    // Check if the search query matches item name or category
+                    if (itemName.includes(searchQuery)) {
+                        card.style.display = "block"; // Show the card
+                    } else {
+                        card.style.display = "none"; // Hide the card
+                    }
+                });
             });
         })
 
