@@ -20,69 +20,26 @@
     <div class="main">
         <!-- Leader board -->
         <div class="main-container">
-            <div class="transactions-title">My Requests</div>
+            <div class="transactions-title">My Active Requests</div>
             <div class="transactions-card">
                 <table class="table">
                     <thead class="thead-custom">
                         <tr>
+                            <th scope="col"></th>
                             <th scope="col">Item</th>
                             <th scope="col">Item Owner</th>
                             <th scope="col">Link</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {{ range . }}
+                        {{ range .RequestArray }}
                         <tr>
-                            <td><img src="/Frontend/static/images/paupau-avatar.png" width="50px"></td>
-                            <td>Towel</td>
-                            <td>#123</td>
-                            <td>
-                                <div class="badge pending">Pending</div>
-                            </td>
-                            <td>
-                                <a href="#">View</a><br>
-                                <a href="#" class="">Cancel</a>
-                            </td>
+                            <td><img src={{.ItemImageLink}} width="100px"></td>
+                            <td>{{ .ItemName }}</td>
+                            <td>{{ .OwnerName }}</td>
+                            <td><a href="items/{{.ItemID}}">Item Link</a><br></td>
                         </tr>
-                        <tr>
-                            <th scope="row">2</th>
-                            <td><img src="/Frontend/static/images/paupau-avatar.png" width="50px"></td>
-                            <td>Keyboard</td>
-                            <td>#456</td>
-                            <td>
-                                <div class="badge completed">Completed</div>
-                            </td>
-                            <td>
-                                <a href="#">View</a><br>
-                                <a href="#" class="hide">Cancel</a>
-                            </td>                        
-                        </tr>
-                        <tr>
-                            <th scope="row">3</th>
-                            <td><img src="/Frontend/static/images/paupau-avatar.png" width="50px"></td>
-                            <td>Toy</td>
-                            <td>#789</td>
-                            <td>
-                                <div class="badge cancelled">Cancelled</div>
-                            </td>
-                            <td>
-                                <a href="#">View</a><br>
-                                <a href="#" class="hide">Cancel</a>
-                            </td>                        
-                        </tr>
-                        <tr>
-                            <th scope="row">4</th>
-                            <td><img src="/Frontend/static/images/paupau-avatar.png" width="50px"></td>
-                            <td>Shirt</td>
-                            <td>##101112</td>
-                            <td>
-                                <div class="badge completed">Completed</div>
-                            </td>
-                            <td>
-                                <a href="#">View</a><br>
-                                <a href="#" class="hide">Cancel</a>
-                            </td>                        
-                        </tr>
+                        {{ end }}
                     </tbody>
                 </table>
             </div>
