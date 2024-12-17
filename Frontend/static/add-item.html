@@ -16,39 +16,7 @@
 </head>
 
 <body>
-    <header>
-        <div class="header-bar">
-            <div class="row">
-                <div class="col-7 fp-logo-container">
-                    <img src="/Frontend/static/images/fp_logo.webp" width="150px">
-                </div>
-                <div class="col-5 user-container">
-                    <!-- template if/else logged in or not -->
-                    <div class="login-signup-container hide">
-                        <a href="#" class="header-btn login">Log in</a>
-                        <a href="#" class="header-btn signup">Sign up</a>              
-                    </div>
-                    <div class="logo-logout-container">
-                        <div id="logo-click" class="logo-container">
-                            <div href="" class="user_logo">
-                                <i class="fa-solid fa-user"></i>
-                            </div>
-                        </div>
-                        <a href="#" class="header-btn login">Log out</a>
-                    </div>
-                    <div id="dropdown" class="dropdown-container hide">
-                        <div class="dropdown-option">Profile</div>
-                        <div class="dropdown-option">Settings</div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-12 nav-bar">
-                <a href="#" class="nav-bar-btn">Items</a>
-                <a href="#" class="nav-bar-btn">Leader Board</a>
-            </div>
-        </div>
-    </header>
-
+    {{ template "headerbar" }}
     <div class="main">
         <div class="main-container">
             <div class="add-item-title">Create New Listing</div>
