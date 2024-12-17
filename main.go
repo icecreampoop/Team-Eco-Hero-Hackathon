@@ -15,7 +15,8 @@ func main() {
 	//backend.LoadDataFromConfig("data.json")
 	//log.Printf("Loaded users: %+v", backend.Users)
 	//log.Printf("Loaded items: %+v", backend.Items)
-	//backend.AddNewItem(1, "HDMI Cable", "electronics")
+	//backend.AddNewItem(1, "SUPER Cable", "electronics")
+	//backend.DeleteItem(6)
 
 	log.Println("App is ready!")
 
