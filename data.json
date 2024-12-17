@@ -146,6 +146,28 @@
       "CurrentRequesters": [
         7
       ]
+    },
+    {
+      "ItemID": 6,
+      "OwnerID": 6,
+      "ReceiverID": 0,
+      "ItemName": "Socks",
+      "ItemDescription": "Used",
+      "ItemImageLink": "https://ecofilebucket.sgp1.digitaloceanspaces.com/3718920461.jpg",
+      "Category": "clothing",
+      "Status": "available",
+      "CurrentRequesters": []
+    },
+    {
+      "ItemID": 7,
+      "OwnerID": 6,
+      "ReceiverID": 0,
+      "ItemName": "New Water Bottle",
+      "ItemDescription": "New",
+      "ItemImageLink": "https://ecofilebucket.sgp1.digitaloceanspaces.com/3248023183.jpg",
+      "Category": "others",
+      "Status": "available",
+      "CurrentRequesters": []
     }
   ]
 }
