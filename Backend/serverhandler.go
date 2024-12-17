@@ -109,9 +109,6 @@ func createNewItem(w http.ResponseWriter, r *http.Request) {
 	w.Write([]byte("File uploaded and processed successfully"))
 }
 
-// returns the resource address
-func uploadFileToDigitalOcean([]bytes, )
-
 func requestItem(w http.ResponseWriter, r *http.Request) {
 
 }
