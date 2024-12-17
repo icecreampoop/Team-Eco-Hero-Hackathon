@@ -451,13 +451,10 @@ func ServerHandler() {
 	mux.HandleFunc("/create-item", createNewItem).Methods("POST")
 	mux.HandleFunc("/items/{itemID}/request", requestItem).Methods("POST")
 	mux.HandleFunc("/items/{itemID}/accept", acceptRequest).Methods("POST")
-<<<<<<< HEAD
 	mux.HandleFunc("/items/{itemID}/accept", acceptRequest).Methods("GET")
 	mux.HandleFunc("/items/{itemID}", updateItemDetails).Methods("PUT")
-=======
 	mux.HandleFunc("/items/{itemID}/update-item", updateItemDetails).Methods("POST")
 	mux.HandleFunc("/items/{itemID}/update-item", serveUpdateItemPage).Methods("GET")
->>>>>>> abc05bd55bf77e6fa9387e13573012395b9f0757
 	mux.HandleFunc("/items/{itemID}", deleteItem).Methods("DELETE")
 
 	mux.HandleFunc("/user", HandleHTTPUser).Methods("GET")
