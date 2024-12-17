@@ -13,6 +13,10 @@
     margin: 20px;
 }
 
+.right-pane {
+    min-width: 700px;
+}
+
 .category-title {
     font-size:larger;
     font-weight: bold;
@@ -30,13 +34,14 @@
     margin-top: 20px;
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
 }
 
 .item-card {
     width: 30%;
     overflow: hidden;
     margin-bottom: 20px;
+    margin-right: 20px;
+    min-width: 200px;
 }
 
 .item-name {
@@ -76,4 +81,17 @@
 .filter-btn {
     width: 100%;
     margin-top: 15px;
+}
+
+.add-item-container {
+    margin: 20px;
+}
+
+.min-left {
+    min-width: 250px;
+    height: 100%;
+}
+
+.row {
+    flex-wrap: nowrap;
 }

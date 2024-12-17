@@ -57,3 +57,9 @@
     justify-content: center;
     align-items: center; 
 }
+
+#edit-delete-btns {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
