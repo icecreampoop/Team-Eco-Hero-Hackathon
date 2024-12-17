@@ -242,8 +242,39 @@ func RequestItem(itemID int, userID int) error {
 	// Iterate through the items to find the item by itemID
 	for i, item := range data.Items {
 		if item.ItemID == itemID {
+			if item.OwnerID == userID {
+				return fmt.Errorf("cannot request your own item")
+			}
 			// Add the userID to the requesters
-			data.Items[i].CurrentRequesters = append(data.Items[i].CurrentRequesters, userID)
+			// Check for duplicates before adding the userID to CurrentRequesters
+			userExists := false
+			for _, requesterID := range data.Items[i].CurrentRequesters {
+				if requesterID == userID {
+					userExists = true
+					break
+				}
+			}
+			if !userExists {
+				data.Items[i].CurrentRequesters = append(data.Items[i].CurrentRequesters, userID)
+			}
+
+			// Add itemID to ActiveRequests if not already present
+			for j, user := range data.Users {
+				if user.UserID == userID {
+					itemExists := false
+					for _, activeItemID := range data.Users[j].ActiveRequests {
+						if activeItemID == itemID {
+							itemExists = true
+							break
+						}
+					}
+					if !itemExists {
+						data.Users[j].ActiveRequests = append(data.Users[j].ActiveRequests, itemID)
+					} else {
+						return fmt.Errorf("you already requested for this")
+					}
+				}
+			}
 			break
 		}
 	}
