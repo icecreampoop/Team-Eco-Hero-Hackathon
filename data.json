@@ -17,28 +17,80 @@
       "Level": 3,
       "AvatarPic": "http://example.com/avatar2.jpg",
       "Admin": true
+    },
+    {
+      "UserID": 3,
+      "Password": "hashed_password3",
+      "Email": "user3@example.com",
+      "EXP": 10,
+      "Level": 1,
+      "AvatarPic": "http://example.com/avatar3.jpg",
+      "Admin": false
+    },
+    {
+      "UserID": 4,
+      "Password": "hashed_password4",
+      "Email": "user4@example.com",
+      "EXP": 60,
+      "Level": 4,
+      "AvatarPic": "http://example.com/avatar4.jpg",
+      "Admin": false
+    },
+    {
+      "UserID": 5,
+      "Password": "hashed_password5",
+      "Email": "user5@example.com",
+      "EXP": 80,
+      "Level": 5,
+      "AvatarPic": "http://example.com/avatar5.jpg",
+      "Admin": true
     }
   ],
   "items": [
     {
       "ItemID": 1,
-      "UserID": 1,
+      "OwnerID": 1,
+      "ReceiverID": 0,
       "ItemName": "Laptop",
-      "ItemDescription": "A powerful gaming laptop",
-      "Category1": "Electronics",
-      "Category2": "Gaming",
-      "Category3": "Laptop",
-      "ItemImage": "http://example.com/laptop.jpg"
+      "ItemDescription": "A powerful gaming laptop (2018)",
+      "Category": "electronics",
+      "Status": "available"
     },
     {
       "ItemID": 2,
-      "UserID": 2,
-      "ItemName": "Phone",
-      "ItemDescription": "A flagship smartphone",
-      "Category1": "Electronics",
-      "Category2": "Mobile",
-      "Category3": "Phone",
-      "ItemImage": "http://example.com/phone.jpg"
+      "OwnerID": 2,
+      "ReceiverID": 0,
+      "ItemName": "Smartphone",
+      "ItemDescription": "A mid-range smartphone",
+      "Category": "mobile",
+      "Status": "available"
+    },
+    {
+      "ItemID": 3,
+      "OwnerID": 3,
+      "ReceiverID": 0,
+      "ItemName": "Bicycle",
+      "ItemDescription": "A mountain bike",
+      "Category": "sports",
+      "Status": "available"
+    },
+    {
+      "ItemID": 4,
+      "OwnerID": 3,
+      "ReceiverID": 0,
+      "ItemName": "Bookshelf",
+      "ItemDescription": "ladder",
+      "Category": "tools",
+      "Status": "pending"
+    },
+    {
+      "ItemID": 5,
+      "OwnerID": 4,
+      "ReceiverID": 5,
+      "ItemName": "Jacket",
+      "ItemDescription": "Blue winter jacket",
+      "Category": "clothing",
+      "Status": "donated"
     }
   ]
 }

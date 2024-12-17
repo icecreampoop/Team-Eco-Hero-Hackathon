@@ -41,9 +41,7 @@ type Item struct {
 	ReceiverID        int        `json:"ReceiverID"`
 	ItemName          string     `json:"ItemName"`
 	ItemDescription   string     `json:"ItemDescription"`
-	Category1         Categories `json:"Category1"`
-	Category2         Categories `json:"Category2"`
-	Category3         Categories `json:"Category3"`
+	Category          Categories `json:"Category"`
 	ItemStatus        Statuses   `json:"Status"`
 	CurrentRequesters []int      `json:"CurrentRequesters"`
 }
