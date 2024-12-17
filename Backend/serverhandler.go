@@ -217,7 +217,9 @@ func deleteItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = DeleteItem(itemID)
+	userIDInt, _ := getUserID(r)
+
+	err = DeleteItem(itemID, userIDInt)
 	if err != nil {
 		if err.Error() == fmt.Sprintf("item with ID %d not found", itemID) {
 			http.Error(w, "Item not found", http.StatusNotFound)
