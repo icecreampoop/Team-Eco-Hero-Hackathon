@@ -7,10 +7,17 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"text/template"
 )
 
+var tpl *template.Template
+
 func showAllItems(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "./Frontend/static/items.html")
+	err := tpl.ExecuteTemplate(w, "items.html", nil)
+	if err != nil {
+		http.Error(w, "Error rendering template", http.StatusInternalServerError)
+		log.Println("Template execution error:", err)
+	}
 }
 
 func showSingleItem(w http.ResponseWriter, r *http.Request) {
@@ -129,6 +136,13 @@ func HandleHTTPSignup(w http.ResponseWriter, r *http.Request) {
 // }
 
 func ServerHandler() {
+	// Go templates
+	var err error
+	tpl, err = template.ParseGlob("./Frontend/static/*.html")
+	if err != nil {
+		log.Println("Error parsing template:", err)
+	}
+
 	// Create new HTTP mux
 	mux := http.NewServeMux()
 
