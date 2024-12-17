@@ -52,7 +52,7 @@ func showAllItems(w http.ResponseWriter, r *http.Request) {
 }
 
 func showSingleItem(w http.ResponseWriter, r *http.Request) {
-
+	asf
 }
 
 func createNewItem(w http.ResponseWriter, r *http.Request) {
@@ -134,7 +134,7 @@ func acceptRequest(w http.ResponseWriter, r *http.Request) {
 }
 
 func updateItemDetails(w http.ResponseWriter, r *http.Request) {
-
+	asf
 }
 
 func deleteItem(w http.ResponseWriter, r *http.Request) {
@@ -297,7 +297,8 @@ func ServerHandler() {
 	mux.HandleFunc("POST /items", createNewItem)
 	mux.HandleFunc("POST /items/{itemID}/request", requestItem)
 	mux.HandleFunc("POST /items/{itemID}/accept", acceptRequest)
-	mux.HandleFunc("PUT /items/{itemID}", updateItemDetails)
+	mux.HandleFunc("POST /items/{itemID}/update-item", updateItemDetails)
+	mux.HandleFunc("GET /items/{itemID}/update-item", showSingleItem)
 	mux.HandleFunc("DELETE /items/{itemID}", deleteItem)
 
 	mux.HandleFunc("/user", HandleHTTPUser)
