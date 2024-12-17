@@ -37,6 +37,17 @@ const (
 )
 
 type Item struct {
+<<<<<<< HEAD
+	ItemID          int        `json:"ItemID"`
+	OwnerID         int        `json:"OwnerID"`
+	ReceiverID      int        `json:"ReceiverID"`
+	ItemName        string     `json:"ItemName"`
+	ItemDescription string     `json:"ItemDescription"`
+	Category1       Categories `json:"Category1"`
+	Category2       Categories `json:"Category2"`
+	Category3       Categories `json:"Category3"`
+	ItemStatus      Statuses   `json:"Status"`
+=======
 	ItemID            int        `json:"ItemID"`
 	OwnerID           int        `json:"OwnerID"`
 	ReceiverID        int        `json:"ReceiverID"`
@@ -45,6 +56,7 @@ type Item struct {
 	Category          Categories `json:"Category"`
 	ItemStatus        Statuses   `json:"Status"`
 	CurrentRequesters []int      `json:"CurrentRequesters"`
+>>>>>>> c5b93805fdb273db783f7785e33917d507f33743
 }
 
 // Data struct to represent the data.json structure
@@ -168,3 +180,34 @@ func AddNewItem(ownerID int, itemName string, categories string) error {
 	// Save the updated data
 	return SaveUserData(data)
 }
+<<<<<<< HEAD
+
+// GetItem retrieves an item by its ItemID
+func GetItem(itemID int) (Item, error) {
+	var data Data
+	file, err := os.Open("data.json")
+	if err != nil {
+		return Item{}, err
+	}
+	defer file.Close()
+
+	bytes, err := io.ReadAll(file)
+	if err != nil {
+		return Item{}, err
+	}
+
+	err = json.Unmarshal(bytes, &data)
+	if err != nil {
+		return Item{}, err
+	}
+
+	for _, item := range data.Items {
+		if item.ItemID == itemID {
+			return item, nil
+		}
+	}
+
+	return Item{}, fmt.Errorf("item with ID %d not found", itemID)
+}
+=======
+>>>>>>> c5b93805fdb273db783f7785e33917d507f33743
