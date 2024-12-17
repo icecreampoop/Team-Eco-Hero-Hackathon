@@ -350,6 +350,20 @@ func HandleHTTPLogin(w http.ResponseWriter, r *http.Request) {
 	tmpl.Execute(w, nil)
 }
 
+// HandleHTTPLogout logs the user out by deleting the "UserID" cookie and redirect to login
+func HandleHTTPLogout(w http.ResponseWriter, r *http.Request) {
+	// Delete the "UserID" cookie
+	cookie := http.Cookie{
+		Name:   "UserID",
+		Value:  "",
+		MaxAge: -1,
+	}
+	http.SetCookie(w, &cookie)
+
+	// Redirect to login page
+	http.Redirect(w, r, "/login", http.StatusSeeOther)
+}
+
 // HandleHTTPSignup serves the signup page and handles user registration
 func HandleHTTPSignup(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("./Frontend/static/signup.html")
@@ -415,6 +429,7 @@ func ServerHandler() {
 	mux.HandleFunc("/board", HandleHTTPBoard).Methods("GET")
 	mux.HandleFunc("/login", HandleHTTPLogin).Methods("GET", "POST")
 	mux.HandleFunc("/signup", HandleHTTPSignup).Methods("GET")
+	mux.HandleFunc("/logout", HandleHTTPLogout).Methods("GET")
 
 	// Serve static files from the frontend directory
 	fs := http.FileServer(http.Dir("./Frontend/static"))
