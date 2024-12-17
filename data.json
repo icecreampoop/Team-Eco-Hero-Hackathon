@@ -58,7 +58,7 @@
   ],
   "items": [
     {
-      "ItemID": 3,
+      "ItemID": 1,
       "OwnerID": 3,
       "ReceiverID": 0,
       "ItemName": "Bicycle",
@@ -69,7 +69,7 @@
       "CurrentRequesters": null
     },
     {
-      "ItemID": 4,
+      "ItemID": 2,
       "OwnerID": 3,
       "ReceiverID": 0,
       "ItemName": "Bookshelf",
