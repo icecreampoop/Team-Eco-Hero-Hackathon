@@ -30,10 +30,10 @@
                             </div>
                             <p class="card-text mt-3">{{ .ItemDescription }}</p>
                             <div class="d-flex justify-content-center gap-3 mt-3">
-                                <a href="#" class="btn btn-primary">Request</a>
+                                <a id="req-btn" class="btn btn-primary">Request</a>
                             </div>
-                            <div id="edit-delete-btns" class="modify-btn">
-                                <a href="#" class="btn btn-success mt-3">Edit</a>
+                            <div id="edit-delete-btns">
+                                <a href="/items/{{.ItemID}}/update-item" class="btn btn-success mt-3">Edit</a>
                                 <a id="delete-btn" class="btn btn-danger mt-3">Delete</a>
                             </div>
                         </div>
@@ -67,15 +67,40 @@
                     console.error('Error:', error);
                 });
             });
+
+            document.getElementById("req-btn").addEventListener("click", function(event) {
+                event.preventDefault(); // Prevent the default link behavior (navigation)
+                
+                // Get the item ID from the button's data attribute
+                const itemId = {{.ItemID}};
+
+                // Send the DELETE request to the server
+                fetch(`/items/${itemId}/request`, {
+                    method: 'POST',  // HTTP method
+                })
+                .then(response => {
+                    if (response.ok) {
+                        console.log("Item deleted successfully.");
+                        alert("Item Successfully Requested!")
+                        window.location.href = "/"
+                    } else {
+                        console.log("Failed to request the item.");
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            });
         });
 
+        var ownerID = Number({{.OwnerID}})
         var sameUser = false
         var editDelete = document.getElementById("edit-delete-btns")
-        // Check user logged in?
         for (let i = 0; i < cookies.length; i++) {
             let [key, val] = cookies[i].split("=")
-            if (key === "UserID") {
-                boolLoggedIn = true
+            console.log(ownerID, val)
+            if (key === "UserID" && Number(val) === ownerID) {
+                sameUser = true
                 editDelete.classList.remove("hide")
                 break
             }
