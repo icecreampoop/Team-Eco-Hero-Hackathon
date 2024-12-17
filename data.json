@@ -111,39 +111,6 @@
       "Category": "clothing",
       "Status": "available",
       "CurrentRequesters": []
-    },
-    {
-      "ItemID": 5,
-      "OwnerID": 6,
-      "ReceiverID": 0,
-      "ItemName": "ISADHSAD",
-      "ItemDescription": "asdasd",
-      "ItemImageLink": "https://ecofilebucket.sgp1.digitaloceanspaces.com/2356809741.png",
-      "Category": "clothing",
-      "Status": "available",
-      "CurrentRequesters": []
-    },
-    {
-      "ItemID": 6,
-      "OwnerID": 6,
-      "ReceiverID": 0,
-      "ItemName": "new item",
-      "ItemDescription": "hashashda",
-      "ItemImageLink": "https://ecofilebucket.sgp1.digitaloceanspaces.com/1786419533.png",
-      "Category": "clothing",
-      "Status": "available",
-      "CurrentRequesters": []
-    },
-    {
-      "ItemID": 7,
-      "OwnerID": 6,
-      "ReceiverID": 0,
-      "ItemName": "new nwe nwe",
-      "ItemDescription": "asdnk ",
-      "ItemImageLink": "https://ecofilebucket.sgp1.digitaloceanspaces.com/1640968246.png",
-      "Category": "furniture",
-      "Status": "available",
-      "CurrentRequesters": []
     }
   ]
 }

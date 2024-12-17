@@ -187,7 +187,7 @@ func createNewItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// Respond to the client
-	fmt.Println("settle")
+	//fmt.Println("settle")
 	//w.WriteHeader(http.StatusOK)
 	//w.Write([]byte("File uploaded and processed successfully"))
 	http.Redirect(w, r, "http://localhost:5000/", http.StatusFound)
@@ -256,7 +256,9 @@ func deleteItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = DeleteItem(itemID)
+	userIDInt, _ := getUserID(r)
+
+	err = DeleteItem(itemID, userIDInt)
 	if err != nil {
 		if err.Error() == fmt.Sprintf("item with ID %d not found", itemID) {
 			http.Error(w, "Item not found", http.StatusNotFound)
