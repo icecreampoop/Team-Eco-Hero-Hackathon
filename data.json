@@ -2,12 +2,12 @@
   "users": [
     {
       "UserID": 1,
-      "Username": "",
+      "Username": "Seb UwU",
       "Password": "hashed_password1",
       "Email": "user1@example.com",
       "EXP": 20,
       "Level": 2,
-      "AvatarPic": "http://example.com/avatar1.jpg",
+      "AvatarPic": "https://media.licdn.com/dms/image/v2/C5603AQHJUmjAUgp4Hw/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1517673150770?e=2147483647&v=beta&t=KK4cL6u-eYyLmmoTYm5ApCKvOx_-e6iaTh8Mzz3Kulg",
       "Admin": false,
       "ActiveRequests": null
     },

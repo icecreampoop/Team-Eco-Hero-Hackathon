@@ -327,11 +327,14 @@ func loadUsers(filename string) ([]User, error) {
 
 // find user based on their user ID, returns user struct
 func findUser(userID int) User {
-	user := &User{
-
+	db, _ := LoadUserData()
+	for _, user := range db.Users {
+		if user.UserID == userID {
+			return user
+		}
 	}
 
-	return *user
+	return User{}
 
 }
 
