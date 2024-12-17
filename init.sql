@@ -1,5 +1,0 @@
-CREATE DATABASE IF NOT EXISTS marketplace;
-
-CREATE USER IF NOT EXISTS 'appuser'@'%' IDENTIFIED BY 'password';
-GRANT ALL PRIVILEGES ON marketplace.* TO 'appuser'@'%';
-FLUSH PRIVILEGES;
