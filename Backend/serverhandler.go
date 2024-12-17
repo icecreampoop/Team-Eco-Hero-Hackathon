@@ -10,6 +10,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"sort"
 	"strconv"
 	"text/template"
 
@@ -199,8 +200,6 @@ func HandleHTTPSingleUser(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	userID, _ := strconv.Atoi(params["userid"])
 
-	fmt.Println(userID)
-
 	// redirect function
 
 	// userID, err := getUserID(r)
@@ -242,19 +241,30 @@ func HandleHTTPSingleUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandleHTTPBoard(w http.ResponseWriter, r *http.Request) {
-	// data, err := LoadUserData()
-	// if err != nil {
-	// 	fmt.Println("Error loading data from JSON")
-	// 	return
-	// }
+	data, err := LoadUserData()
+	if err != nil {
+		fmt.Println("Error loading data from JSON")
+		return
+	}
 
-	// // users :=
+	users := data.Users
 
-	// err = tpl.ExecuteTemplate(w, "board.html", nil)
-	// if err != nil {
-	// 	http.Error(w, "Error rendering Board template", http.StatusInternalServerError)
-	// 	log.Println("Template execution error:", err)
-	// }
+	sort.Slice(users, func(i, j int) bool {
+		user1 := (users[i].Level * 100) + users[i].EXP
+		user2 := (users[j].Level * 100) + users[j].EXP
+		return user1 > user2
+	})
+
+	topFive := make(map[int]User)
+	for i := 0; i < len(users) && i < 5; i++ {
+		topFive[i+1] = users[i]
+	}
+
+	err = tpl.ExecuteTemplate(w, "board.html", topFive)
+	if err != nil {
+		http.Error(w, "Error rendering Board template", http.StatusInternalServerError)
+		log.Println("Template execution error:", err)
+	}
 }
 
 // // HandleHTTPLogin serves the login page
