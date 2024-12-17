@@ -2,14 +2,18 @@ package backend
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"hash/fnv"
 	"image"
 	"io"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"text/template"
+
+	"github.com/gorilla/mux"
 )
 
 var tpl *template.Template
@@ -51,6 +55,14 @@ func showAllItems(w http.ResponseWriter, r *http.Request) {
 
 func showSingleItem(w http.ResponseWriter, r *http.Request) {
 
+}
+
+func createNewItemPage(w http.ResponseWriter, r *http.Request) {
+	err := tpl.ExecuteTemplate(w, "add-item.html", nil)
+	if err != nil {
+		http.Error(w, "Error rendering add-item template", http.StatusInternalServerError)
+		log.Println("Template execution error:", err)
+	}
 }
 
 func createNewItem(w http.ResponseWriter, r *http.Request) {
@@ -145,6 +157,11 @@ func HandleHTTPIndex(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandleHTTPUser(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	userID, _ := strconv.Atoi(params["userid"])
+
+	// if userID blank , meaning if /user
+
 	// redirect function
 
 	// userID, err := getUserID(r)
@@ -152,7 +169,6 @@ func HandleHTTPUser(w http.ResponseWriter, r *http.Request) {
 	// 	fmt.Println(err)
 	// 	return
 	// }
-	userID := 2
 
 	data, err := LoadUserData()
 	if err != nil {
@@ -184,10 +200,6 @@ func HandleHTTPUser(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Error rendering User template", http.StatusInternalServerError)
 		log.Println("Template execution error:", err)
 	}
-}
-
-func HandleHTTPSingleUser(w http.ResponseWriter, r *http.Request) {
-	fmt.Println(r.URL.Path)
 }
 
 func HandleHTTPBoard(w http.ResponseWriter, r *http.Request) {
@@ -288,29 +300,30 @@ func ServerHandler() {
 	}
 
 	// Create new HTTP mux
-	mux := http.NewServeMux()
+	mux := mux.NewRouter()
 
 	// Default handler
 	mux.HandleFunc("/", showAllItems) // default handler to showallitems
 
 	//all item handlers
-	mux.HandleFunc("GET /items", showAllItems)
-	mux.HandleFunc("GET /items/{itemID}", showSingleItem)
-	mux.HandleFunc("POST /items", createNewItem)
-	mux.HandleFunc("POST /items/{itemID}/request", requestItem)
-	mux.HandleFunc("POST /items/{itemID}/accept", acceptRequest)
-	mux.HandleFunc("PUT /items/{itemID}", updateItemDetails)
-	mux.HandleFunc("DELETE /items/{itemID}", deleteItem)
+	mux.HandleFunc("GET /items", showAllItems).Methods("GET")
+	mux.HandleFunc("GET /items/{itemID}", showSingleItem).Methods("GET")
+	mux.HandleFunc("/create-item", createNewItemPage).Methods("GET")
+	mux.HandleFunc("POST /create-item", createNewItem).Methods("POST")
+	mux.HandleFunc("POST /items/{itemID}/request", requestItem).Methods("POST")
+	mux.HandleFunc("POST /items/{itemID}/accept", acceptRequest).Methods("POST")
+	mux.HandleFunc("PUT /items/{itemID}", updateItemDetails).Methods("PUT")
+	mux.HandleFunc("DELETE /items/{itemID}", deleteItem).Methods("DELETE")
 
-	mux.HandleFunc("GET /user", HandleHTTPUser)
-	mux.HandleFunc("GET /user/{userid}", HandleHTTPSingleUser)
-	mux.HandleFunc("/board", HandleHTTPBoard)
-	mux.HandleFunc("/login", HandleHTTPLogin)
-	mux.HandleFunc("/signup", HandleHTTPSignup)
+	// mux.HandleFunc("GET /user", HandleHTTPUser)
+	mux.HandleFunc("/user/{userid}", HandleHTTPUser).Methods("GET")
+	mux.HandleFunc("/board", HandleHTTPBoard).Methods("GET")
+	mux.HandleFunc("/login", HandleHTTPLogin).Methods("GET")
+	mux.HandleFunc("/signup", HandleHTTPSignup).Methods("GET")
 
 	// Serve static files from the frontend directory
 	fs := http.FileServer(http.Dir("./Frontend/static"))
-	mux.Handle("/Frontend/static/", http.StripPrefix("/Frontend/static/", fs))
+	mux.PathPrefix("/Frontend/static/").Handler(http.StripPrefix("/Frontend/static/", fs))
 
 	// Start server
 	port := ":5000"
@@ -332,4 +345,43 @@ func getUserID(r *http.Request) (int, error) {
 	userID, _ := strconv.Atoi(cookie.Value)
 
 	return userID, nil
+}
+
+func loadUsers(filename string) ([]User, error) {
+	file, err := os.Open(filename)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	byteVal, err := io.ReadAll(file)
+	if err != nil {
+		return nil, err
+	}
+
+	var users []User
+	err = json.Unmarshal(byteVal, &users)
+	if err != nil {
+		return nil, err
+	}
+
+	return users, nil
+}
+
+// find user based on their user ID, returns user struct
+func findUser(userID int) User {
+	db, _ := LoadUserData()
+	for _, user := range db.Users {
+		if user.UserID == userID {
+			return user
+		}
+	}
+
+	return User{}
+
+}
+
+func hashResourcePath(input string) string {
+	hasher.Write([]byte(input))
+	return strconv.FormatUint(uint64(hasher.Sum32()), 10)
 }
