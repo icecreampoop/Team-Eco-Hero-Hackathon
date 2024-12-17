@@ -196,7 +196,10 @@
       "ItemImageLink": "https://www.kardiel.com/product_images/uploaded_images/blogs/blog-post-75/Style-It-2-1.jpg",
       "Category": "furniture",
       "Status": "pending",
-      "CurrentRequesters": null
+      "CurrentRequesters": [
+        1,
+        1
+      ]
     },
     {
       "ItemID": 3,
@@ -207,7 +210,9 @@
       "ItemImageLink": "https://www.ikea.com/sg/en/images/products/vaerdera-coffee-cup-and-saucer-white__0711123_pe727991_s5.jpg",
       "Category": "others",
       "Status": "available",
-      "CurrentRequesters": []
+      "CurrentRequesters": [
+        1
+      ]
     },
     {
       "ItemID": 4,
@@ -218,7 +223,9 @@
       "ItemImageLink": "https://imageio.forbes.com/specials-images/imageserve/5d35eacaf1176b0008974b54/0x0.jpg?format=jpg\u0026crop=4560,2565,x790,y784,safe\u0026height=900\u0026width=1600\u0026fit=bounds",
       "Category": "sports",
       "Status": "available",
-      "CurrentRequesters": []
+      "CurrentRequesters": [
+        1
+      ]
     },
     {
       "ItemID": 5,
@@ -230,7 +237,11 @@
       "Category": "others",
       "Status": "available",
       "CurrentRequesters": [
-        7
+        7,
+        1,
+        1,
+        1,
+        1
       ]
     },
     {
@@ -242,7 +253,10 @@
       "ItemImageLink": "https://ecofilebucket.sgp1.digitaloceanspaces.com/3718920461.jpg",
       "Category": "clothing",
       "Status": "available",
-      "CurrentRequesters": []
+      "CurrentRequesters": [
+        1,
+        1
+      ]
     },
     {
       "ItemID": 7,
@@ -254,14 +268,15 @@
       "Category": "others",
       "Status": "available",
       "CurrentRequesters": [
-        6
+        6,
+        1
       ]
     },
     {
       "ItemID": 8,
       "OwnerID": 1,
       "ReceiverID": 0,
-      "ItemName": "New Broom",
+      "ItemName": "Super Broom",
       "ItemDescription": "New",
       "ItemImageLink": "https://ecofilebucket.sgp1.digitaloceanspaces.com/692389666.jpg",
       "Category": "furniture",
