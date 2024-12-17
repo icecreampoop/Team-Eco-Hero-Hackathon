@@ -184,10 +184,20 @@ func HandleHTTPIndex(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandleHTTPUser(w http.ResponseWriter, r *http.Request) {
+	userID, exists := getUserID(r)
+	if !exists {
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+	} else {
+		path := fmt.Sprintf("/user/%d", userID)
+		http.Redirect(w, r, path, http.StatusSeeOther)
+	}
+}
+
+func HandleHTTPSingleUser(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	userID, _ := strconv.Atoi(params["userid"])
 
-	// if userID blank , meaning if /user
+	fmt.Println(userID)
 
 	// redirect function
 
@@ -230,7 +240,19 @@ func HandleHTTPUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandleHTTPBoard(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "./Frontend/static/board.html")
+	// data, err := LoadUserData()
+	// if err != nil {
+	// 	fmt.Println("Error loading data from JSON")
+	// 	return
+	// }
+
+	// // users :=
+
+	// err = tpl.ExecuteTemplate(w, "board.html", nil)
+	// if err != nil {
+	// 	http.Error(w, "Error rendering Board template", http.StatusInternalServerError)
+	// 	log.Println("Template execution error:", err)
+	// }
 }
 
 // // HandleHTTPLogin serves the login page
@@ -330,7 +352,7 @@ func ServerHandler() {
 	mux := mux.NewRouter()
 
 	// Default handler
-	mux.HandleFunc("/", showAllItems) // default handler to showallitems
+	mux.HandleFunc("/", showAllItems).Methods("GET") // default handler to showallitems
 
 	//all item handlers
 	mux.HandleFunc("/items", showAllItems).Methods("GET")
@@ -342,8 +364,8 @@ func ServerHandler() {
 	mux.HandleFunc("/items/{itemID}", updateItemDetails).Methods("PUT")
 	mux.HandleFunc("/items/{itemID}", deleteItem).Methods("DELETE")
 
-	// mux.HandleFunc("GET /user", HandleHTTPUser)
-	mux.HandleFunc("/user/{userid}", HandleHTTPUser).Methods("GET")
+	mux.HandleFunc("/user", HandleHTTPUser).Methods("GET")
+	mux.HandleFunc("/user/{userid}", HandleHTTPSingleUser).Methods("GET")
 	mux.HandleFunc("/board", HandleHTTPBoard).Methods("GET")
 	mux.HandleFunc("/login", HandleHTTPLogin).Methods("GET")
 	mux.HandleFunc("/signup", HandleHTTPSignup).Methods("GET")
@@ -360,18 +382,16 @@ func ServerHandler() {
 	}
 }
 
-func getUserID(r *http.Request) (int, error) {
+func getUserID(r *http.Request) (int, bool) {
 	// Retrieve userID from cookie
 	cookie, err := r.Cookie("userID")
-	if err == http.ErrNoCookie {
-		return -1, fmt.Errorf("no userID cookie found. Please log in")
-	} else if err != nil {
-		return -1, fmt.Errorf("error retrieving cookie")
+	if err != nil {
+		return -1, false
 	}
 
 	userID, _ := strconv.Atoi(cookie.Value)
 
-	return userID, nil
+	return userID, true
 }
 
 func loadUsers(filename string) ([]User, error) {
