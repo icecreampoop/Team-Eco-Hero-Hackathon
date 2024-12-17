@@ -57,6 +57,11 @@ type Data struct {
 	Items []Item `json:"items"`
 }
 
+type ItemWithOwner struct {
+	Item
+	OwnerUsername string // This will hold the username of the item owner
+}
+
 // Load user data from data.json
 func LoadUserData() (Data, error) {
 	var data Data
@@ -176,6 +181,22 @@ func AddNewItem(ownerID int, itemName string, itemDescription string, categories
 	fmt.Println("added properlly")
 	// Save the updated data
 	return SaveUserData(data)
+}
+
+// GetUserID returns the UserID of a user by their email
+func GetUserID(email string) (int, error) {
+	data, err := LoadUserData()
+	if err != nil {
+		return 0, err
+	}
+
+	for _, user := range data.Users {
+		if user.Email == email {
+			return user.UserID, nil
+		}
+	}
+
+	return 0, fmt.Errorf("user with email %s not found", email)
 }
 
 // GetItem retrieves an item by its ItemID

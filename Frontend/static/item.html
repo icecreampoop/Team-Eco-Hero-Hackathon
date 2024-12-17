@@ -16,18 +16,16 @@
         <div class="row justify-content-center">
             <div class="col-md-6">
                 <div class="card">
-                    <img src="https://via.placeholder.com/600x500" alt="Card image" class="card-img">
+                    <img src="{{ .ItemImageLink }}" alt="Card image" class="card-img">
                     <div class="card-body">
-                        <h5 class="card-title">Product Name</h5>
+                        <h5 class="card-title">{{ .ItemName }}</h5>
                         <div class="item-info">
-                            <div class="listed-by">Listed By: Matthew</div>
-                            <span class="badge dark-badge">Electronics</span>
-                            <span class="badge dark-badge">Household</span>
-                            <span class="badge dark-badge">Gaming</span><br>
+                            <div class="listed-by">Listed By: abc</div>
+                            <span class="badge dark-badge">{{ .Category }}</span>
                         </div>
-                        <p class="card-text mt-3">Lorem ipsum dolor sit amet consectetur adipisicing elit. Reprehenderit doloribus laboriosam deserunt neque aliquam modi ab provident quis at in, maiores, delectus tenetur illum dolores fugit voluptatum, magnam itaque quisquam.</p>
+                        <p class="card-text mt-3">{{ .ItemDescription }}</p>
                         <div class="chope-btn">
-                            <a href="#" class="btn btn-primary mt-3">Chope!</a>
+                            <a href="#" class="btn btn-primary mt-3">Request</a>
                         </div>
                         <div class="modify-btn">
                             <a href="#" class="btn btn-success mt-3">Edit</a>

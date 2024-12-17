@@ -2,7 +2,6 @@ package backend
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"github.com/gorilla/mux"
 	"hash/fnv"
@@ -12,7 +11,7 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"os"
+	"sort"
 	"strconv"
 	"text/template"
 )
@@ -34,20 +33,28 @@ func showAllItems(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Get the filter query parameters from the URL (if any)
-	statusFilter := r.URL.Query().Get("status") // "available" or "pending"
+	// Create a slice to hold the filtered items with OwnerUsername
+	var filteredItemsWithOwner []ItemWithOwner
 
-	// Filter items based on the status
-	var filteredItems []Item
 	for _, item := range data.Items {
-		// Filter by status if specified, otherwise show all items
-		if statusFilter == "" || item.ItemStatus == StatusAvailable || item.ItemStatus == StatusPending {
-			filteredItems = append(filteredItems, item)
+		// Only include items with status "available" or "pending"
+		if item.ItemStatus == "available" || item.ItemStatus == "pending" {
+			// Use the findUser function to get the owner's username
+			owner := findUserTpl(item.OwnerID, data.Users)
+
+			// Create an ItemWithOwner struct and assign the OwnerUsername
+			itemWithOwner := ItemWithOwner{
+				Item:          item,
+				OwnerUsername: owner.Username, // Assign the owner's username
+			}
+
+			// Add the item with owner information to the filtered list
+			filteredItemsWithOwner = append(filteredItemsWithOwner, itemWithOwner)
 		}
 	}
 
-	// Pass the filtered items to the template
-	err = tpl.ExecuteTemplate(w, "items.html", filteredItems)
+	// Pass the filtered items with owner info to the template
+	err = tpl.ExecuteTemplate(w, "items.html", filteredItemsWithOwner)
 	if err != nil {
 		http.Error(w, "Error rendering template", http.StatusInternalServerError)
 		log.Println("Template execution error:", err)
@@ -55,7 +62,29 @@ func showAllItems(w http.ResponseWriter, r *http.Request) {
 }
 
 func showSingleItem(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	itemID, _ := strconv.Atoi(params["itemid"])
 
+	fmt.Println(itemID)
+
+	data, err := LoadUserData()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	var foundItem Item
+	for _, item := range data.Items {
+		if item.ItemID == itemID {
+			foundItem = item
+		}
+	}
+
+	err = tpl.ExecuteTemplate(w, "item.html", foundItem)
+	if err != nil {
+		http.Error(w, "Error rendering User template", http.StatusInternalServerError)
+		log.Println("Template execution error:", err)
+	}
 }
 
 func createNewItemPage(w http.ResponseWriter, r *http.Request) {
@@ -187,10 +216,18 @@ func HandleHTTPIndex(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandleHTTPUser(w http.ResponseWriter, r *http.Request) {
-	params := mux.Vars(r)
-	userID, _ := strconv.Atoi(params["userid"])
+	userID, exists := getUserID(r)
+	if !exists {
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+	} else {
+		path := fmt.Sprintf("/user/%d", userID)
+		http.Redirect(w, r, path, http.StatusSeeOther)
+	}
+}
 
-	// if userID blank , meaning if /user
+func HandleHTTPSingleUser(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	userID, _ := strconv.Atoi(params["UserID"])
 
 	// redirect function
 
@@ -233,8 +270,36 @@ func HandleHTTPUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandleHTTPBoard(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "./Frontend/static/board.html")
+	data, err := LoadUserData()
+	if err != nil {
+		fmt.Println("Error loading data from JSON")
+		return
+	}
+
+	users := data.Users
+
+	sort.Slice(users, func(i, j int) bool {
+		user1 := (users[i].Level * 100) + users[i].EXP
+		user2 := (users[j].Level * 100) + users[j].EXP
+		return user1 > user2
+	})
+
+	topFive := make(map[int]User)
+	for i := 0; i < len(users) && i < 5; i++ {
+		topFive[i+1] = users[i]
+	}
+
+	err = tpl.ExecuteTemplate(w, "board.html", topFive)
+	if err != nil {
+		http.Error(w, "Error rendering Board template", http.StatusInternalServerError)
+		log.Println("Template execution error:", err)
+	}
 }
+
+// // HandleHTTPLogin serves the login page
+// func HandleHTTPLogin(w http.ResponseWriter, r *http.Request) {
+// 	http.ServeFile(w, r, "./Frontend/static/login.html")
+// }
 
 // // HandleHTTPLogin serves the login page
 // func HandleHTTPLogin(w http.ResponseWriter, r *http.Request) {
@@ -258,17 +323,28 @@ func HandleHTTPLogin(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Get form values
-		username := r.FormValue("username")
+		email := r.FormValue("email")
 		password := r.FormValue("password")
 
 		// Validate credentials
-		valid, err := ValidateUserCredentials(username, password)
+		valid, err := ValidateUserCredentials(email, password)
 		if err != nil {
 			http.Error(w, "Unable to validate user credentials", http.StatusInternalServerError)
 			return
 		}
 
 		if valid {
+			// Set the "UserID" cookie
+			userID, err := GetUserID(email)
+			if err != nil {
+				http.Error(w, "Unable to get user ID", http.StatusInternalServerError)
+				return
+			}
+			cookie := http.Cookie{
+				Name:  "UserID",
+				Value: strconv.Itoa(userID),
+			}
+			http.SetCookie(w, &cookie)
 			// Successful login
 			http.Redirect(w, r, "/user", http.StatusSeeOther)
 			return
@@ -276,13 +352,27 @@ func HandleHTTPLogin(w http.ResponseWriter, r *http.Request) {
 
 		// Invalid credentials
 		tmpl.Execute(w, map[string]interface{}{
-			"ErrorMessage": "Invalid username or password",
+			"ErrorMessage": "Invalid login email or password",
 		})
 		return
 	}
 
 	// Serve the login page for GET requests
 	tmpl.Execute(w, nil)
+}
+
+// HandleHTTPLogout logs the user out by deleting the "UserID" cookie and redirect to login
+func HandleHTTPLogout(w http.ResponseWriter, r *http.Request) {
+	// Delete the "UserID" cookie
+	cookie := http.Cookie{
+		Name:   "UserID",
+		Value:  "",
+		MaxAge: -1,
+	}
+	http.SetCookie(w, &cookie)
+
+	// Redirect to login page
+	http.Redirect(w, r, "/login", http.StatusSeeOther)
 }
 
 // HandleHTTPSignup serves the signup page and handles user registration
@@ -333,7 +423,7 @@ func ServerHandler() {
 	mux := mux.NewRouter()
 
 	// Default handler
-	mux.HandleFunc("/", showAllItems) // default handler to showallitems
+	mux.HandleFunc("/", showAllItems).Methods("GET") // default handler to showallitems
 
 	//all item handlers
 	mux.HandleFunc("/items", createNewItem).Methods("POST")
@@ -347,11 +437,12 @@ func ServerHandler() {
 	mux.HandleFunc("/items/{itemID}", updateItemDetails).Methods("PUT")
 	mux.HandleFunc("/items/{itemID}", deleteItem).Methods("DELETE")
 
-	// mux.HandleFunc("GET /user", HandleHTTPUser)
-	mux.HandleFunc("/user/{userid}", HandleHTTPUser).Methods("GET")
+	mux.HandleFunc("/user", HandleHTTPUser).Methods("GET")
+	mux.HandleFunc("/user/{userid}", HandleHTTPSingleUser).Methods("GET")
 	mux.HandleFunc("/board", HandleHTTPBoard).Methods("GET")
-	mux.HandleFunc("/login", HandleHTTPLogin).Methods("GET")
+	mux.HandleFunc("/login", HandleHTTPLogin).Methods("GET", "POST")
 	mux.HandleFunc("/signup", HandleHTTPSignup).Methods("GET")
+	mux.HandleFunc("/logout", HandleHTTPLogout).Methods("GET")
 
 	// Serve static files from the frontend directory
 	fs := http.FileServer(http.Dir("./Frontend/static"))
@@ -365,39 +456,16 @@ func ServerHandler() {
 	}
 }
 
-func getUserID(r *http.Request) (int, error) {
+func getUserID(r *http.Request) (int, bool) {
 	// Retrieve userID from cookie
-	cookie, err := r.Cookie("userID")
-	if err == http.ErrNoCookie {
-		return -1, fmt.Errorf("no userID cookie found. Please log in")
-	} else if err != nil {
-		return -1, fmt.Errorf("error retrieving cookie")
+	cookie, err := r.Cookie("UserID")
+	if err != nil {
+		return -1, false
 	}
 
 	userID, _ := strconv.Atoi(cookie.Value)
 
-	return userID, nil
-}
-
-func loadUsers(filename string) ([]User, error) {
-	file, err := os.Open(filename)
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
-
-	byteVal, err := io.ReadAll(file)
-	if err != nil {
-		return nil, err
-	}
-
-	var users []User
-	err = json.Unmarshal(byteVal, &users)
-	if err != nil {
-		return nil, err
-	}
-
-	return users, nil
+	return userID, true
 }
 
 // find user based on their user ID, returns user struct
@@ -411,6 +479,16 @@ func findUser(userID int) User {
 
 	return User{}
 
+}
+
+// Find user based on their user ID, returns the user struct
+func findUserTpl(userID int, users []User) User {
+	for _, user := range users {
+		if user.UserID == userID {
+			return user
+		}
+	}
+	return User{} // Return an empty user if not found
 }
 
 func hashResourcePath(input string) string {
