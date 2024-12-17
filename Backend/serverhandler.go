@@ -325,14 +325,14 @@ func ServerHandler() {
 	mux.HandleFunc("/", showAllItems) // default handler to showallitems
 
 	//all item handlers
-	mux.HandleFunc("GET /items", showAllItems).Methods("GET")
-	mux.HandleFunc("GET /items/{itemID}", showSingleItem).Methods("GET")
+	mux.HandleFunc("/items", showAllItems).Methods("GET")
+	mux.HandleFunc("/items/{itemID}", showSingleItem).Methods("GET")
 	mux.HandleFunc("/create-item", createNewItemPage).Methods("GET")
-	mux.HandleFunc("POST /create-item", createNewItem).Methods("POST")
-	mux.HandleFunc("POST /items/{itemID}/request", requestItem).Methods("POST")
-	mux.HandleFunc("POST /items/{itemID}/accept", acceptRequest).Methods("POST")
-	mux.HandleFunc("PUT /items/{itemID}", updateItemDetails).Methods("PUT")
-	mux.HandleFunc("DELETE /items/{itemID}", deleteItem).Methods("DELETE")
+	mux.HandleFunc("/create-item", createNewItem).Methods("POST")
+	mux.HandleFunc("/items/{itemID}/request", requestItem).Methods("POST")
+	mux.HandleFunc("/items/{itemID}/accept", acceptRequest).Methods("POST")
+	mux.HandleFunc("/items/{itemID}", updateItemDetails).Methods("PUT")
+	mux.HandleFunc("/items/{itemID}", deleteItem).Methods("DELETE")
 
 	// mux.HandleFunc("GET /user", HandleHTTPUser)
 	mux.HandleFunc("/user/{userid}", HandleHTTPUser).Methods("GET")
