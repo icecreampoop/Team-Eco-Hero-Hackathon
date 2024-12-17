@@ -186,6 +186,10 @@ func HandleHTTPUser(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
+func HandleHTTPSingleUser(w http.ResponseWriter, r *http.Request) {
+	fmt.Println(r.URL.Path)
+}
+
 func HandleHTTPBoard(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "./Frontend/static/board.html")
 }
@@ -298,7 +302,8 @@ func ServerHandler() {
 	mux.HandleFunc("PUT /items/{itemID}", updateItemDetails)
 	mux.HandleFunc("DELETE /items/{itemID}", deleteItem)
 
-	mux.HandleFunc("/user", HandleHTTPUser)
+	mux.HandleFunc("GET /user", HandleHTTPUser)
+	mux.HandleFunc("GET /user/{userid}", HandleHTTPSingleUser)
 	mux.HandleFunc("/board", HandleHTTPBoard)
 	mux.HandleFunc("/login", HandleHTTPLogin)
 	mux.HandleFunc("/signup", HandleHTTPSignup)
