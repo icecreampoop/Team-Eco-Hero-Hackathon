@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+
 	//"image"
 	"io"
 	"log"
@@ -15,8 +16,18 @@ import (
 
 var tpl *template.Template
 
+// Show all items from the database and pass them to the template
 func showAllItems(w http.ResponseWriter, r *http.Request) {
-	err := tpl.ExecuteTemplate(w, "items.html", nil)
+	// Load data from data.json
+	data, err := LoadUserData()
+	if err != nil {
+		http.Error(w, "Error loading data", http.StatusInternalServerError)
+		log.Println("Error loading data:", err)
+		return
+	}
+
+	// Pass the items data to the template
+	err = tpl.ExecuteTemplate(w, "items.html", data.Items)
 	if err != nil {
 		http.Error(w, "Error rendering template", http.StatusInternalServerError)
 		log.Println("Template execution error:", err)
@@ -111,26 +122,34 @@ func HandleHTTPIndex(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandleHTTPUser(w http.ResponseWriter, r *http.Request) {
-	userID, err := getUserID(r)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+	// redirect function
 
-	data, err := loadUsers("data.json")
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-
-	fmt.Println(data, userID)
-
-	// err = tpl.ExecuteTemplate(w, "user.html", nil)
+	// userID, err := getUserID(r)
 	// if err != nil {
-	// 	http.Error(w, "Error rendering User template", http.StatusInternalServerError)
-	// 	log.Println("Template execution error:", err)
+	// 	fmt.Println(err)
+	// 	return
 	// }
+	userID := 2
 
+	data, err := LoadUserData()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	var foundUser User
+	for _, user := range data.Users {
+		if user.UserID == userID {
+			foundUser = user
+		}
+	}
+
+	fmt.Println(foundUser)
+	err = tpl.ExecuteTemplate(w, "user.html", foundUser)
+	if err != nil {
+		http.Error(w, "Error rendering User template", http.StatusInternalServerError)
+		log.Println("Template execution error:", err)
+	}
 }
 
 func HandleHTTPBoard(w http.ResponseWriter, r *http.Request) {
@@ -266,9 +285,9 @@ func getUserID(r *http.Request) (int, error) {
 	// Retrieve userID from cookie
 	cookie, err := r.Cookie("userID")
 	if err == http.ErrNoCookie {
-		return -1, fmt.Errorf("No userID cookie found. Please log in.")
+		return -1, fmt.Errorf("no userID cookie found. Please log in")
 	} else if err != nil {
-		return -1, fmt.Errorf("Error retrieving cookie")
+		return -1, fmt.Errorf("error retrieving cookie")
 	}
 
 	userID, _ := strconv.Atoi(cookie.Value)
