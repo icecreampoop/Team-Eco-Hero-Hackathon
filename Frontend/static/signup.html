@@ -20,15 +20,15 @@
     <h2 class="card-title">Create New Account</h2>
     <h4>Enter the following to create a new account</h4>
     
-    <!-- Display error message if exists
+    <!-- Display error message if exists -->
     {{if .ErrorMessage}}
         <div class="alert alert-danger" role="alert">
             {{.ErrorMessage}}
         </div>
-    {{end}} -->
+    {{end}}
 
     <div class="criteria-group">
-        <p class="criteria">Username must be between 5 and 20 characters, and contain only letters and numbers.</p>
+        <p class="criteria">Username must be between 15 and 30 characters, and contain only letters and numbers.</p>
         <p class="criteria">Password must be at least 8 characters long and contain at least one number.</p>
     </div>
 
