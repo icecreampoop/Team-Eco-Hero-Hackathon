@@ -7,14 +7,15 @@ import (
 )
 
 type User struct {
-	UserID         int    `json:"UserID"`
-	Password       string `json:"Password"`
-	Email          string `json:"Email"`
-	EXP            int    `json:"EXP"`
-	Level          int    `json:"Level"`
-	AvatarPic      string `json:"AvatarPic"`
-	Admin          bool   `json:"Admin"`
-	ActiveRequests []int  `json:"ActiveRequests"`
+	UserID    int    `json:"UserID"`
+	Password  string `json:"Password"`
+	Email     string `json:"Email"`
+	EXP       int    `json:"EXP"`
+	Level     int    `json:"Level"`
+	AvatarPic string `json:"AvatarPic"`
+	Admin     bool   `json:"Admin"`
+	// array of item IDs
+	ActiveRequests []int `json:"ActiveRequests"`
 }
 
 type Categories string
@@ -36,16 +37,16 @@ const (
 )
 
 type Item struct {
-	ItemID            int        `json:"ItemID"`
-	OwnerID           int        `json:"OwnerID"`
-	ReceiverID        int        `json:"ReceiverID"`
-	ItemName          string     `json:"ItemName"`
-	ItemDescription   string     `json:"ItemDescription"`
-	Category1         Categories `json:"Category1"`
-	Category2         Categories `json:"Category2"`
-	Category3         Categories `json:"Category3"`
-	ItemStatus        Statuses   `json:"Status"`
-	CurrentRequesters []int      `json:"CurrentRequesters"`
+	ItemID          int        `json:"ItemID"`
+	OwnerID         int        `json:"OwnerID"`
+	ReceiverID      int        `json:"ReceiverID"`
+	ItemName        string     `json:"ItemName"`
+	ItemDescription string     `json:"ItemDescription"`
+	ItemImageLink   string     `json:"ItemImageLink"`
+	Category        Categories `json:"Category"`
+	ItemStatus      Statuses   `json:"Status"`
+	// array of user IDs
+	CurrentRequesters []int `json:"CurrentRequesters"`
 }
 
 // Data struct to represent the data.json structure
@@ -127,6 +128,6 @@ func AddNewUser(email, password string) error {
 }
 
 // add item to db
-func AddNewItem(ownerID int, itemName, categories string) error {
-	return nil
+func AddNewItemToDB(item Item) error {
+
 }

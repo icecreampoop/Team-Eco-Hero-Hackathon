@@ -68,6 +68,12 @@ func createNewItem(w http.ResponseWriter, r *http.Request) {
 
 	// UploadFile(itemName + "."  + format, imageBytes)
 	UploadFile("."+format, imageBytes)
+	AddNewItemToDB(&Item{
+		ItemID: nil,
+		OwnerID: sfafs,
+		ReceiverID: nil,
+		ItemName: r.FormValue()
+	})
 
 	// Respond to the client
 	w.WriteHeader(http.StatusOK)
