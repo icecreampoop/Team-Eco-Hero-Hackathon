@@ -69,12 +69,12 @@ func createNewItem(w http.ResponseWriter, r *http.Request) {
 
 	// UploadFile(itemName + "."  + format, imageBytes)
 	UploadFile("."+format, imageBytes)
-	AddNewItemToDB(&Item{
-		ItemID: nil,
-		OwnerID: sfafs,
-		ReceiverID: nil,
-		ItemName: r.FormValue()
-	})
+	// AddNewItemToDB(&Item{
+	// 	ItemID: nil,
+	// 	OwnerID: getUserID(),
+	// 	ReceiverID: nil,
+	// 	ItemName: r.FormValue()
+	// })
 
 	// Respond to the client
 	w.WriteHeader(http.StatusOK)
@@ -104,11 +104,11 @@ func HandleHTTPIndex(w http.ResponseWriter, r *http.Request) {
 
 func HandleHTTPUser(w http.ResponseWriter, r *http.Request) {
 
-	err = tpl.ExecuteTemplate(w, "user.html", nil)
-	if err != nil {
-		http.Error(w, "Error rendering User template", http.StatusInternalServerError)
-		log.Println("Template execution error:", err)
-	}
+	// err = tpl.ExecuteTemplate(w, "user.html", nil)
+	// if err != nil {
+	// 	http.Error(w, "Error rendering User template", http.StatusInternalServerError)
+	// 	log.Println("Template execution error:", err)
+	// }
 
 }
 
