@@ -2,11 +2,13 @@ package backend
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"image"
 	"io"
 	"log"
 	"net/http"
+	"os"
 	"strconv"
 	"text/template"
 )
@@ -103,6 +105,19 @@ func HandleHTTPIndex(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandleHTTPUser(w http.ResponseWriter, r *http.Request) {
+	userID, err := getUserID(r)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	data, err := loadUsers("data.json")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Println(data, userID)
 
 	// err = tpl.ExecuteTemplate(w, "user.html", nil)
 	// if err != nil {
@@ -253,4 +268,25 @@ func getUserID(r *http.Request) (int, error) {
 	userID, _ := strconv.Atoi(cookie.Value)
 
 	return userID, nil
+}
+
+func loadUsers(filename string) ([]User, error) {
+	file, err := os.Open(filename)
+	if err != nil {
+		return nil, err
+	}
+	defer file.Close()
+
+	byteVal, err := io.ReadAll(file)
+	if err != nil {
+		return nil, err
+	}
+
+	var users []User
+	err = json.Unmarshal(byteVal, &users)
+	if err != nil {
+		return nil, err
+	}
+
+	return users, nil
 }
