@@ -58,12 +58,12 @@
                         <img src="/Frontend/static/images/paupau-avatar.png" width="100%" height="100%">
                     </div>
                     <div class="user-info">
-                        <div class="user-name">Pau Pau</div>
-                        <div class="user-title">Grand Master</div>
-                        <div class="user-level">Level 69</div>
+                        <div class="user-name">{{.TplUser.Username}}</div>
+                        <div class="user-email">{{.TplUser.Email}}</div>
+                        <div class="user-level">Level {{.TplUser.Level}}</div>
                     </div>
                     <div class="user-expbar-container">
-                        <div class="exp-title">EXP: </div>
+                        <div class="exp-title">EXP:</div>
                         <div class="full-exp-bar">
                             <div class="exp-bar" id="expBar"></div>
                         </div>
@@ -80,58 +80,19 @@
                     </div>
                 </div>
                 <div class="item-viewer">
+                    {{range .TplItems}}
                     <div class="card item-card">
                         <div class="img-container">
-                            <img src="/Frontend/static/images/item1.png" width="100%" height="100%">
+                            <img src={{.ItemImageLink}} width="100%" height="100%">
                         </div>
                         <div class="item-info">
-                            <div class="item-name">Keyboard</div>
-                            <div class="listed-by">Listed By: Matthew</div>
-                            <span class="badge dark-badge">Electronics</span>
-                            <span class="badge dark-badge">Household</span>
-                            <span class="badge dark-badge">Gaming</span><br>
-                            <button type="button" class="btn more-btn">View More</button>
+                            <div class="item-name">{{.ItemName}}</div>
+                            <span class="badge dark-badge">{{.Category}}</span>
+                            <span class="badge dark-badge">{{.ItemStatus}}</span>
+                            <button type="button" onclick="nav({{.ItemID}})" class="btn more-btn">View More</button>
                         </div>
                     </div>
-                    <div class="card item-card">
-                        <div class="img-container">
-                            <img src="/Frontend/static/images/item1.png" width="100%" height="100%">
-                        </div>
-                        <div class="item-info">
-                            <div class="item-name">Keyboard</div>
-                            <div class="listed-by">Listed By: Matthew</div>
-                            <span class="badge dark-badge">Electronics</span>
-                            <span class="badge dark-badge">Household</span>
-                            <span class="badge dark-badge">Gaming</span><br>
-                            <button type="button" class="btn more-btn">View More</button>
-                        </div>
-                    </div>
-                    <div class="card item-card">
-                        <div class="img-container">
-                            <img src="/Frontend/static/images/item1.png" width="100%" height="100%">
-                        </div>
-                        <div class="item-info">
-                            <div class="item-name">Keyboard</div>
-                            <div class="listed-by">Listed By: Matthew</div>
-                            <span class="badge dark-badge">Electronics</span>
-                            <span class="badge dark-badge">Household</span>
-                            <span class="badge dark-badge">Gaming</span><br>
-                            <button type="button" class="btn more-btn">View More</button>
-                        </div>
-                    </div>
-                    <div class="card item-card">
-                        <div class="img-container">
-                            <img src="/Frontend/static/images/item1.png" width="100%" height="100%">
-                        </div>
-                        <div class="item-info">
-                            <div class="item-name">Keyboard</div>
-                            <div class="listed-by">Listed By: Matthew</div>
-                            <span class="badge dark-badge">Electronics</span>
-                            <span class="badge dark-badge">Household</span>
-                            <span class="badge dark-badge">Gaming</span><br>
-                            <button type="button" class="btn more-btn">View More</button>
-                        </div>
-                    </div>
+                    {{end}}
                 </div>
                 
             </div>
@@ -139,6 +100,7 @@
     </div>
 
     <script>
+        var exp = {{.TplUser.EXP}}
         var logo = document.getElementById("logo-click")
         var dropdown = document.getElementById("dropdown")
         logo.addEventListener("click", function(){
@@ -146,5 +108,10 @@
             dropdown.style.top = `${logo.offsetTop + logo.offsetHeight + 10}px`
             dropdown.style.left = `${logo.offsetLeft - 50}px`
         })
+        document.getElementById("expBar").style.width = `${exp}%`
+
+        function nav(itemid){
+            window.location.href = "/item/" + itemid
+        }
     </script>
 </body>

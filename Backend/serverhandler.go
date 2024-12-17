@@ -2,20 +2,23 @@ package backend
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
+	"hash/fnv"
 	"image"
 	"io"
 	"log"
 	"net/http"
-	"os"
 	"strconv"
 	"text/template"
-	"hash/fnv"
 )
 
 var tpl *template.Template
 var hasher = fnv.New32a()
+
+type userPageData struct {
+	TplUser  User
+	TplItems []Item
+}
 
 func showAllItems(w http.ResponseWriter, r *http.Request) {
 	// Load data from data.json
@@ -108,12 +111,12 @@ func createNewItem(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid UserID value", http.StatusBadRequest)
 		return
 	}
-	hashedFileName := hashResourcePath(findUser(userID).Email + r.FormValue("item-name")) + "."  + format
+	hashedFileName := hashResourcePath(findUser(userID).Email+r.FormValue("item-name")) + "." + format
 	fileResourcePath, _ := UploadFile(hashedFileName, imageBytes)
 	// add item entry to db
 	userIDInt, _ := getUserID(r)
-	AddNewItem(userIDInt, r.FormValue("item-name"), r.FormValue("item-description"), 
-				r.FormValue("category"), fileResourcePath)
+	AddNewItem(userIDInt, r.FormValue("item-name"), r.FormValue("item-description"),
+		r.FormValue("category"), fileResourcePath)
 
 	// Respond to the client
 	w.WriteHeader(http.StatusOK)
@@ -164,8 +167,19 @@ func HandleHTTPUser(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	fmt.Println(foundUser)
-	err = tpl.ExecuteTemplate(w, "user.html", foundUser)
+	// Get user's listings
+	var userItems []Item
+	for _, item := range data.Items {
+		if item.OwnerID == userID {
+			userItems = append(userItems, item)
+		}
+	}
+	tplData := userPageData{
+		foundUser,
+		userItems,
+	}
+
+	err = tpl.ExecuteTemplate(w, "user.html", tplData)
 	if err != nil {
 		http.Error(w, "Error rendering User template", http.StatusInternalServerError)
 		log.Println("Template execution error:", err)
@@ -313,40 +327,4 @@ func getUserID(r *http.Request) (int, error) {
 	userID, _ := strconv.Atoi(cookie.Value)
 
 	return userID, nil
-}
-
-func loadUsers(filename string) ([]User, error) {
-	file, err := os.Open(filename)
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
-
-	byteVal, err := io.ReadAll(file)
-	if err != nil {
-		return nil, err
-	}
-
-	var users []User
-	err = json.Unmarshal(byteVal, &users)
-	if err != nil {
-		return nil, err
-	}
-
-	return users, nil
-}
-
-// find user based on their user ID, returns user struct
-func findUser(userID int) User {
-	user := &User{
-
-	}
-
-	return *user
-
-}
-
-func hashResourcePath(input string) string {
-	hasher.Write([]byte(input))
-	return strconv.FormatUint(uint64(hasher.Sum32()), 10)
 }

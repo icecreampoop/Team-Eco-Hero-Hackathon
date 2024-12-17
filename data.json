@@ -13,7 +13,11 @@
     },
     {
       "UserID": 2,
+<<<<<<< HEAD
+      "Username": "Ching Kuang",
+=======
       "Username": "",
+>>>>>>> 9d4804baf6e39380e8dbb637cff686ed9b758c19
       "Password": "hashed_password2",
       "Email": "user2@example.com",
       "EXP": 40,
