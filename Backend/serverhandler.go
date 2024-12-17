@@ -62,7 +62,29 @@ func showAllItems(w http.ResponseWriter, r *http.Request) {
 }
 
 func showSingleItem(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	itemID, _ := strconv.Atoi(params["itemid"])
 
+	fmt.Println(itemID)
+
+	data, err := LoadUserData()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	var foundItem Item
+	for _, item := range data.Items {
+		if item.ItemID == itemID {
+			foundItem = item
+		}
+	}
+
+	err = tpl.ExecuteTemplate(w, "item.html", foundItem)
+	if err != nil {
+		http.Error(w, "Error rendering User template", http.StatusInternalServerError)
+		log.Println("Template execution error:", err)
+	}
 }
 
 func createNewItemPage(w http.ResponseWriter, r *http.Request) {
