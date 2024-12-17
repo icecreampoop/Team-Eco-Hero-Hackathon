@@ -22,6 +22,17 @@ type userPageData struct {
 	TplItems []Item
 }
 
+type requestPageData struct {
+	RequestArray []requestPageStruct
+}
+
+type requestPageStruct struct {
+	ItemImageLink string
+	ItemName      string
+	OwnerName     string
+	ItemID        int
+}
+
 func showAllItems(w http.ResponseWriter, r *http.Request) {
 	// Load data from data.json
 	data, err := LoadUserData()
@@ -478,7 +489,20 @@ func HandleHTTPSingleUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func myRequestsPage(w http.ResponseWriter, r *http.Request) {
-	err := tpl.ExecuteTemplate(w, "transactions.html", nil)
+	userID, _ := getUserID(r)
+	var reqData requestPageData
+
+	for _, itemID := range findUser(userID).ActiveRequests {
+		reqData.RequestArray = append(reqData.RequestArray,
+			requestPageStruct{
+				ItemImageLink: findItem(itemID).ItemImageLink,
+				ItemName:      findItem(itemID).ItemName,
+				OwnerName:     findUser(findItem(itemID).OwnerID).Username,
+				ItemID:        findItem(itemID).ItemID,
+			})
+	}
+
+	err := tpl.ExecuteTemplate(w, "transactions.html", reqData)
 	if err != nil {
 		http.Error(w, "Error rendering My-requests template", http.StatusInternalServerError)
 		log.Println("Template execution error:", err)
@@ -674,6 +698,7 @@ func ServerHandler() {
 	}
 }
 
+// returns userid and bool of whether there is a cookie
 func getUserID(r *http.Request) (int, bool) {
 	// Retrieve userID from cookie
 	cookie, err := r.Cookie("UserID")
@@ -696,6 +721,19 @@ func findUser(userID int) User {
 	}
 
 	return User{}
+
+}
+
+// find item based on item ID, returns item struct
+func findItem(itemID int) Item {
+	db, _ := LoadUserData()
+	for _, item := range db.Items {
+		if item.ItemID == itemID {
+			return item
+		}
+	}
+
+	return Item{}
 
 }
 
