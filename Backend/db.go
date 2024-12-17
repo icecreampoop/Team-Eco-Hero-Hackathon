@@ -83,3 +83,8 @@ func AddNewUser(email, password string) error {
 	data.Users = append(data.Users, newUser)
 	return SaveUserData(data)
 }
+
+// add item to db
+func AddNewItem(ownerID int, itemName, categories string) error {
+	return nil
+}
