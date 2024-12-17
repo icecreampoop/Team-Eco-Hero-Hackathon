@@ -16,7 +16,6 @@ import (
 
 var tpl *template.Template
 
-// Show all items from the database and pass them to the template
 func showAllItems(w http.ResponseWriter, r *http.Request) {
 	// Load data from data.json
 	data, err := LoadUserData()
@@ -26,8 +25,20 @@ func showAllItems(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Pass the items data to the template
-	err = tpl.ExecuteTemplate(w, "items.html", data.Items)
+	// Get the filter query parameters from the URL (if any)
+	statusFilter := r.URL.Query().Get("status") // "available" or "pending"
+
+	// Filter items based on the status
+	var filteredItems []Item
+	for _, item := range data.Items {
+		// Filter by status if specified, otherwise show all items
+		if statusFilter == "" || item.ItemStatus == StatusAvailable || item.ItemStatus == StatusPending {
+			filteredItems = append(filteredItems, item)
+		}
+	}
+
+	// Pass the filtered items to the template
+	err = tpl.ExecuteTemplate(w, "items.html", filteredItems)
 	if err != nil {
 		http.Error(w, "Error rendering template", http.StatusInternalServerError)
 		log.Println("Template execution error:", err)
