@@ -99,7 +99,10 @@
       "ItemImageLink": "https://www.canyon.com/dw/image/v2/BCML_PRD/on/demandware.static/-/Sites-canyon-storefront/default/dwead92c71/category-landing/mountain/seo-mtb-light.jpg?sw=1280\u0026sfrm=jpg\u0026q=80",
       "Category": "sports",
       "Status": "available",
-      "CurrentRequesters": null
+      "CurrentRequesters": [
+        6,
+        6
+      ]
     },
     {
       "ItemID": 2,
@@ -166,6 +169,19 @@
       "ItemDescription": "New",
       "ItemImageLink": "https://ecofilebucket.sgp1.digitaloceanspaces.com/3248023183.jpg",
       "Category": "others",
+      "Status": "available",
+      "CurrentRequesters": [
+        6
+      ]
+    },
+    {
+      "ItemID": 8,
+      "OwnerID": 1,
+      "ReceiverID": 0,
+      "ItemName": "New Broom",
+      "ItemDescription": "New",
+      "ItemImageLink": "https://ecofilebucket.sgp1.digitaloceanspaces.com/692389666.jpg",
+      "Category": "furniture",
       "Status": "available",
       "CurrentRequesters": []
     }
