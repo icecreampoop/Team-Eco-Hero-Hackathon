@@ -4,6 +4,7 @@
 .header-bar {
     width: 100%;
     box-shadow: 0 2px 20px rgba(69, 69, 69, 0.5);
+    background-color: #e5e6de;
 }
 
 .row {
@@ -70,7 +71,7 @@
 
 .nav-bar {
     display: flex;
-    padding-left: 50px;
+    padding-left: 200px;
     padding-right: 50px;
     height: 100%;
 }
@@ -132,6 +133,7 @@
     width: 100px;
     border-radius: 10px;
     overflow: hidden;
+    z-index: 1;
 }
 
 .dropdown-option {

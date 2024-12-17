@@ -2,11 +2,11 @@
   "users": [
     {
       "UserID": 1,
-      "Username": "Seb UwU",
+      "Username": "Seb",
       "Password": "hashed_password1",
-      "Email": "user1@example.com",
+      "Email": "Eco Learner",
       "EXP": 20,
-      "Level": 2,
+      "Level": 32,
       "AvatarPic": "https://media.licdn.com/dms/image/v2/C5603AQHJUmjAUgp4Hw/profile-displayphoto-shrink_200_200/profile-displayphoto-shrink_200_200/0/1517673150770?e=2147483647\u0026v=beta\u0026t=KK4cL6u-eYyLmmoTYm5ApCKvOx_-e6iaTh8Mzz3Kulg",
       "Admin": false,
       "ActiveRequests": [1,2,3,5]
@@ -15,10 +15,10 @@
       "UserID": 2,
       "Username": "Ching Kuang",
       "Password": "hashed_password2",
-      "Email": "user2@example.com",
+      "Email": "Eco Apprentice",
       "EXP": 40,
-      "Level": 3,
-      "AvatarPic": "http://example.com/avatar2.jpg",
+      "Level": 45,
+      "AvatarPic": "https://raw.githubusercontent.com/EdythHo/gitPartA2/refs/heads/main/sianPau-removebg-preview.png",
       "Admin": true,
       "ActiveRequests": null
     },
@@ -26,21 +26,21 @@
       "UserID": 3,
       "Username": "user3",
       "Password": "hashed_password3",
-      "Email": "user3@example.com",
+      "Email": "Eco Guardian",
       "EXP": 10,
-      "Level": 1,
-      "AvatarPic": "http://example.com/avatar3.jpg",
+      "Level": 51,
+      "AvatarPic": "https://raw.githubusercontent.com/EdythHo/gitPartA2/refs/heads/main/avatar4.jpg",
       "Admin": false,
       "ActiveRequests": null
     },
     {
       "UserID": 4,
-      "Username": "hashbrown",
+      "Username": "Yi Lon Ma",
       "Password": "hashed_password4",
-      "Email": "user4@example.com",
+      "Email": "Eco Warrior",
       "EXP": 60,
-      "Level": 4,
-      "AvatarPic": "http://example.com/avatar4.jpg",
+      "Level": 72,
+      "AvatarPic": "https://i1.sndcdn.com/avatars-XpzN0ujJa3iI96PS-hKizHQ-t1080x1080.jpg",
       "Admin": false,
       "ActiveRequests": null
     },
@@ -48,21 +48,21 @@
       "UserID": 5,
       "Username": "potatoking",
       "Password": "hashed_password5",
-      "Email": "user5@example.com",
+      "Email": "Eco Hero",
       "EXP": 80,
-      "Level": 5,
-      "AvatarPic": "http://example.com/avatar5.jpg",
+      "Level": 98,
+      "AvatarPic": "https://raw.githubusercontent.com/EdythHo/gitPartA2/refs/heads/main/potato.webp",
       "Admin": true,
       "ActiveRequests": null
     },
     {
       "UserID": 6,
-      "Username": "notadmin",
+      "Username": "Chat GPT",
       "Password": "1",
-      "Email": "1",
-      "EXP": 0,
-      "Level": 1,
-      "AvatarPic": "",
+      "Email": "Eco Master",
+      "EXP": 90,
+      "Level": 10,
+      "AvatarPic": "https://imgcdn.stablediffusionweb.com/2024/3/27/f2456dac-07df-4324-aa4b-d4cc41795dbc.jpg",
       "Admin": false,
       "ActiveRequests": null
     },
@@ -71,6 +71,17 @@
       "Username": "lmao",
       "Password": "123",
       "Email": "lmao@gmail.com",
+      "EXP": 0,
+      "Level": 1,
+      "AvatarPic": "",
+      "Admin": false,
+      "ActiveRequests": null
+    },
+    {
+      "UserID": 8,
+      "Username": "a",
+      "Password": "a",
+      "Email": "a",
       "EXP": 0,
       "Level": 1,
       "AvatarPic": "",
@@ -88,7 +99,10 @@
       "ItemImageLink": "https://www.canyon.com/dw/image/v2/BCML_PRD/on/demandware.static/-/Sites-canyon-storefront/default/dwead92c71/category-landing/mountain/seo-mtb-light.jpg?sw=1280\u0026sfrm=jpg\u0026q=80",
       "Category": "sports",
       "Status": "available",
-      "CurrentRequesters": null
+      "CurrentRequesters": [
+        6,
+        6
+      ]
     },
     {
       "ItemID": 2,
@@ -135,6 +149,41 @@
       "CurrentRequesters": [
         7
       ]
+    },
+    {
+      "ItemID": 6,
+      "OwnerID": 6,
+      "ReceiverID": 0,
+      "ItemName": "Socks",
+      "ItemDescription": "Used",
+      "ItemImageLink": "https://ecofilebucket.sgp1.digitaloceanspaces.com/3718920461.jpg",
+      "Category": "clothing",
+      "Status": "available",
+      "CurrentRequesters": []
+    },
+    {
+      "ItemID": 7,
+      "OwnerID": 6,
+      "ReceiverID": 0,
+      "ItemName": "New Water Bottle",
+      "ItemDescription": "New",
+      "ItemImageLink": "https://ecofilebucket.sgp1.digitaloceanspaces.com/3248023183.jpg",
+      "Category": "others",
+      "Status": "available",
+      "CurrentRequesters": [
+        6
+      ]
+    },
+    {
+      "ItemID": 8,
+      "OwnerID": 1,
+      "ReceiverID": 0,
+      "ItemName": "New Broom",
+      "ItemDescription": "New",
+      "ItemImageLink": "https://ecofilebucket.sgp1.digitaloceanspaces.com/692389666.jpg",
+      "Category": "furniture",
+      "Status": "available",
+      "CurrentRequesters": []
     }
   ]
 }

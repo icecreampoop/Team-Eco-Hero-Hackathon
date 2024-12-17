@@ -87,13 +87,13 @@
     margin-top: 20px;
     display: flex;
     flex-wrap: wrap;
-    justify-content: space-between;
 }
 
 .item-card {
     width: 30%;
     overflow: hidden;
     margin-bottom: 20px;
+    margin-right: 20px;
 }
 
 .item-name {
