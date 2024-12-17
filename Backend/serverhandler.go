@@ -3,7 +3,6 @@ package backend
 import (
 	"bytes"
 	"fmt"
-	"github.com/gorilla/mux"
 	"hash/fnv"
 	"image"
 	_ "image/jpeg"
@@ -14,6 +13,8 @@ import (
 	"sort"
 	"strconv"
 	"text/template"
+
+	"github.com/gorilla/mux"
 )
 
 var tpl *template.Template
@@ -441,7 +442,7 @@ func ServerHandler() {
 	mux.HandleFunc("/user/{userid}", HandleHTTPSingleUser).Methods("GET")
 	mux.HandleFunc("/board", HandleHTTPBoard).Methods("GET")
 	mux.HandleFunc("/login", HandleHTTPLogin).Methods("GET", "POST")
-	mux.HandleFunc("/signup", HandleHTTPSignup).Methods("GET")
+	mux.HandleFunc("/signup", HandleHTTPSignup).Methods("GET", "POST")
 	mux.HandleFunc("/logout", HandleHTTPLogout).Methods("GET")
 
 	// Serve static files from the frontend directory
