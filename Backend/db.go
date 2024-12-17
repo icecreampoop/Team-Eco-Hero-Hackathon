@@ -60,6 +60,7 @@ type Data struct {
 type ItemWithOwner struct {
 	Item
 	OwnerUsername string // This will hold the username of the item owner
+	OwnerID       int
 }
 
 // Load user data from data.json
@@ -114,7 +115,7 @@ func ValidateUserCredentials(email, password string) (bool, error) {
 }
 
 // AddNewUser adds a new user to the data.json file
-func AddNewUser(email, password string) error {
+func AddNewUser(email, password, username string) error {
 	data, err := LoadUserData()
 	if err != nil {
 		return err
@@ -122,6 +123,7 @@ func AddNewUser(email, password string) error {
 
 	newUser := User{
 		UserID:    len(data.Users) + 1,
+		Username:  username,
 		Password:  password,
 		Email:     email,
 		EXP:       0,
@@ -178,7 +180,6 @@ func AddNewItem(ownerID int, itemName string, itemDescription string, categories
 
 	// Append the new item to the list
 	data.Items = append(data.Items, newItem)
-	fmt.Println("added properlly")
 	// Save the updated data
 	return SaveUserData(data)
 }
@@ -225,6 +226,32 @@ func GetItem(itemID int) (Item, error) {
 	}
 
 	return Item{}, fmt.Errorf("item with ID %d not found", itemID)
+}
+
+// RequestItem updates the Requesters field of an item in the data.json file by its ItemID
+func RequestItem(itemID int, userID int) error {
+	// Load existing data
+	data, err := LoadUserData()
+	if err != nil {
+		return err
+	}
+
+	// Iterate through the items to find the item by itemID
+	for i, item := range data.Items {
+		if item.ItemID == itemID {
+			// Add the userID to the requesters
+			data.Items[i].CurrentRequesters = append(data.Items[i].CurrentRequesters, userID)
+			break
+		}
+	}
+
+	// Save the updated data
+	err = SaveUserData(data)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // DeleteItem removes an item from the data.json file by its ItemID

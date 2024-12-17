@@ -101,6 +101,7 @@ func showSingleItem(w http.ResponseWriter, r *http.Request) {
 	itemWithOwner := ItemWithOwner{
 		Item:          foundItem,
 		OwnerUsername: owner.Username, // Set the owner's username
+		OwnerID:       owner.UserID,
 	}
 
 	// Render the template with the found item and its owner information
@@ -231,7 +232,46 @@ func createNewItem(w http.ResponseWriter, r *http.Request) {
 }
 
 func requestItem(w http.ResponseWriter, r *http.Request) {
+	// based on the requestitem function in db.go
+	// get user id from cookie and item id from url, and add the user id to the requesters field of the item via function
+	// do not run the function if user is not logged in or item is not found
 
+	// Get the "UserID" cookie from the request
+	cookie, err := r.Cookie("UserID")
+	if err != nil {
+		// If the cookie is not found, handle the error
+		http.Error(w, "UserID cookie not found", http.StatusBadRequest)
+		return
+	}
+
+	// Convert the cookie value (which is a string) to an integer
+	userID, err := strconv.Atoi(cookie.Value)
+	if err != nil {
+		// If there's an error converting the value, handle it
+		http.Error(w, "Invalid UserID value", http.StatusBadRequest)
+		return
+	}
+
+	// Extract itemID from URL parameters
+	params := mux.Vars(r)
+	itemID, err := strconv.Atoi(params["itemID"])
+	if err != nil {
+		http.Error(w, "Invalid item ID", http.StatusBadRequest)
+		return
+	}
+
+	// Call the RequestItem function to add the user to the item's requesters
+	err = RequestItem(itemID, userID)
+	if err != nil {
+		http.Error(w, "Error requesting item", http.StatusInternalServerError)
+		log.Println("Error requesting item:", err)
+		return
+	}
+
+	// Respond to the client
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(fmt.Sprintf("Item with ID %d successfully requested by user %d", itemID, userID)))
+	http.Redirect(w, r, "http://localhost:5000/my-requests", http.StatusFound)
 }
 
 func acceptRequest(w http.ResponseWriter, r *http.Request) {
@@ -331,6 +371,57 @@ func deleteItem(w http.ResponseWriter, r *http.Request) {
 // functions to handle HTTP requests for page loads
 func HandleHTTPIndex(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "./Frontend/static/index.gohtml")
+}
+
+func HandleHTTPAccSettings(w http.ResponseWriter, r *http.Request) {
+	// Get the logged-in user's ID from the cookie
+	userID, exists := getUserID(r)
+	if !exists {
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		return
+	}
+
+	// Load user data
+	data, err := LoadUserData()
+	if err != nil {
+		http.Error(w, "Error loading data", http.StatusInternalServerError)
+		log.Println("Error loading data:", err)
+		return
+	}
+
+	// Find the user by ID
+	var currentUser User
+	for _, user := range data.Users {
+		if user.UserID == userID {
+			currentUser = user
+			break
+		}
+	}
+
+	// If the user is not found, return an error
+	if currentUser.UserID == 0 {
+		http.Error(w, "User not found", http.StatusNotFound)
+		return
+	}
+
+	// Prepare the data to pass to the template
+	// We mask the password as "******"
+	accountData := struct {
+		Username string
+		Email    string
+		Password string
+	}{
+		Username: currentUser.Username,
+		Email:    currentUser.Email,
+		Password: "******", // Mask the password
+	}
+
+	// Render the account settings template
+	err = tpl.ExecuteTemplate(w, "account-settings.html", accountData)
+	if err != nil {
+		http.Error(w, "Error rendering template", http.StatusInternalServerError)
+		log.Println("Template execution error:", err)
+	}
 }
 
 func HandleHTTPUser(w http.ResponseWriter, r *http.Request) {
@@ -520,9 +611,10 @@ func HandleHTTPSignup(w http.ResponseWriter, r *http.Request) {
 		// Get form values
 		email := r.FormValue("email")
 		password := r.FormValue("password")
+		username := r.FormValue("username")
 
 		// Add the new user to the data.json file
-		err = AddNewUser(email, password)
+		err = AddNewUser(email, password, username)
 		if err != nil {
 			http.Error(w, "Unable to add new user", http.StatusInternalServerError)
 			return
@@ -564,6 +656,7 @@ func ServerHandler() {
 
 	mux.HandleFunc("/user", HandleHTTPUser).Methods("GET")
 	mux.HandleFunc("/user/{userid}", HandleHTTPSingleUser).Methods("GET")
+	mux.HandleFunc("/account", HandleHTTPAccSettings).Methods("GET")
 	mux.HandleFunc("/board", HandleHTTPBoard).Methods("GET")
 	mux.HandleFunc("/login", HandleHTTPLogin).Methods("GET", "POST")
 	mux.HandleFunc("/signup", HandleHTTPSignup).Methods("GET", "POST")
