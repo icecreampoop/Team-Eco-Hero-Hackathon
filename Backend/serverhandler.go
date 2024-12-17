@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"hash/fnv"
 	"image"
 	"io"
 	"log"
@@ -11,13 +12,16 @@ import (
 	"os"
 	"strconv"
 	"text/template"
-	"hash/fnv"
 )
 
 var tpl *template.Template
 var hasher = fnv.New32a()
 
-// Show all items from the database and pass them to the template
+type userPageData struct {
+	TplUser  User
+	TplItems []Item
+}
+
 func showAllItems(w http.ResponseWriter, r *http.Request) {
 	// Load data from data.json
 	data, err := LoadUserData()
@@ -27,8 +31,20 @@ func showAllItems(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Pass the items data to the template
-	err = tpl.ExecuteTemplate(w, "items.html", data.Items)
+	// Get the filter query parameters from the URL (if any)
+	statusFilter := r.URL.Query().Get("status") // "available" or "pending"
+
+	// Filter items based on the status
+	var filteredItems []Item
+	for _, item := range data.Items {
+		// Filter by status if specified, otherwise show all items
+		if statusFilter == "" || item.ItemStatus == StatusAvailable || item.ItemStatus == StatusPending {
+			filteredItems = append(filteredItems, item)
+		}
+	}
+
+	// Pass the filtered items to the template
+	err = tpl.ExecuteTemplate(w, "items.html", filteredItems)
 	if err != nil {
 		http.Error(w, "Error rendering template", http.StatusInternalServerError)
 		log.Println("Template execution error:", err)
@@ -97,12 +113,12 @@ func createNewItem(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Invalid UserID value", http.StatusBadRequest)
 		return
 	}
-	hashedFileName := hashResourcePath(findUser(userID).Email + r.FormValue("item-name")) + "."  + format
+	hashedFileName := hashResourcePath(findUser(userID).Email+r.FormValue("item-name")) + "." + format
 	fileResourcePath, _ := UploadFile(hashedFileName, imageBytes)
 	// add item entry to db
 	userIDInt, _ := getUserID(r)
-	AddNewItem(userIDInt, r.FormValue("item-name"), r.FormValue("item-description"), 
-				r.FormValue("category"), fileResourcePath)
+	AddNewItem(userIDInt, r.FormValue("item-name"), r.FormValue("item-description"),
+		r.FormValue("category"), fileResourcePath)
 
 	// Respond to the client
 	w.WriteHeader(http.StatusOK)
@@ -153,8 +169,19 @@ func HandleHTTPUser(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	fmt.Println(foundUser)
-	err = tpl.ExecuteTemplate(w, "user.html", foundUser)
+	// Get user's listings
+	var userItems []Item
+	for _, item := range data.Items {
+		if item.OwnerID == userID {
+			userItems = append(userItems, item)
+		}
+	}
+	tplData := userPageData{
+		foundUser,
+		userItems,
+	}
+
+	err = tpl.ExecuteTemplate(w, "user.html", tplData)
 	if err != nil {
 		http.Error(w, "Error rendering User template", http.StatusInternalServerError)
 		log.Println("Template execution error:", err)

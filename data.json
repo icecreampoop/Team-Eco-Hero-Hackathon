@@ -13,7 +13,7 @@
     },
     {
       "UserID": 2,
-      "Username": "",
+      "Username": "Ching Kuang",
       "Password": "hashed_password2",
       "Email": "user2@example.com",
       "EXP": 40,
@@ -63,7 +63,7 @@
       "ReceiverID": 0,
       "ItemName": "Laptop",
       "ItemDescription": "A powerful gaming laptop (2018)",
-      "ItemImageLink": "",
+      "ItemImageLink": "https://cdn.mos.cms.futurecdn.net/3kcgKLkfPRbskpsYzW239d.jpg",
       "Category": "electronics",
       "Status": "available",
       "CurrentRequesters": null
@@ -74,7 +74,7 @@
       "ReceiverID": 0,
       "ItemName": "Smartphone",
       "ItemDescription": "A mid-range smartphone",
-      "ItemImageLink": "",
+      "ItemImageLink": "https://5.imimg.com/data5/BF/RQ/MY-74789112/apple-iphone-7-32gb-black-colour-usa-250x250.jpg",
       "Category": "mobile",
       "Status": "available",
       "CurrentRequesters": null
@@ -85,7 +85,7 @@
       "ReceiverID": 0,
       "ItemName": "Bicycle",
       "ItemDescription": "A mountain bike",
-      "ItemImageLink": "",
+      "ItemImageLink": "https://www.canyon.com/dw/image/v2/BCML_PRD/on/demandware.static/-/Sites-canyon-storefront/default/dwead92c71/category-landing/mountain/seo-mtb-light.jpg?sw=1280&sfrm=jpg&q=80",
       "Category": "sports",
       "Status": "available",
       "CurrentRequesters": null
@@ -96,7 +96,7 @@
       "ReceiverID": 0,
       "ItemName": "Bookshelf",
       "ItemDescription": "ladder",
-      "ItemImageLink": "",
+      "ItemImageLink": "https://www.kardiel.com/product_images/uploaded_images/blogs/blog-post-75/Style-It-2-1.jpg",
       "Category": "hardwaretools",
       "Status": "pending",
       "CurrentRequesters": null
@@ -107,7 +107,7 @@
       "ReceiverID": 5,
       "ItemName": "COOL JACKET",
       "ItemDescription": "Blue winter jacket",
-      "ItemImageLink": "abcd",
+      "ItemImageLink": "https://i.ebayimg.com/images/g/FAwAAOSwBhdiW0SX/s-l1200.jpg",
       "Category": "clothing",
       "Status": "donated",
       "CurrentRequesters": null

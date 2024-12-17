@@ -41,6 +41,7 @@
                     <input type="text" class="form-control" placeholder="Search...">
                 </div>
                 <div class="item-viewer">
+                    <!-- Loop through the filtered items -->
                     {{ range . }}
                     <div class="card item-card">
                         <div class="img-container">
@@ -50,13 +51,13 @@
                             <div class="item-name">{{ .ItemName }}</div>
                             <div class="listed-by">Listed By: {{ .OwnerID }}</div>
                             <span class="badge dark-badge">{{ .Category }}</span>
-                            <span class="badge dark-badge">{{ .ItemStatus }}</span><br>
                             <button type="button" class="btn more-btn">View More</button>
                         </div>
                     </div>
+                    {{ else }}
+                    <div>No items found</div>
                     {{ end }}
                 </div>
+                
             </div>
         </div>
-    </div>
-</body>
