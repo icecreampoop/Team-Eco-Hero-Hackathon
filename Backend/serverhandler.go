@@ -86,7 +86,7 @@ func showSingleItem(w http.ResponseWriter, r *http.Request) {
 }
 
 func serveUpdateItemPage(w http.ResponseWriter, r *http.Request) {
-	
+
 }
 
 func createNewItemPage(w http.ResponseWriter, r *http.Request) {
@@ -199,6 +199,8 @@ func deleteItem(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(fmt.Sprintf("Item with ID %d successfully deleted", itemID)))
+
+	http.Redirect(w, r, "/", http.StatusAccepted)
 }
 
 // functions to handle HTTP requests for page loads
