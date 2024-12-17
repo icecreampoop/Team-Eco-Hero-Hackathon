@@ -107,11 +107,7 @@
       "ReceiverID": 5,
       "ItemName": "COOL JACKET",
       "ItemDescription": "Blue winter jacket",
-<<<<<<< HEAD
       "ItemImageLink": "https://i.ebayimg.com/images/g/FAwAAOSwBhdiW0SX/s-l1200.jpg",
-=======
-      "ItemImageLink": "abcd",
->>>>>>> 0191a0a751f3496368541c67bbd4e2db00169407
       "Category": "clothing",
       "Status": "donated",
       "CurrentRequesters": null
