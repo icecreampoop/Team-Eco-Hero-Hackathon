@@ -178,7 +178,6 @@ func AddNewItem(ownerID int, itemName string, itemDescription string, categories
 
 	// Append the new item to the list
 	data.Items = append(data.Items, newItem)
-	fmt.Println("added properlly")
 	// Save the updated data
 	return SaveUserData(data)
 }
