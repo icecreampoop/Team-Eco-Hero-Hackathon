@@ -87,6 +87,11 @@
     margin: 20px;
 }
 
+.add-item-container .btn {
+    height: 60px;
+    align-content: center;
+}
+
 .min-left {
     min-width: 250px;
     height: 100%;
