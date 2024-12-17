@@ -4,7 +4,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"image"
+
+	//"image"
 	"io"
 	"log"
 	"net/http"
@@ -60,22 +61,28 @@ func createNewItem(w http.ResponseWriter, r *http.Request) {
 	imageBytes := buf.Bytes()
 
 	// Detect the image format
-	_, format, err := image.Decode(file)
-	if err != nil {
-		http.Error(w, "Unsupported or invalid image format", http.StatusUnsupportedMediaType)
-		return
-	}
+	// _, format, err := image.Decode(file)
+	// if err != nil {
+	// 	http.Error(w, "Unsupported or invalid image format", http.StatusUnsupportedMediaType)
+	// 	return
+	// }
 
 	// Process the imageBytes (e.g., store in a database or perform operations)
 	fmt.Printf("Received file %s with size %d bytes\n", handler.Filename, len(imageBytes))
 
+	// upload media to digital ocean spaces
 	// UploadFile(itemName + "."  + format, imageBytes)
-	UploadFile("."+format, imageBytes)
-	// AddNewItemToDB(&Item{
+	// // add item entry to db
+	// AddNewItem(&Item{
 	// 	ItemID: nil,
-	// 	OwnerID: sfafs,
+	// 	OwnerID: getUserID(r),
 	// 	ReceiverID: nil,
-	// 	ItemName: r.FormValue()
+	// 	ItemName: r.FormValue(),
+	// 	ItemDescription: s,
+	// 	ItemImageLink: d,
+	// 	Category: f,
+	// 	ItemStatus: ss,
+	// 	CurrentRequesters: nil,
 	// })
 
 	// Respond to the client
