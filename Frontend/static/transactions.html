@@ -20,22 +20,19 @@
     <div class="main">
         <!-- Leader board -->
         <div class="main-container">
-            <div class="transactions-title">Transactions & Activity</div>
+            <div class="transactions-title">My Requests</div>
             <div class="transactions-card">
                 <table class="table">
                     <thead class="thead-custom">
                         <tr>
-                            <th scope="col">No</th>
-                            <th scope="col"></th>
                             <th scope="col">Item</th>
-                            <th scope="col">Transaction ID</th>
-                            <th scope="col">Status</th>
-                            <th scope="col">Action</th>
+                            <th scope="col">Item Owner</th>
+                            <th scope="col">Link</th>
                         </tr>
                     </thead>
                     <tbody>
+                        {{ range . }}
                         <tr>
-                            <th scope="row">1</th>
                             <td><img src="/Frontend/static/images/paupau-avatar.png" width="50px"></td>
                             <td>Towel</td>
                             <td>#123</td>
