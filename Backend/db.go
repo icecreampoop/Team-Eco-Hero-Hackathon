@@ -7,6 +7,9 @@ import (
 	"os"
 )
 
+var Users []User
+var Items []Item
+
 type User struct {
 	UserID    int    `json:"UserID"`
 	Username  string `json:"Username"`

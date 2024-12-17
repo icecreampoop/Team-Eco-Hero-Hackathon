@@ -4,14 +4,10 @@ import (
 	"log"
 
 	backend "github.com/icecreampoop/Team-Eco-Hero-Hackathon/Backend"
-	"github.com/joho/godotenv"
 )
 
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatalf("Error loading .env file: %v", err)
-	}
+	
 	log.Println("App is ready!")
 
 	// listenandserve in serverhandler.go, please run this last to ensure all other functions run first
