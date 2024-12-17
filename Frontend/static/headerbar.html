@@ -8,11 +8,11 @@
             </div>
             <div class="col-5 user-container">
                 <!-- template if/else logged in or not -->
-                <div class="login-signup-container hide">
+                <div id="notLoggedIn" class="login-signup-container">
                     <a href="/login" class="header-btn login">Log in</a>
                     <a href="/signup" class="header-btn signup">Sign up</a>              
                 </div>
-                <div class="logo-logout-container">
+                <div id="loggedIn" class="logo-logout-container hide">
                     <div id="logo-click" class="logo-container">
                         <div class="user_logo">
                             <i class="fa-solid fa-user"></i>
@@ -47,5 +47,24 @@
     document.getElementById("settings").addEventListener("click", function(){
         window.location.href = "/user/account"
     })
+
+    var notLoggedIn = document.getElementById("notLoggedIn")
+    var loggedIn = document.getElementById("loggedIn")
+    var boolLoggedIn = false
+    // Check user logged in?
+    const cookies = document.cookie.split('; ')
+    for (let i = 0; i < cookies.length; i++) {
+        let [key, val] = cookies[i].split("=")
+        if (key === "UserID") {
+            boolLoggedIn = true
+            loggedIn.classList.remove("hide")
+            notLoggedIn.classList.add("hide")
+            break
+        }
+    }
+    if(!boolLoggedIn){
+        loggedIn.classList.add("hide")
+        notLoggedIn.classList.remove("hide")
+    }
 </script>
 {{ end }}
