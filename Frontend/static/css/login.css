@@ -26,6 +26,20 @@ body {
     margin-bottom: 1rem;
 }
 
+.paupau-img {
+    width: 40%; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    margin: 0 auto; 
+}
+
+.paupau-img img {
+    max-width: 100%; 
+    height: auto; 
+}
+
+
 .form-group {
     margin-bottom: 20px;
 }
