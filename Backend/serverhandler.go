@@ -61,7 +61,29 @@ func showAllItems(w http.ResponseWriter, r *http.Request) {
 }
 
 func showSingleItem(w http.ResponseWriter, r *http.Request) {
+	params := mux.Vars(r)
+	itemID, _ := strconv.Atoi(params["itemid"])
 
+	fmt.Println(itemID)
+
+	data, err := LoadUserData()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	var foundItem Item
+	for _, item := range data.Items {
+		if item.ItemID == itemID {
+			foundItem = item
+		}
+	}
+
+	err = tpl.ExecuteTemplate(w, "item.html", foundItem)
+	if err != nil {
+		http.Error(w, "Error rendering User template", http.StatusInternalServerError)
+		log.Println("Template execution error:", err)
+	}
 }
 
 func createNewItemPage(w http.ResponseWriter, r *http.Request) {
@@ -194,7 +216,7 @@ func HandleHTTPUser(w http.ResponseWriter, r *http.Request) {
 
 func HandleHTTPSingleUser(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	userID, _ := strconv.Atoi(params["userid"])
+	userID, _ := strconv.Atoi(params["UserID"])
 
 	// redirect function
 
@@ -328,6 +350,20 @@ func HandleHTTPLogin(w http.ResponseWriter, r *http.Request) {
 	tmpl.Execute(w, nil)
 }
 
+// HandleHTTPLogout logs the user out by deleting the "UserID" cookie and redirect to login
+func HandleHTTPLogout(w http.ResponseWriter, r *http.Request) {
+	// Delete the "UserID" cookie
+	cookie := http.Cookie{
+		Name:   "UserID",
+		Value:  "",
+		MaxAge: -1,
+	}
+	http.SetCookie(w, &cookie)
+
+	// Redirect to login page
+	http.Redirect(w, r, "/login", http.StatusSeeOther)
+}
+
 // HandleHTTPSignup serves the signup page and handles user registration
 func HandleHTTPSignup(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("./Frontend/static/signup.html")
@@ -393,6 +429,7 @@ func ServerHandler() {
 	mux.HandleFunc("/board", HandleHTTPBoard).Methods("GET")
 	mux.HandleFunc("/login", HandleHTTPLogin).Methods("GET", "POST")
 	mux.HandleFunc("/signup", HandleHTTPSignup).Methods("GET")
+	mux.HandleFunc("/logout", HandleHTTPLogout).Methods("GET")
 
 	// Serve static files from the frontend directory
 	fs := http.FileServer(http.Dir("./Frontend/static"))
@@ -408,7 +445,7 @@ func ServerHandler() {
 
 func getUserID(r *http.Request) (int, bool) {
 	// Retrieve userID from cookie
-	cookie, err := r.Cookie("userID")
+	cookie, err := r.Cookie("UserID")
 	if err != nil {
 		return -1, false
 	}
