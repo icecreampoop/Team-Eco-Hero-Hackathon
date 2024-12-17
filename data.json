@@ -12,6 +12,7 @@
     },
     {
       "UserID": 2,
+      "Username": "Ching Kuang",
       "Password": "hashed_password2",
       "Email": "user2@example.com",
       "EXP": 40,

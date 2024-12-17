@@ -2,19 +2,22 @@ package backend
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 
 	//"image"
 	"io"
 	"log"
 	"net/http"
-	"os"
 	"strconv"
 	"text/template"
 )
 
 var tpl *template.Template
+
+type userPageData struct {
+	TplUser  User
+	TplItems []Item
+}
 
 func showAllItems(w http.ResponseWriter, r *http.Request) {
 	err := tpl.ExecuteTemplate(w, "items.html", nil)
@@ -134,8 +137,19 @@ func HandleHTTPUser(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 
-	fmt.Println(foundUser)
-	err = tpl.ExecuteTemplate(w, "user.html", foundUser)
+	// Get user's listings
+	var userItems []Item
+	for _, item := range data.Items {
+		if item.OwnerID == userID {
+			userItems = append(userItems, item)
+		}
+	}
+	tplData := userPageData{
+		foundUser,
+		userItems,
+	}
+
+	err = tpl.ExecuteTemplate(w, "user.html", tplData)
 	if err != nil {
 		http.Error(w, "Error rendering User template", http.StatusInternalServerError)
 		log.Println("Template execution error:", err)
@@ -283,25 +297,4 @@ func getUserID(r *http.Request) (int, error) {
 	userID, _ := strconv.Atoi(cookie.Value)
 
 	return userID, nil
-}
-
-func loadUsers(filename string) ([]User, error) {
-	file, err := os.Open(filename)
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
-
-	byteVal, err := io.ReadAll(file)
-	if err != nil {
-		return nil, err
-	}
-
-	var users []User
-	err = json.Unmarshal(byteVal, &users)
-	if err != nil {
-		return nil, err
-	}
-
-	return users, nil
 }
