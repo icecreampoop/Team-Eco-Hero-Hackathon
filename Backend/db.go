@@ -8,13 +8,14 @@ import (
 )
 
 type User struct {
-	UserID    int    `json:"UserID"`
-	Password  string `json:"Password"`
-	Email     string `json:"Email"`
-	EXP       int    `json:"EXP"`
-	Level     int    `json:"Level"`
-	AvatarPic string `json:"AvatarPic"`
-	Admin     bool   `json:"Admin"`
+	UserID         int    `json:"UserID"`
+	Password       string `json:"Password"`
+	Email          string `json:"Email"`
+	EXP            int    `json:"EXP"`
+	Level          int    `json:"Level"`
+	AvatarPic      string `json:"AvatarPic"`
+	Admin          bool   `json:"Admin"`
+	ActiveRequests []int  `json:"ActiveRequests"`
 }
 
 type Categories string
@@ -36,6 +37,7 @@ const (
 )
 
 type Item struct {
+<<<<<<< HEAD
 	ItemID          int        `json:"ItemID"`
 	OwnerID         int        `json:"OwnerID"`
 	ReceiverID      int        `json:"ReceiverID"`
@@ -45,6 +47,16 @@ type Item struct {
 	Category2       Categories `json:"Category2"`
 	Category3       Categories `json:"Category3"`
 	ItemStatus      Statuses   `json:"Status"`
+=======
+	ItemID            int        `json:"ItemID"`
+	OwnerID           int        `json:"OwnerID"`
+	ReceiverID        int        `json:"ReceiverID"`
+	ItemName          string     `json:"ItemName"`
+	ItemDescription   string     `json:"ItemDescription"`
+	Category          Categories `json:"Category"`
+	ItemStatus        Statuses   `json:"Status"`
+	CurrentRequesters []int      `json:"CurrentRequesters"`
+>>>>>>> c5b93805fdb273db783f7785e33917d507f33743
 }
 
 // Data struct to represent the data.json structure
@@ -129,6 +141,7 @@ func AddNewUser(email, password string) error {
 func AddNewItem(ownerID int, itemName, categories string) error {
 	return nil
 }
+<<<<<<< HEAD
 
 // GetItem retrieves an item by its ItemID
 func GetItem(itemID int) (Item, error) {
@@ -157,3 +170,5 @@ func GetItem(itemID int) (Item, error) {
 
 	return Item{}, fmt.Errorf("item with ID %d not found", itemID)
 }
+=======
+>>>>>>> c5b93805fdb273db783f7785e33917d507f33743
