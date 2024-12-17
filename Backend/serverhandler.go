@@ -7,6 +7,7 @@ import (
 	"io"
 	"log"
 	"net/http"
+	"strconv"
 	"text/template"
 )
 
@@ -102,7 +103,13 @@ func HandleHTTPIndex(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandleHTTPUser(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "./Frontend/static/user.html")
+
+	err = tpl.ExecuteTemplate(w, "user.html", nil)
+	if err != nil {
+		http.Error(w, "Error rendering User template", http.StatusInternalServerError)
+		log.Println("Template execution error:", err)
+	}
+
 }
 
 func HandleHTTPBoard(w http.ResponseWriter, r *http.Request) {
@@ -232,4 +239,18 @@ func ServerHandler() {
 	if err := http.ListenAndServe(port, mux); err != nil {
 		log.Fatalf("Could not start server: %s\n", err)
 	}
+}
+
+func getUserID(r *http.Request) (int, error) {
+	// Retrieve userID from cookie
+	cookie, err := r.Cookie("userID")
+	if err == http.ErrNoCookie {
+		return -1, fmt.Errorf("No userID cookie found. Please log in.")
+	} else if err != nil {
+		return -1, fmt.Errorf("Error retrieving cookie")
+	}
+
+	userID, _ := strconv.Atoi(cookie.Value)
+
+	return userID, nil
 }
