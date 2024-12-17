@@ -171,7 +171,6 @@ func AddNewItem(ownerID int, itemName string, categories string) error {
 	// Save the updated data
 	return SaveUserData(data)
 }
-<<<<<<< HEAD
 
 // GetItem retrieves an item by its ItemID
 func GetItem(itemID int) (Item, error) {
@@ -200,5 +199,3 @@ func GetItem(itemID int) (Item, error) {
 
 	return Item{}, fmt.Errorf("item with ID %d not found", itemID)
 }
-=======
->>>>>>> c5b93805fdb273db783f7785e33917d507f33743
