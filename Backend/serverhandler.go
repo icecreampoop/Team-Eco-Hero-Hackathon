@@ -260,6 +260,11 @@ func HandleHTTPBoard(w http.ResponseWriter, r *http.Request) {
 // 	http.ServeFile(w, r, "./Frontend/static/login.html")
 // }
 
+// // HandleHTTPLogin serves the login page
+// func HandleHTTPLogin(w http.ResponseWriter, r *http.Request) {
+// 	http.ServeFile(w, r, "./Frontend/static/login.html")
+// }
+
 // HandleHTTPLogin serves the login page and handles login authentication
 func HandleHTTPLogin(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("./Frontend/static/login.html")
@@ -277,17 +282,28 @@ func HandleHTTPLogin(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Get form values
-		username := r.FormValue("username")
+		email := r.FormValue("email")
 		password := r.FormValue("password")
 
 		// Validate credentials
-		valid, err := ValidateUserCredentials(username, password)
+		valid, err := ValidateUserCredentials(email, password)
 		if err != nil {
 			http.Error(w, "Unable to validate user credentials", http.StatusInternalServerError)
 			return
 		}
 
 		if valid {
+			// Set the "UserID" cookie
+			userID, err := GetUserID(email)
+			if err != nil {
+				http.Error(w, "Unable to get user ID", http.StatusInternalServerError)
+				return
+			}
+			cookie := http.Cookie{
+				Name:  "UserID",
+				Value: strconv.Itoa(userID),
+			}
+			http.SetCookie(w, &cookie)
 			// Successful login
 			http.Redirect(w, r, "/user", http.StatusSeeOther)
 			return
@@ -295,7 +311,7 @@ func HandleHTTPLogin(w http.ResponseWriter, r *http.Request) {
 
 		// Invalid credentials
 		tmpl.Execute(w, map[string]interface{}{
-			"ErrorMessage": "Invalid username or password",
+			"ErrorMessage": "Invalid login email or password",
 		})
 		return
 	}
@@ -367,7 +383,7 @@ func ServerHandler() {
 	mux.HandleFunc("/user", HandleHTTPUser).Methods("GET")
 	mux.HandleFunc("/user/{userid}", HandleHTTPSingleUser).Methods("GET")
 	mux.HandleFunc("/board", HandleHTTPBoard).Methods("GET")
-	mux.HandleFunc("/login", HandleHTTPLogin).Methods("GET")
+	mux.HandleFunc("/login", HandleHTTPLogin).Methods("GET", "POST")
 	mux.HandleFunc("/signup", HandleHTTPSignup).Methods("GET")
 
 	// Serve static files from the frontend directory
