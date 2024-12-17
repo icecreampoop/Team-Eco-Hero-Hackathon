@@ -33,24 +33,22 @@ func showAllItems(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Get the filter query parameters from the URL (if any)
-	statusFilter := r.URL.Query().Get("status") // "available" or "pending"
-
 	// Create a slice to hold the filtered items with OwnerUsername
 	var filteredItemsWithOwner []ItemWithOwner
 
 	for _, item := range data.Items {
-		// Use the findUser function to get the owner's username
-		owner := findUserTpl(item.OwnerID, data.Users)
+		// Only include items with status "available" or "pending"
+		if item.ItemStatus == "available" || item.ItemStatus == "pending" {
+			// Use the findUser function to get the owner's username
+			owner := findUserTpl(item.OwnerID, data.Users)
 
-		// Create an ItemWithOwner struct and assign the OwnerUsername
-		itemWithOwner := ItemWithOwner{
-			Item:          item,
-			OwnerUsername: owner.Username, // Assign the owner's username
-		}
+			// Create an ItemWithOwner struct and assign the OwnerUsername
+			itemWithOwner := ItemWithOwner{
+				Item:          item,
+				OwnerUsername: owner.Username, // Assign the owner's username
+			}
 
-		// Filter by status if specified, otherwise show all items
-		if statusFilter == "" || item.ItemStatus == StatusAvailable || item.ItemStatus == StatusPending {
+			// Add the item with owner information to the filtered list
 			filteredItemsWithOwner = append(filteredItemsWithOwner, itemWithOwner)
 		}
 	}
