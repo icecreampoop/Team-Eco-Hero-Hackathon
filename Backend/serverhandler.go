@@ -68,8 +68,6 @@ func showSingleItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	fmt.Println("Item ID:", itemID)
-
 	// Load user data
 	data, err := LoadUserData()
 	if err != nil {
@@ -96,8 +94,17 @@ func showSingleItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Render the template with the found item
-	err = tpl.ExecuteTemplate(w, "item.html", foundItem)
+	// Find the owner's username
+	owner := findUserTpl(foundItem.OwnerID, data.Users)
+
+	// Create an ItemWithOwner struct to hold both the item and owner's username
+	itemWithOwner := ItemWithOwner{
+		Item:          foundItem,
+		OwnerUsername: owner.Username, // Set the owner's username
+	}
+
+	// Render the template with the found item and its owner information
+	err = tpl.ExecuteTemplate(w, "item.html", itemWithOwner)
 	if err != nil {
 		http.Error(w, "Error rendering template", http.StatusInternalServerError)
 		fmt.Println("Template execution error:", err)
@@ -217,9 +224,10 @@ func createNewItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// Respond to the client
-	fmt.Println("settle")
+	//fmt.Println("settle")
 	//w.WriteHeader(http.StatusOK)
 	//w.Write([]byte("File uploaded and processed successfully"))
+	http.Redirect(w, r, "http://localhost:5000/", http.StatusFound)
 }
 
 func requestItem(w http.ResponseWriter, r *http.Request) {
@@ -296,14 +304,16 @@ func updateItemDetails(w http.ResponseWriter, r *http.Request) {
 }
 
 func deleteItem(w http.ResponseWriter, r *http.Request) {
-	itemIDStr := r.PathValue("itemID")
-	itemID, err := strconv.Atoi(itemIDStr)
+	params := mux.Vars(r)
+	itemID, err := strconv.Atoi(params["itemID"])
 	if err != nil {
 		http.Error(w, "Invalid item ID", http.StatusBadRequest)
 		return
 	}
 
-	err = DeleteItem(itemID)
+	userIDInt, _ := getUserID(r)
+
+	err = DeleteItem(itemID, userIDInt)
 	if err != nil {
 		if err.Error() == fmt.Sprintf("item with ID %d not found", itemID) {
 			http.Error(w, "Item not found", http.StatusNotFound)

@@ -54,6 +54,17 @@
       "AvatarPic": "http://example.com/avatar5.jpg",
       "Admin": true,
       "ActiveRequests": null
+    },
+    {
+      "UserID": 6,
+      "Username": "",
+      "Password": "1",
+      "Email": "1",
+      "EXP": 0,
+      "Level": 1,
+      "AvatarPic": "",
+      "Admin": false,
+      "ActiveRequests": null
     }
   ],
   "items": [
@@ -81,7 +92,7 @@
     },
     {
       "ItemID": 3,
-      "OwnerID": 1,
+      "OwnerID": 3,
       "ReceiverID": 0,
       "ItemName": "fk",
       "ItemDescription": "fk",

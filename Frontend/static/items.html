@@ -23,33 +23,13 @@
             <div class="col-3">
                 <div class="left-pane">
                     <div class="category-title">Category</div>
-                    <div class="category-list">
-                        <div class="form-check">
+                    <div id="category-list" class="category-list">
+                        <!-- <div class="form-check">
                             <input type="checkbox" class="form-check-input" id="cat1">
                             <label class="form-check-label" for="cat1">Electronics</label>
-                        </div>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="cat2">
-                            <label class="form-check-label" for="cat2">Furniture</label>
-                        </div>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="cat3">
-                            <label class="form-check-label" for="cat3">Clothing</label>
-                        </div>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="cat4">
-                            <label class="form-check-label" for="cat4">Food & Groceries</label>
-                        </div>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="cat5">
-                            <label class="form-check-label" for="cat5">Household Items</label>
-                        </div>
-                        <div class="form-check">
-                            <input type="checkbox" class="form-check-input" id="cat6">
-                            <label class="form-check-label" for="cat6">Toys and Games</label>
-                        </div>
+                        </div> -->
                     </div>
-                    <button type="button" class="btn btn-dark filter-btn">Filter</button>
+                    <button id="filter-btn" type="button" class="btn btn-dark filter-btn">Filter</button>
                 </div>
             </div>
             <div class="col-8 right-pane">
@@ -59,7 +39,7 @@
                 <div class="item-viewer">
                     <!-- Loop through the filtered items -->
                     {{ range . }}
-                    <div class="card item-card">
+                    <div class="card item-card" data-category="{{ .Category }}">
                         <div class="img-container">
                             <img src="{{ .ItemImageLink }}" width="100%" height="100%">
                         </div>
@@ -74,8 +54,46 @@
                     <div>No items found</div>
                     {{ end }}
                 </div>
-                
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", function(){
+            // Gather all categories
+            const itemCards = document.querySelectorAll(".item-card")
+            const categories = new Set()
+            itemCards.forEach(card => {
+                const category = card.getAttribute("data-category")
+                if(category) {
+                    categories.add(category)
+                }
+            })
+
+            // Dynamically create filter options
+            const filterContainer = document.getElementById("category-list");
+
+            categories.forEach(category => {
+                const div = document.createElement("div");
+                div.classList.add("form-check")
+                div.innerHTML = `
+                    <input type="checkbox" class="form-check-input" value="${category}">
+                    <label class="form-check-label">${category}</label>
+                `;
+                filterContainer.append(div);
+            });
+        })
+
+        document.getElementById("filter-btn").addEventListener("click", function(){
+            const checkedCats = Array.from(document.querySelectorAll(".form-check-input:checked")).map(checkbox => checkbox.value)
+            const itemCards = document.querySelectorAll(".item-card")
+            itemCards.forEach(function(card){
+                const itemCat = card.getAttribute("data-category")
+                if (checkedCats.includes(itemCat)) {
+                    card.style.display = "block"
+                } else {
+                    card.style.display = "none"
+                }
+            })
+        })
+    </script>
 </body>

@@ -228,7 +228,7 @@ func GetItem(itemID int) (Item, error) {
 }
 
 // DeleteItem removes an item from the data.json file by its ItemID
-func DeleteItem(itemID int) error {
+func DeleteItem(itemID int, requesterID int) error {
 	// Load existing data
 	data, err := LoadUserData()
 	if err != nil {
@@ -245,6 +245,9 @@ func DeleteItem(itemID int) error {
 	for _, item := range data.Items {
 		if item.ItemID == itemID {
 			itemFound = true
+			if requesterID != item.OwnerID {
+				return fmt.Errorf("cannot delete item. your id %d, original id %d", requesterID, item.OwnerID)
+			}
 			continue // Skip the item to delete it
 		}
 		updatedItems = append(updatedItems, item)
