@@ -15,8 +15,18 @@ import (
 
 var tpl *template.Template
 
+// Show all items from the database and pass them to the template
 func showAllItems(w http.ResponseWriter, r *http.Request) {
-	err := tpl.ExecuteTemplate(w, "items.html", nil)
+	// Load data from data.json
+	data, err := LoadUserData()
+	if err != nil {
+		http.Error(w, "Error loading data", http.StatusInternalServerError)
+		log.Println("Error loading data:", err)
+		return
+	}
+
+	// Pass the items data to the template
+	err = tpl.ExecuteTemplate(w, "items.html", data.Items)
 	if err != nil {
 		http.Error(w, "Error rendering template", http.StatusInternalServerError)
 		log.Println("Template execution error:", err)
@@ -260,9 +270,9 @@ func getUserID(r *http.Request) (int, error) {
 	// Retrieve userID from cookie
 	cookie, err := r.Cookie("userID")
 	if err == http.ErrNoCookie {
-		return -1, fmt.Errorf("No userID cookie found. Please log in.")
+		return -1, fmt.Errorf("no userID cookie found. Please log in")
 	} else if err != nil {
-		return -1, fmt.Errorf("Error retrieving cookie")
+		return -1, fmt.Errorf("error retrieving cookie")
 	}
 
 	userID, _ := strconv.Atoi(cookie.Value)
