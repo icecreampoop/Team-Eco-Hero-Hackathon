@@ -279,6 +279,57 @@ func HandleHTTPIndex(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "./Frontend/static/index.gohtml")
 }
 
+func HandleHTTPAccSettings(w http.ResponseWriter, r *http.Request) {
+	// Get the logged-in user's ID from the cookie
+	userID, exists := getUserID(r)
+	if !exists {
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		return
+	}
+
+	// Load user data
+	data, err := LoadUserData()
+	if err != nil {
+		http.Error(w, "Error loading data", http.StatusInternalServerError)
+		log.Println("Error loading data:", err)
+		return
+	}
+
+	// Find the user by ID
+	var currentUser User
+	for _, user := range data.Users {
+		if user.UserID == userID {
+			currentUser = user
+			break
+		}
+	}
+
+	// If the user is not found, return an error
+	if currentUser.UserID == 0 {
+		http.Error(w, "User not found", http.StatusNotFound)
+		return
+	}
+
+	// Prepare the data to pass to the template
+	// We mask the password as "******"
+	accountData := struct {
+		Username string
+		Email    string
+		Password string
+	}{
+		Username: currentUser.Username,
+		Email:    currentUser.Email,
+		Password: "******", // Mask the password
+	}
+
+	// Render the account settings template
+	err = tpl.ExecuteTemplate(w, "account-settings.html", accountData)
+	if err != nil {
+		http.Error(w, "Error rendering template", http.StatusInternalServerError)
+		log.Println("Template execution error:", err)
+	}
+}
+
 func HandleHTTPUser(w http.ResponseWriter, r *http.Request) {
 	userID, exists := getUserID(r)
 	if !exists {
@@ -511,6 +562,7 @@ func ServerHandler() {
 
 	mux.HandleFunc("/user", HandleHTTPUser).Methods("GET")
 	mux.HandleFunc("/user/{userid}", HandleHTTPSingleUser).Methods("GET")
+	mux.HandleFunc("/account", HandleHTTPAccSettings).Methods("GET")
 	mux.HandleFunc("/board", HandleHTTPBoard).Methods("GET")
 	mux.HandleFunc("/login", HandleHTTPLogin).Methods("GET", "POST")
 	mux.HandleFunc("/signup", HandleHTTPSignup).Methods("GET", "POST")
