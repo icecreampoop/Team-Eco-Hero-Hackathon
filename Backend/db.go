@@ -6,6 +6,46 @@ import (
 	"os"
 )
 
+type User struct {
+	UserID    int    `json:"UserID"`
+	Password  string `json:"Password"`
+	Email     string `json:"Email"`
+	EXP       int    `json:"EXP"`
+	Level     int    `json:"Level"`
+	AvatarPic string `json:"AvatarPic"`
+	Admin     bool   `json:"Admin"`
+}
+
+type Categories string
+type Statuses string
+
+const (
+	StatusAvailable Statuses   = "available"
+	StatusPending   Statuses   = "pending"
+	StatusDonated   Statuses   = "donated"
+	Electronics     Categories = "electronics"
+	Mobile          Categories = "mobile"
+	Furniture       Categories = "furniture"
+	HardwareTools   Categories = "hardwaretools"
+	Sports          Categories = "sports"
+	Clothing        Categories = "clothing"
+	Books           Categories = "books"
+	Media           Categories = "media"
+	Others          Categories = "others"
+)
+
+type Item struct {
+	ItemID          int    `json:"ItemID"`
+	OwnerID         int    `json:"OwnerID"`
+	ReceiverID      int    `json:"ReceiverID"`
+	ItemName        string `json:"ItemName"`
+	ItemDescription string `json:"ItemDescription"`
+	Category1       Categories `json:"Category1"`
+	Category2       Categories `json:"Category2"`
+	Category3       Categories `json:"Category3"`
+	ItemStatus      Statuses `json:"Status"`
+}
+
 // Data struct to represent the data.json structure
 type Data struct {
 	Users []User `json:"users"`
