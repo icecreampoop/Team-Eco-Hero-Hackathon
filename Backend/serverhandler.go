@@ -4,17 +4,18 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-
-	//"image"
+	"image"
 	"io"
 	"log"
 	"net/http"
 	"os"
 	"strconv"
 	"text/template"
+	"hash/fnv"
 )
 
 var tpl *template.Template
+var hasher = fnv.New32a()
 
 func showAllItems(w http.ResponseWriter, r *http.Request) {
 	// Load data from data.json
@@ -82,29 +83,37 @@ func createNewItem(w http.ResponseWriter, r *http.Request) {
 	imageBytes := buf.Bytes()
 
 	// Detect the image format
-	// _, format, err := image.Decode(file)
-	// if err != nil {
-	// 	http.Error(w, "Unsupported or invalid image format", http.StatusUnsupportedMediaType)
-	// 	return
-	// }
+	_, format, err := image.Decode(file)
+	if err != nil {
+		http.Error(w, "Unsupported or invalid image format", http.StatusUnsupportedMediaType)
+		return
+	}
 
 	// Process the imageBytes (e.g., store in a database or perform operations)
 	fmt.Printf("Received file %s with size %d bytes\n", handler.Filename, len(imageBytes))
 
 	// upload media to digital ocean spaces
-	// UploadFile(itemName + "."  + format, imageBytes)
-	// // add item entry to db
-	// AddNewItem(&Item{
-	// 	ItemID: nil,
-	// 	OwnerID: getUserID(r),
-	// 	ReceiverID: nil,
-	// 	ItemName: r.FormValue(),
-	// 	ItemDescription: s,
-	// 	ItemImageLink: d,
-	// 	Category: f,
-	// 	ItemStatus: ss,
-	// 	CurrentRequesters: nil,
-	// })
+	// Get the "UserID" cookie from the request
+	cookie, err := r.Cookie("UserID")
+	if err != nil {
+		// If the cookie is not found, handle the error
+		http.Error(w, "UserID cookie not found", http.StatusBadRequest)
+		return
+	}
+
+	// Convert the cookie value (which is a string) to an integer
+	userID, err := strconv.Atoi(cookie.Value)
+	if err != nil {
+		// If there's an error converting the value, handle it
+		http.Error(w, "Invalid UserID value", http.StatusBadRequest)
+		return
+	}
+	hashedFileName := hashResourcePath(findUser(userID).Email + r.FormValue("item-name")) + "."  + format
+	fileResourcePath, _ := UploadFile(hashedFileName, imageBytes)
+	// add item entry to db
+	userIDInt, _ := getUserID(r)
+	AddNewItem(userIDInt, r.FormValue("item-name"), r.FormValue("item-description"), 
+				r.FormValue("category"), fileResourcePath)
 
 	// Respond to the client
 	w.WriteHeader(http.StatusOK)
@@ -325,4 +334,19 @@ func loadUsers(filename string) ([]User, error) {
 	}
 
 	return users, nil
+}
+
+// find user based on their user ID, returns user struct
+func findUser(userID int) User {
+	user := &User{
+
+	}
+
+	return *user
+
+}
+
+func hashResourcePath(input string) string {
+	hasher.Write([]byte(input))
+	return strconv.FormatUint(uint64(hasher.Sum32()), 10)
 }
