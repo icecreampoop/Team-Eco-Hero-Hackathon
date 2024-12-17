@@ -187,7 +187,7 @@ func createNewItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// Respond to the client
-	fmt.Println("settle")
+	//fmt.Println("settle")
 	//w.WriteHeader(http.StatusOK)
 	//w.Write([]byte("File uploaded and processed successfully"))
 	http.Redirect(w, r, "http://localhost:5000/", http.StatusFound)
