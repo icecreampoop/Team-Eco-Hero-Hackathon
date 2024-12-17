@@ -187,14 +187,53 @@ func createNewItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	// Respond to the client
-	fmt.Println("settle")
+	//fmt.Println("settle")
 	//w.WriteHeader(http.StatusOK)
 	//w.Write([]byte("File uploaded and processed successfully"))
 	http.Redirect(w, r, "http://localhost:5000/", http.StatusFound)
 }
 
 func requestItem(w http.ResponseWriter, r *http.Request) {
+	// based on the requestitem function in db.go
+	// get user id from cookie and item id from url, and add the user id to the requesters field of the item via function
+	// do not run the function if user is not logged in or item is not found
 
+	// Get the "UserID" cookie from the request
+	cookie, err := r.Cookie("UserID")
+	if err != nil {
+		// If the cookie is not found, handle the error
+		http.Error(w, "UserID cookie not found", http.StatusBadRequest)
+		return
+	}
+
+	// Convert the cookie value (which is a string) to an integer
+	userID, err := strconv.Atoi(cookie.Value)
+	if err != nil {
+		// If there's an error converting the value, handle it
+		http.Error(w, "Invalid UserID value", http.StatusBadRequest)
+		return
+	}
+
+	// Extract itemID from URL parameters
+	params := mux.Vars(r)
+	itemID, err := strconv.Atoi(params["itemID"])
+	if err != nil {
+		http.Error(w, "Invalid item ID", http.StatusBadRequest)
+		return
+	}
+
+	// Call the RequestItem function to add the user to the item's requesters
+	err = RequestItem(itemID, userID)
+	if err != nil {
+		http.Error(w, "Error requesting item", http.StatusInternalServerError)
+		log.Println("Error requesting item:", err)
+		return
+	}
+
+	// Respond to the client
+	w.WriteHeader(http.StatusOK)
+	w.Write([]byte(fmt.Sprintf("Item with ID %d successfully requested by user %d", itemID, userID)))
+	http.Redirect(w, r, "http://localhost:5000/my-requests", http.StatusFound)
 }
 
 func acceptRequest(w http.ResponseWriter, r *http.Request) {
@@ -210,18 +249,16 @@ func updateItemDetails(w http.ResponseWriter, r *http.Request) {
 }
 
 func deleteItem(w http.ResponseWriter, r *http.Request) {
-	fmt.Println()
 	params := mux.Vars(r)
 	itemID, err := strconv.Atoi(params["itemID"])
-
-	//itemIDStr := r.PathValue("itemID")
-	//itemID, err := strconv.Atoi(itemIDStr)
 	if err != nil {
 		http.Error(w, "Invalid item ID", http.StatusBadRequest)
 		return
 	}
 
-	err = DeleteItem(itemID)
+	userIDInt, _ := getUserID(r)
+
+	err = DeleteItem(itemID, userIDInt)
 	if err != nil {
 		if err.Error() == fmt.Sprintf("item with ID %d not found", itemID) {
 			http.Error(w, "Item not found", http.StatusNotFound)
@@ -234,8 +271,6 @@ func deleteItem(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(fmt.Sprintf("Item with ID %d successfully deleted", itemID)))
-
-	http.Redirect(w, r, "/", http.StatusAccepted)
 }
 
 // functions to handle HTTP requests for page loads
@@ -481,9 +516,10 @@ func HandleHTTPSignup(w http.ResponseWriter, r *http.Request) {
 		// Get form values
 		email := r.FormValue("email")
 		password := r.FormValue("password")
+		username := r.FormValue("username")
 
 		// Add the new user to the data.json file
-		err = AddNewUser(email, password)
+		err = AddNewUser(email, password, username)
 		if err != nil {
 			http.Error(w, "Unable to add new user", http.StatusInternalServerError)
 			return
