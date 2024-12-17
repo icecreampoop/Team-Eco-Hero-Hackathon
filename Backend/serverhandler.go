@@ -3,7 +3,6 @@ package backend
 import (
 	"bytes"
 	"fmt"
-	"github.com/gorilla/mux"
 	"hash/fnv"
 	"image"
 	_ "image/jpeg"
@@ -14,6 +13,8 @@ import (
 	"sort"
 	"strconv"
 	"text/template"
+
+	"github.com/gorilla/mux"
 )
 
 var tpl *template.Template
@@ -62,28 +63,47 @@ func showAllItems(w http.ResponseWriter, r *http.Request) {
 }
 
 func showSingleItem(w http.ResponseWriter, r *http.Request) {
+	// Extract itemID from URL parameters
 	params := mux.Vars(r)
-	itemID, _ := strconv.Atoi(params["itemid"])
-
-	fmt.Println(itemID)
-
-	data, err := LoadUserData()
+	itemID, err := strconv.Atoi(params["itemID"])
 	if err != nil {
-		fmt.Println(err)
+		http.Error(w, "Invalid item ID", http.StatusBadRequest)
 		return
 	}
 
+	fmt.Println("Item ID:", itemID)
+
+	// Load user data
+	data, err := LoadUserData()
+	if err != nil {
+		fmt.Println("Error loading data:", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	// Find the item by ID
 	var foundItem Item
+	var itemFound bool
 	for _, item := range data.Items {
 		if item.ItemID == itemID {
 			foundItem = item
+			itemFound = true
+			break
 		}
 	}
 
+	// If item not found, return 404 error
+	if !itemFound {
+		fmt.Println("Item not found:", itemID) // Debugging line
+		http.NotFound(w, r)
+		return
+	}
+
+	// Render the template with the found item
 	err = tpl.ExecuteTemplate(w, "item.html", foundItem)
 	if err != nil {
-		http.Error(w, "Error rendering User template", http.StatusInternalServerError)
-		log.Println("Template execution error:", err)
+		http.Error(w, "Error rendering template", http.StatusInternalServerError)
+		fmt.Println("Template execution error:", err)
 	}
 }
 
@@ -434,6 +454,7 @@ func ServerHandler() {
 	mux.HandleFunc("/create-item", createNewItem).Methods("POST")
 	mux.HandleFunc("/items/{itemID}/request", requestItem).Methods("POST")
 	mux.HandleFunc("/items/{itemID}/accept", acceptRequest).Methods("POST")
+	mux.HandleFunc("/items/{itemID}/accept", acceptRequest).Methods("GET")
 	mux.HandleFunc("/items/{itemID}", updateItemDetails).Methods("PUT")
 	mux.HandleFunc("/items/{itemID}", deleteItem).Methods("DELETE")
 
