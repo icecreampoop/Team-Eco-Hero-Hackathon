@@ -135,7 +135,9 @@
       "Level": 1,
       "AvatarPic": "",
       "Admin": false,
-      "ActiveRequests": null
+      "ActiveRequests": [
+        1
+      ]
     },
     {
       "UserID": 13,
@@ -184,7 +186,8 @@
       "CurrentRequesters": [
         6,
         6,
-        11
+        11,
+        12
       ]
     },
     {

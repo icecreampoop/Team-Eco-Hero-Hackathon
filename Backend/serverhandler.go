@@ -167,6 +167,13 @@ func serveUpdateItemPage(w http.ResponseWriter, r *http.Request) {
 }
 
 func createNewItemPage(w http.ResponseWriter, r *http.Request) {
+	// Get the logged-in user's ID from the cookie
+	_, exists := getUserID(r)
+	if !exists {
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+		return
+	}
+
 	err := tpl.ExecuteTemplate(w, "add-item.html", nil)
 	if err != nil {
 		http.Error(w, "Error rendering add-item template", http.StatusInternalServerError)
