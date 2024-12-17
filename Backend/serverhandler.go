@@ -105,7 +105,46 @@ func showSingleItem(w http.ResponseWriter, r *http.Request) {
 }
 
 func serveUpdateItemPage(w http.ResponseWriter, r *http.Request) {
+	// Extract itemID from URL parameters
+	params := mux.Vars(r)
+	itemID, err := strconv.Atoi(params["itemID"])
+	if err != nil {
+		http.Error(w, "Invalid item ID", http.StatusBadRequest)
+		return
+	}
 
+	// Load user data
+	data, err := LoadUserData()
+	if err != nil {
+		fmt.Println("Error loading data:", err)
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	// Find the item by ID
+	var foundItem Item
+	var itemFound bool
+	for _, item := range data.Items {
+		if item.ItemID == itemID {
+			foundItem = item
+			itemFound = true
+			break
+		}
+	}
+
+	// If item not found, return 404 error
+	if !itemFound {
+		fmt.Println("Item not found:", itemID) // Debugging line
+		http.NotFound(w, r)
+		return
+	}
+
+	// Render the template with the found item
+	err = tpl.ExecuteTemplate(w, "update-item.html", foundItem)
+	if err != nil {
+		http.Error(w, "Error rendering template", http.StatusInternalServerError)
+		fmt.Println("Template execution error:", err)
+	}
 }
 
 func createNewItemPage(w http.ResponseWriter, r *http.Request) {
@@ -169,11 +208,9 @@ func createNewItem(w http.ResponseWriter, r *http.Request) {
 	}
 	hashedFileName := hashResourcePath(findUser(userID).Email+r.FormValue("item-name")) + getFileExtension(handler.Header.Get("Content-Type"))
 	fileResourcePath, _ := UploadFile(hashedFileName, imageBytes)
-	fmt.Println(fileResourcePath)
 	// add item entry to db
 	userIDInt, _ := getUserID(r)
-	fmt.Println(userIDInt)
-	err = AddNewItem(3, r.FormValue("item-name"), r.FormValue("item-description"),
+	err = AddNewItem(userIDInt, r.FormValue("item-name"), r.FormValue("item-description"),
 		r.FormValue("category"), fileResourcePath)
 	if err != nil {
 		fmt.Println(err)
@@ -198,7 +235,64 @@ func serveAcceptRequestPage(w http.ResponseWriter, r *http.Request) {
 }
 
 func updateItemDetails(w http.ResponseWriter, r *http.Request) {
-	//asf
+	params := mux.Vars(r)
+	itemID, _ := strconv.Atoi(params["itemID"])
+
+	//if image uploaded need send to DO (the steps from create new item)
+	imageFilePath := ""
+	file, handler, _ := r.FormFile("image")
+	if file != nil {
+		defer file.Close()
+
+		// Validate file type (optional, based on MIME type)
+		contentType := handler.Header.Get("Content-Type")
+		if contentType[:6] != "image/" {
+			http.Error(w, "Only image files are allowed", http.StatusUnsupportedMediaType)
+			return
+		}
+
+		// Read file into []byte
+		var buf bytes.Buffer
+		_, err := io.Copy(&buf, file)
+		if err != nil {
+			http.Error(w, "Error reading file", http.StatusInternalServerError)
+			return
+		}
+		imageBytes := buf.Bytes()
+
+		// Process the imageBytes (e.g., store in a database or perform operations)
+		fmt.Printf("Received file %s with size %d bytes\n", handler.Filename, len(imageBytes))
+
+		// upload media to digital ocean spaces
+		// Get the "UserID" cookie from the request
+		cookie, err := r.Cookie("UserID")
+		if err != nil {
+			// If the cookie is not found, handle the error
+			http.Error(w, "UserID cookie not found", http.StatusBadRequest)
+			return
+		}
+
+		// Convert the cookie value (which is a string) to an integer
+		userID, err := strconv.Atoi(cookie.Value)
+		if err != nil {
+			// If there's an error converting the value, handle it
+			http.Error(w, "Invalid UserID value", http.StatusBadRequest)
+			return
+		}
+		hashedFileName := hashResourcePath(findUser(userID).Email+r.FormValue("item-name")) + getFileExtension(handler.Header.Get("Content-Type"))
+		imageFilePath, _ = UploadFile(hashedFileName, imageBytes)
+	}
+
+	//else just send to edit item db call
+	err := EditItem(itemID, r.FormValue("item-name"), r.FormValue("item-description"), imageFilePath, r.FormValue("category"))
+	if err != nil {
+		http.Error(w, "Failed to update item: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	//redirect to
+	//mux.HandleFunc("/items/{itemID}", showSingleItem).Methods("GET")
+	http.Redirect(w, r, fmt.Sprintf("/items/%d", itemID), http.StatusSeeOther)
 }
 
 func deleteItem(w http.ResponseWriter, r *http.Request) {
