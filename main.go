@@ -12,9 +12,10 @@ func main() {
 	if err != nil {
 		log.Fatalf("Error loading .env file: %v", err)
 	}
-	backend.LoadDataFromConfig("data.json")
-	log.Printf("Loaded users: %+v", backend.Users)
-	log.Printf("Loaded items: %+v", backend.Items)
+	//backend.LoadDataFromConfig("data.json")
+	//log.Printf("Loaded users: %+v", backend.Users)
+	//log.Printf("Loaded items: %+v", backend.Items)
+	//backend.AddNewItem(1, "HDMI Cable", "electronics")
 
 	log.Println("App is ready!")
 

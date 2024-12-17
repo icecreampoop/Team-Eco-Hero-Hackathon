@@ -2,6 +2,7 @@ package backend
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"os"
 )
@@ -124,7 +125,46 @@ func AddNewUser(email, password string) error {
 	return SaveUserData(data)
 }
 
-// add item to db
-func AddNewItem(ownerID int, itemName, categories string) error {
-	return nil
+// Add new item to data.json
+func AddNewItem(ownerID int, itemName string, categories string) error {
+	data, err := LoadUserData()
+	if err != nil {
+		return err
+	}
+	userExists := false
+	for _, user := range data.Users {
+		if user.UserID == ownerID {
+			userExists = true
+			break
+		}
+	}
+	if !userExists {
+		return err
+	}
+
+	var validCategory Categories
+	switch categories {
+	case string(Electronics), string(Mobile), string(Furniture), string(HardwareTools),
+		string(Sports), string(Clothing), string(Books), string(Media), string(Others):
+		validCategory = Categories(categories)
+	default:
+		return fmt.Errorf("invalid category: %s", categories)
+	}
+	// Create a new item
+	newItem := Item{
+		ItemID:            len(data.Items) + 1,
+		OwnerID:           ownerID,
+		ReceiverID:        0, // 0 means no receiver yet
+		ItemName:          itemName,
+		ItemDescription:   "", // Optional: allow it to be empty for now
+		Category:          validCategory,
+		ItemStatus:        StatusAvailable, // New items are 'available' by default
+		CurrentRequesters: []int{},
+	}
+
+	// Append the new item to the list
+	data.Items = append(data.Items, newItem)
+
+	// Save the updated data
+	return SaveUserData(data)
 }
