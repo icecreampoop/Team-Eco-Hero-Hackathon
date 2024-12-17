@@ -89,8 +89,6 @@
       "Category": "hardwaretools",
       "Status": "pending",
       "CurrentRequesters": null
-<<<<<<< HEAD
-=======
     },
     {
       "ItemID": 3,
@@ -146,7 +144,6 @@
       "Category": "furniture",
       "Status": "available",
       "CurrentRequesters": []
->>>>>>> 28403875c4ccb0439ca6e848e42ebec9b4e15009
     }
   ]
 }
