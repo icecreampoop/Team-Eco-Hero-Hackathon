@@ -2,14 +2,12 @@ package backend
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"hash/fnv"
 	"image"
 	"io"
 	"log"
 	"net/http"
-	"os"
 	"sort"
 	"strconv"
 	"text/template"
@@ -34,24 +32,22 @@ func showAllItems(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Get the filter query parameters from the URL (if any)
-	statusFilter := r.URL.Query().Get("status") // "available" or "pending"
-
 	// Create a slice to hold the filtered items with OwnerUsername
 	var filteredItemsWithOwner []ItemWithOwner
 
 	for _, item := range data.Items {
-		// Use the findUser function to get the owner's username
-		owner := findUserTpl(item.OwnerID, data.Users)
+		// Only include items with status "available" or "pending"
+		if item.ItemStatus == "available" || item.ItemStatus == "pending" {
+			// Use the findUser function to get the owner's username
+			owner := findUserTpl(item.OwnerID, data.Users)
 
-		// Create an ItemWithOwner struct and assign the OwnerUsername
-		itemWithOwner := ItemWithOwner{
-			Item:          item,
-			OwnerUsername: owner.Username, // Assign the owner's username
-		}
+			// Create an ItemWithOwner struct and assign the OwnerUsername
+			itemWithOwner := ItemWithOwner{
+				Item:          item,
+				OwnerUsername: owner.Username, // Assign the owner's username
+			}
 
-		// Filter by status if specified, otherwise show all items
-		if statusFilter == "" || item.ItemStatus == StatusAvailable || item.ItemStatus == StatusPending {
+			// Add the item with owner information to the filtered list
 			filteredItemsWithOwner = append(filteredItemsWithOwner, itemWithOwner)
 		}
 	}
@@ -272,6 +268,11 @@ func HandleHTTPBoard(w http.ResponseWriter, r *http.Request) {
 // 	http.ServeFile(w, r, "./Frontend/static/login.html")
 // }
 
+// // HandleHTTPLogin serves the login page
+// func HandleHTTPLogin(w http.ResponseWriter, r *http.Request) {
+// 	http.ServeFile(w, r, "./Frontend/static/login.html")
+// }
+
 // HandleHTTPLogin serves the login page and handles login authentication
 func HandleHTTPLogin(w http.ResponseWriter, r *http.Request) {
 	tmpl, err := template.ParseFiles("./Frontend/static/login.html")
@@ -289,17 +290,28 @@ func HandleHTTPLogin(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Get form values
-		username := r.FormValue("username")
+		email := r.FormValue("email")
 		password := r.FormValue("password")
 
 		// Validate credentials
-		valid, err := ValidateUserCredentials(username, password)
+		valid, err := ValidateUserCredentials(email, password)
 		if err != nil {
 			http.Error(w, "Unable to validate user credentials", http.StatusInternalServerError)
 			return
 		}
 
 		if valid {
+			// Set the "UserID" cookie
+			userID, err := GetUserID(email)
+			if err != nil {
+				http.Error(w, "Unable to get user ID", http.StatusInternalServerError)
+				return
+			}
+			cookie := http.Cookie{
+				Name:  "UserID",
+				Value: strconv.Itoa(userID),
+			}
+			http.SetCookie(w, &cookie)
 			// Successful login
 			http.Redirect(w, r, "/user", http.StatusSeeOther)
 			return
@@ -307,7 +319,7 @@ func HandleHTTPLogin(w http.ResponseWriter, r *http.Request) {
 
 		// Invalid credentials
 		tmpl.Execute(w, map[string]interface{}{
-			"ErrorMessage": "Invalid username or password",
+			"ErrorMessage": "Invalid login email or password",
 		})
 		return
 	}
@@ -379,7 +391,7 @@ func ServerHandler() {
 	mux.HandleFunc("/user", HandleHTTPUser).Methods("GET")
 	mux.HandleFunc("/user/{userid}", HandleHTTPSingleUser).Methods("GET")
 	mux.HandleFunc("/board", HandleHTTPBoard).Methods("GET")
-	mux.HandleFunc("/login", HandleHTTPLogin).Methods("GET")
+	mux.HandleFunc("/login", HandleHTTPLogin).Methods("GET", "POST")
 	mux.HandleFunc("/signup", HandleHTTPSignup).Methods("GET")
 
 	// Serve static files from the frontend directory
@@ -404,27 +416,6 @@ func getUserID(r *http.Request) (int, bool) {
 	userID, _ := strconv.Atoi(cookie.Value)
 
 	return userID, true
-}
-
-func loadUsers(filename string) ([]User, error) {
-	file, err := os.Open(filename)
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
-
-	byteVal, err := io.ReadAll(file)
-	if err != nil {
-		return nil, err
-	}
-
-	var users []User
-	err = json.Unmarshal(byteVal, &users)
-	if err != nil {
-		return nil, err
-	}
-
-	return users, nil
 }
 
 // find user based on their user ID, returns user struct

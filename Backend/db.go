@@ -179,6 +179,22 @@ func AddNewItem(ownerID int, itemName string, itemDescription string, categories
 	return SaveUserData(data)
 }
 
+// GetUserID returns the UserID of a user by their email
+func GetUserID(email string) (int, error) {
+	data, err := LoadUserData()
+	if err != nil {
+		return 0, err
+	}
+
+	for _, user := range data.Users {
+		if user.Email == email {
+			return user.UserID, nil
+		}
+	}
+
+	return 0, fmt.Errorf("user with email %s not found", email)
+}
+
 // GetItem retrieves an item by its ItemID
 func GetItem(itemID int) (Item, error) {
 	var data Data

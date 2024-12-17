@@ -21,16 +21,16 @@
 <h2 class="card-title">Login</h2>
 
 <!-- Display error message if exists -->
-<!-- {{if .ErrorMessage}}
+{{if .ErrorMessage}}
     <div class="alert alert-danger" role="alert">
         {{.ErrorMessage}}
     </div>
-{{end}} -->
+{{end}}
 
 <form method="post">
     <div class="form-group">
-        <label for="username" class="form-label">Username:</label>
-        <input type="text" name="username" class="form-control" placeholder="Username" autocomplete="off" required>
+        <label for="email" class="form-label">Email:</label>
+        <input type="text" name="email" class="form-control" placeholder="Email" autocomplete="off" required>
     </div>
     <div class="form-group">
         <label for="password" class="form-label">Password:</label>
