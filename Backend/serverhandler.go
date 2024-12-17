@@ -2,14 +2,13 @@ package backend
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"hash/fnv"
 	"image"
 	"io"
 	"log"
 	"net/http"
-	"os"
+	"sort"
 	"strconv"
 	"text/template"
 
@@ -219,8 +218,6 @@ func HandleHTTPSingleUser(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
 	userID, _ := strconv.Atoi(params["userid"])
 
-	fmt.Println(userID)
-
 	// redirect function
 
 	// userID, err := getUserID(r)
@@ -262,20 +259,36 @@ func HandleHTTPSingleUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func HandleHTTPBoard(w http.ResponseWriter, r *http.Request) {
-	// data, err := LoadUserData()
-	// if err != nil {
-	// 	fmt.Println("Error loading data from JSON")
-	// 	return
-	// }
+	data, err := LoadUserData()
+	if err != nil {
+		fmt.Println("Error loading data from JSON")
+		return
+	}
 
-	// // users :=
+	users := data.Users
 
-	// err = tpl.ExecuteTemplate(w, "board.html", nil)
-	// if err != nil {
-	// 	http.Error(w, "Error rendering Board template", http.StatusInternalServerError)
-	// 	log.Println("Template execution error:", err)
-	// }
+	sort.Slice(users, func(i, j int) bool {
+		user1 := (users[i].Level * 100) + users[i].EXP
+		user2 := (users[j].Level * 100) + users[j].EXP
+		return user1 > user2
+	})
+
+	topFive := make(map[int]User)
+	for i := 0; i < len(users) && i < 5; i++ {
+		topFive[i+1] = users[i]
+	}
+
+	err = tpl.ExecuteTemplate(w, "board.html", topFive)
+	if err != nil {
+		http.Error(w, "Error rendering Board template", http.StatusInternalServerError)
+		log.Println("Template execution error:", err)
+	}
 }
+
+// // HandleHTTPLogin serves the login page
+// func HandleHTTPLogin(w http.ResponseWriter, r *http.Request) {
+// 	http.ServeFile(w, r, "./Frontend/static/login.html")
+// }
 
 // // HandleHTTPLogin serves the login page
 // func HandleHTTPLogin(w http.ResponseWriter, r *http.Request) {
@@ -299,17 +312,28 @@ func HandleHTTPLogin(w http.ResponseWriter, r *http.Request) {
 		}
 
 		// Get form values
-		username := r.FormValue("username")
+		email := r.FormValue("email")
 		password := r.FormValue("password")
 
 		// Validate credentials
-		valid, err := ValidateUserCredentials(username, password)
+		valid, err := ValidateUserCredentials(email, password)
 		if err != nil {
 			http.Error(w, "Unable to validate user credentials", http.StatusInternalServerError)
 			return
 		}
 
 		if valid {
+			// Set the "UserID" cookie
+			userID, err := GetUserID(email)
+			if err != nil {
+				http.Error(w, "Unable to get user ID", http.StatusInternalServerError)
+				return
+			}
+			cookie := http.Cookie{
+				Name:  "UserID",
+				Value: strconv.Itoa(userID),
+			}
+			http.SetCookie(w, &cookie)
 			// Successful login
 			http.Redirect(w, r, "/user", http.StatusSeeOther)
 			return
@@ -317,7 +341,7 @@ func HandleHTTPLogin(w http.ResponseWriter, r *http.Request) {
 
 		// Invalid credentials
 		tmpl.Execute(w, map[string]interface{}{
-			"ErrorMessage": "Invalid username or password",
+			"ErrorMessage": "Invalid login email or password",
 		})
 		return
 	}
@@ -389,7 +413,7 @@ func ServerHandler() {
 	mux.HandleFunc("/user", HandleHTTPUser).Methods("GET")
 	mux.HandleFunc("/user/{userid}", HandleHTTPSingleUser).Methods("GET")
 	mux.HandleFunc("/board", HandleHTTPBoard).Methods("GET")
-	mux.HandleFunc("/login", HandleHTTPLogin).Methods("GET")
+	mux.HandleFunc("/login", HandleHTTPLogin).Methods("GET", "POST")
 	mux.HandleFunc("/signup", HandleHTTPSignup).Methods("GET")
 
 	// Serve static files from the frontend directory
@@ -414,27 +438,6 @@ func getUserID(r *http.Request) (int, bool) {
 	userID, _ := strconv.Atoi(cookie.Value)
 
 	return userID, true
-}
-
-func loadUsers(filename string) ([]User, error) {
-	file, err := os.Open(filename)
-	if err != nil {
-		return nil, err
-	}
-	defer file.Close()
-
-	byteVal, err := io.ReadAll(file)
-	if err != nil {
-		return nil, err
-	}
-
-	var users []User
-	err = json.Unmarshal(byteVal, &users)
-	if err != nil {
-		return nil, err
-	}
-
-	return users, nil
 }
 
 // find user based on their user ID, returns user struct
