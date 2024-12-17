@@ -22,7 +22,9 @@
         <div class="row">
             <div class="col-3 min-left">
                 <div class="add-item-container">
-                    <a href="/create-item" class="btn more-btn">Create New Listing</a>
+                    <a href="/create-item" class="btn more-btn">
+                        <div>Create New Listing</div>
+                    </a>
                 </div>
                 <div class="left-pane">
                     <div class="category-title">Category</div>
@@ -89,14 +91,16 @@
         document.getElementById("filter-btn").addEventListener("click", function(){
             const checkedCats = Array.from(document.querySelectorAll(".form-check-input:checked")).map(checkbox => checkbox.value)
             const itemCards = document.querySelectorAll(".item-card")
-            itemCards.forEach(function(card){
-                const itemCat = card.getAttribute("data-category")
-                if (checkedCats.includes(itemCat)) {
-                    card.style.display = "block"
-                } else {
-                    card.style.display = "none"
-                }
-            })
+            if(checkedCats.length > 0){
+                itemCards.forEach(function(card){
+                    const itemCat = card.getAttribute("data-category")
+                    if (checkedCats.includes(itemCat)) {
+                        card.style.display = "block"
+                    } else {
+                        card.style.display = "none"
+                    }
+                })
+            }
         })
     </script>
 </body>
