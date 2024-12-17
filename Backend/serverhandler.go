@@ -94,8 +94,17 @@ func showSingleItem(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// Render the template with the found item
-	err = tpl.ExecuteTemplate(w, "item.html", foundItem)
+	// Find the owner's username
+	owner := findUserTpl(foundItem.OwnerID, data.Users)
+
+	// Create an ItemWithOwner struct to hold both the item and owner's username
+	itemWithOwner := ItemWithOwner{
+		Item:          foundItem,
+		OwnerUsername: owner.Username, // Set the owner's username
+	}
+
+	// Render the template with the found item and its owner information
+	err = tpl.ExecuteTemplate(w, "item.html", itemWithOwner)
 	if err != nil {
 		http.Error(w, "Error rendering template", http.StatusInternalServerError)
 		fmt.Println("Template execution error:", err)
@@ -171,7 +180,7 @@ func createNewItem(w http.ResponseWriter, r *http.Request) {
 	// add item entry to db
 	userIDInt, _ := getUserID(r)
 	fmt.Println(userIDInt)
-	err = AddNewItem(3, r.FormValue("item-name"), r.FormValue("item-description"),
+	err = AddNewItem(userIDInt, r.FormValue("item-name"), r.FormValue("item-description"),
 		r.FormValue("category"), fileResourcePath)
 	if err != nil {
 		fmt.Println(err)
@@ -181,6 +190,7 @@ func createNewItem(w http.ResponseWriter, r *http.Request) {
 	fmt.Println("settle")
 	//w.WriteHeader(http.StatusOK)
 	//w.Write([]byte("File uploaded and processed successfully"))
+	http.Redirect(w, r, "http://localhost:5000/", http.StatusFound)
 }
 
 func requestItem(w http.ResponseWriter, r *http.Request) {
