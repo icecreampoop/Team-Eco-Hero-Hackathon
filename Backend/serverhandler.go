@@ -271,7 +271,6 @@ func requestItem(w http.ResponseWriter, r *http.Request) {
 	// Respond to the client
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte(fmt.Sprintf("Item with ID %d successfully requested by user %d", itemID, userID)))
-	http.Redirect(w, r, "http://localhost:5000/my-requests", http.StatusFound)
 }
 
 func acceptRequest(w http.ResponseWriter, r *http.Request) {
