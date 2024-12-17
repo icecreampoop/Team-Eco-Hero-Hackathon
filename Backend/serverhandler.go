@@ -216,7 +216,7 @@ func HandleHTTPUser(w http.ResponseWriter, r *http.Request) {
 
 func HandleHTTPSingleUser(w http.ResponseWriter, r *http.Request) {
 	params := mux.Vars(r)
-	userID, _ := strconv.Atoi(params["UserID"])
+	userID, _ := strconv.Atoi(params["userid"])
 
 	// redirect function
 
