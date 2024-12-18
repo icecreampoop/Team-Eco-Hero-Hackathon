@@ -117,7 +117,7 @@ func showSingleItem(w http.ResponseWriter, r *http.Request) {
 
 	// pck was here to map and add requestor name arr
 	var nameArr []string
-	for _, userID := range itemWithOwner.CurrentRequesters {
+	for _, userID := range foundItem.CurrentRequesters {
 		nameArr = append(nameArr, findUser(userID).Username)
 	}
 	itemWithOwner.CurrentRequestersNameArr = nameArr
@@ -288,8 +288,9 @@ func requestItem(w http.ResponseWriter, r *http.Request) {
 	// Call the RequestItem function to add the user to the item's requesters
 	err = RequestItem(itemID, userID)
 	if err != nil {
-		http.Error(w, "Error requesting item", http.StatusInternalServerError)
-		log.Println("Error requesting item:", err)
+		errorStr := fmt.Sprintf("Error requesting item: %v", err)
+		http.Error(w, errorStr, http.StatusInternalServerError)
+		log.Println(errorStr)
 		return
 	}
 	//fmt.Println("item requested")
@@ -306,7 +307,7 @@ func acceptRequest(w http.ResponseWriter, r *http.Request) {
 	itemID, _ := strconv.Atoi(params["itemID"])
 	receiverName := r.FormValue("receiverName")
 	var receiverID int
-	requestorsStore  := map[int]int{}
+	requestorsStore := map[int]int{}
 
 	// find receiver ID
 	for _, userStructs := range data.Users {

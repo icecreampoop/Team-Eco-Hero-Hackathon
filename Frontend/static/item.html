@@ -10,16 +10,20 @@
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
       rel="stylesheet"
     />
-    <link
+    <!-- <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
       rel="stylesheet"
-    />
+    /> -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&family=Quicksand:wght@700&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="/Frontend/static/css/styles.css" />
     <link rel="stylesheet" href="/Frontend/static/css/item.css" />
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
   </head>
 
   <body>
@@ -41,14 +45,31 @@
                   <div class="owner-ID">
                     User ID #<span id="owner-id">{{.OwnerID}}</span>
                   </div>
-                  <span class="badge dark-badge">{{ .Category }}</span>
+                  <span class="badge custom-badge">{{ .Category }}</span>
                 </div>
                 <p class="card-text mt-3">{{ .ItemDescription }}</p>
                 <div
-                  class="d-flex justify-content-center gap-3 mt-3"
+                  class="gap-3 mt-3"
                   id="request-btn-toggle"
                 >
-                  <a id="req-btn" class="btn btn-primary">Request</a>
+                    <button id="req-btn" class="btn btn-primary">Request</button>
+                    <!-- Request Modal -->
+                    <div class="modal fade" id="requestModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLabel">Request Successful!</h5>
+                            </div>
+                            <div class="modal-body">
+                            Item Request Successful.
+                            Drop your fellow Pau Pau a message to arrange a handover!
+                            </div>
+                            <div class="modal-footer">
+                            <button id="ok-btn" type="button" class="btn btn-success">Okay</button>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
                 </div>
                 <div id="edit-delete-btns">
                   <a
@@ -56,43 +77,55 @@
                     class="btn btn-success mt-3"
                     >Edit</a
                   >
-                  <a id="delete-btn" class="btn btn-danger mt-3">Delete</a>
-                </div>
-              </div>
-              <div class="container my-5" id="requestors-list-toggle">
-                <h3 class="text-center mb-4">Requestors List</h3>
-                <ul class="list-group">
-                  {{ range $index, $name := .CurrentRequestersNameArr }}
-                  <li
-                    class="list-group-item d-flex justify-content-between align-items-center"
-                  >
-                    {{ $name }}
-                    <div class="d-flex" style="white-space: nowrap">
-                      <!-- Ensures no wrapping -->
-                      <form
-                        action="/items/{{$.ItemID}}/accept"
-                        method="POST"
-                        class="d-inline"
-                        id="accept-form-toggle-{{ $index }}"
-                      >
-                        <input
-                          type="hidden"
-                          name="receiverName"
-                          value="{{ $name }}"
-                        />
-                        <button type="submit" class="btn btn-primary btn-sm">
-                          Accept
-                        </button>
-                      </form>
-                      <a
-                        href="https://slack.com/intl/en-sg/"
-                        class="btn btn-primary btn-sm"
-                        >Contact</a
-                      >
+                  <button type="button" class="btn btn-danger mt-3" data-toggle="modal" data-target="#deleteModalContainer">Delete</button>
+                    <!-- Delete Confirmation Modal -->
+                    <div class="modal fade" id="deleteModalContainer" tabindex="-1" role="dialog">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Delete Listing?</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            </div>
+                            <div class="modal-body">
+                            Are you sure you want to delete this listing?
+                            </div>
+                            <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button id="delete-btn" type="button" class="btn btn-danger">DELETE</button>
+                            </div>
+                        </div>
+                        </div>
                     </div>
-                  </li>
-                  {{ end }}
-                </ul>
+                </div>
+            </div>
+            <div id="requestors-list-toggle">
+                <h3 class="text-center mb-4">Requested By</h3>
+                <table class="table">
+                    <tbody>
+                        {{ range .CurrentRequestersNameArr }}
+                        <tr>
+                            <th>{{ . }}</th>
+                            <td>
+                                <form action="/items/{{$.ItemID}}/accept" method="POST" id="accept-form-toggle">
+                                    <input type="hidden" name="receiverName" value="{{ . }}"/>
+                                    <button type="submit" class="btn btn-primary btn-sm">
+                                        Accept
+                                    </button>
+                                    </form>
+                            </td>
+                            <td>
+                                <a href="https://slack.com/intl/en-sg/" class="btn btn-primary btn-sm">
+                                    Contact
+                                </a>
+                            </td>
+                        </tr>
+                        {{ else }}
+                        No one has requested for this item yet!
+                        {{ end }}
+                    </tbody>
+                </table>
               </div>
             </div>
           </div>
@@ -131,24 +164,25 @@
               // Get the item ID from the button's data attribute
               const itemId = {{.ItemID}};
 
-              // Send the DELETE request to the server
+              // Send the POST request to the server
               fetch(`/items/${itemId}/request`, {
                   method: 'POST',  // HTTP method
               })
               .then(response => {
                   if (response.ok) {
-                      console.log("Item deleted successfully.");
-                      alert("Item Successfully Requested!")
-                      window.location.href = "/"
+                        $('#requestModal').modal('show')
                   } else {
-                      alert("Unable to request for this item now!")
-                      console.log("Failed to request the item.");
+                        alert("There was an error requesting the item! You might have already requested for it!")
                   }
               })
               .catch(error => {
                   console.error('Error:', error);
               });
           });
+
+          document.getElementById("ok-btn").addEventListener("click", function(){
+            window.location.href = "/"
+          })
       });
 
       var ownerID = Number({{.OwnerID}})

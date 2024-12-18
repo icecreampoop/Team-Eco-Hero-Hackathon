@@ -92,7 +92,12 @@
       "AvatarPic": "",
       "Admin": false,
       "ActiveRequests": [
-        4
+        4,
+        3,
+        2,
+        1,
+        6,
+        8
       ]
     },
     {
@@ -202,7 +207,8 @@
         6,
         6,
         11,
-        12
+        12,
+        7
       ]
     },
     {
@@ -216,7 +222,8 @@
       "Status": "pending",
       "CurrentRequesters": [
         1,
-        1
+        1,
+        7
       ]
     },
     {
@@ -230,7 +237,8 @@
       "Status": "available",
       "CurrentRequesters": [
         1,
-        4
+        4,
+        7
       ]
     },
     {
@@ -253,23 +261,6 @@
       ]
     },
     {
-      "ItemID": 5,
-      "OwnerID": 7,
-      "ReceiverID": 0,
-      "ItemName": "Sword",
-      "ItemDescription": "Sword!",
-      "ItemImageLink": "https://cdn.thesikhessentials.in/wp-content/uploads/2021/11/17130245/Image-2-48.jpg",
-      "Category": "others",
-      "Status": "available",
-      "CurrentRequesters": [
-        7,
-        1,
-        1,
-        1,
-        1
-      ]
-    },
-    {
       "ItemID": 6,
       "OwnerID": 6,
       "ReceiverID": 0,
@@ -280,7 +271,8 @@
       "Status": "available",
       "CurrentRequesters": [
         1,
-        1
+        1,
+        7
       ]
     },
     {
@@ -306,7 +298,9 @@
       "ItemImageLink": "https://ecofilebucket.sgp1.digitaloceanspaces.com/692389666.jpg",
       "Category": "furniture",
       "Status": "available",
-      "CurrentRequesters": []
+      "CurrentRequesters": [
+        7
+      ]
     },
     {
       "ItemID": 9,

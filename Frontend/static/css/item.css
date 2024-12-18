@@ -1,6 +1,7 @@
 .card {
     width: 100%;
-    max-width: 800px;  
+    max-width: 800px;
+    min-width: 450px;
     min-height: 600px;      
     border-radius: 15px;     
     padding: 30px;
@@ -29,14 +30,19 @@
     text-align: center;
 }
 
+#requestors-list-toggle {
+    border-top: 1px solid lightgray;
+    padding-top: 20px;
+}
+
 .btn-primary {
     background-color: #FF2B85; 
     color: white;
     font-weight: bold;
     border-radius: 10px;
     transition: background-color 0.3s, color 0.3s;
-    width: 50%;
     padding: 12px;
+    text-wrap: nowrap;
 }
 
 .btn-primary:hover {
@@ -44,22 +50,36 @@
     color: white; 
 }
 
+#req-btn {
+    width: 50%;
+    margin-top: 20px;
+    color: white;
+    border: 0px;
+}
+
+#request-btn-toggle {
+    display: flex;
+    justify-content: center;
+}
+
 .listed-by, .owner-ID {
     color: #6C7780;
     font-size: small;
 }
 
-.dark-badge {
+.custom-badge {
     background-color: #6C7780;
+    color: white;
 }
 
-.d-flex {
-    justify-content: center;
-    align-items: center; 
+.accept-container {
+    text-wrap: nowrap;
 }
 
-#edit-delete-btns {
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
+.btn-success {
+    margin-right: 10px;
+}
+
+a:hover {
+    text-decoration: none;
 }
