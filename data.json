@@ -191,6 +191,39 @@
       "AvatarPic": "",
       "Admin": false,
       "ActiveRequests": null
+    },
+    {
+      "UserID": 16,
+      "Username": "demotest",
+      "Password": "12344qwer",
+      "Email": "test@test.com",
+      "EXP": 0,
+      "Level": 1,
+      "AvatarPic": "",
+      "Admin": false,
+      "ActiveRequests": null
+    },
+    {
+      "UserID": 17,
+      "Username": "demotest",
+      "Password": "1234qwer",
+      "Email": "test@test.com",
+      "EXP": 0,
+      "Level": 1,
+      "AvatarPic": "",
+      "Admin": false,
+      "ActiveRequests": null
+    },
+    {
+      "UserID": 18,
+      "Username": "1",
+      "Password": "1",
+      "Email": "d",
+      "EXP": 0,
+      "Level": 1,
+      "AvatarPic": "",
+      "Admin": false,
+      "ActiveRequests": null
     }
   ],
   "items": [
@@ -261,7 +294,7 @@
       ]
     },
     {
-      "ItemID": 6,
+      "ItemID": 5,
       "OwnerID": 6,
       "ReceiverID": 0,
       "ItemName": "Socks",
@@ -276,7 +309,7 @@
       ]
     },
     {
-      "ItemID": 7,
+      "ItemID": 6,
       "OwnerID": 6,
       "ReceiverID": 0,
       "ItemName": "New Water Bottle",
@@ -290,7 +323,7 @@
       ]
     },
     {
-      "ItemID": 8,
+      "ItemID": 7,
       "OwnerID": 1,
       "ReceiverID": 0,
       "ItemName": "Super Broom",
@@ -303,7 +336,7 @@
       ]
     },
     {
-      "ItemID": 9,
+      "ItemID": 8,
       "OwnerID": 3,
       "ReceiverID": 0,
       "ItemName": "XBOX",
